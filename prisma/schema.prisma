@@ -1,9 +1,11 @@
+// prisma/schema.prisma
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider =  "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -12,19 +14,45 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      String   @default("user")
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([createdAt])
+  @@map("users")
 }
 
 model Submission {
   id        Int      @id @default(autoincrement())
   name      String
-  email      String
-  phone      String
-  altphone      String?
-  state     String
-  district  String
-  village   String
-  pincode   String
+  email     String
+  phone    String?
+  altphone String?
+  state     String?
+  district  String?
+  village   String?
+  pincode   String?
+  address   String?  @db.Text
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Composite indexes for efficient filtering
+  @@index([state, district, village])
+  @@index([pincode])
+  @@index([email])
+  @@index([name])
+  @@index([createdAt(sort: Desc)])
+  @@index([state])
+  @@index([district])
+  @@index([village])
+  
+  // Composite index for common filter combinations
+  @@index([state, district])
+  @@index([district, village])
+  
+  @@map("submissions")
 }
+
+// Run these commands after updating schema:
+// 1. npx prisma migrate dev --name add_indexes
+// 2. npx prisma generate
