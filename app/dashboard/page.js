@@ -2,7 +2,38 @@
 
 import { useState, useEffect } from "react";
 import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, ChevronDown, BarChart3, Users, FileText } from "lucide-react";
-import { useRouter } from "next/navigation";
+
+// State-District mapping for India (2 states for now)
+const STATE_DISTRICTS = {
+  "Maharashtra": [
+    "Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad", "Solapur", 
+    "Kolhapur", "Amravati", "Sangli", "Jalgaon", "Akola", "Latur", "Dhule",
+    "Ahmednagar", "Chandrapur", "Parbhani", "Jalna", "Bhiwandi", "Nanded",
+    "Satara", "Yavatmal", "Ratnagiri", "Beed", "Gondia", "Osmanabad", "Wardha",
+    "Buldhana", "Washim", "Hingoli", "Gadchiroli", "Raigad", "Sindhudurg"
+  ],
+  "Karnataka": [
+    "Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Hubli-Dharwad", "Mangaluru",
+    "Belagavi", "Kalaburagi", "Davanagere", "Ballari", "Vijayapura", "Raichur",
+    "Shivamogga", "Tumakuru", "Bidar", "Hospet", "Gadag-Betageri", "Robertsonpet",
+    "Hassan", "Bhadravati", "Chitradurga", "Udupi", "Kolar", "Mandya", "Chikkamagaluru",
+    "Gangavati", "Bagalkot", "Ranebennuru", "Yadgir", "Haveri", "Bellary", "Koppal",
+    "Chamarajanagar", "Chickballapur", "Kodagu", "Ramanagara", "Uttara Kannada", "Dakshina Kannada"
+  ],"Rajasthan": [
+    "Ajmer", "Alwar", "Banswara", "Baran", "Barmer", "Bharatpur", "Bhilwara", 
+    "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Dholpur", "Dungarpur",
+    "Hanumangarh", "Jaipur", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu",
+    "Jodhpur", "Karauli", "Kota", "Nagaur", "Pali", "Pratapgarh", "Rajsamand",
+    "Sawai Madhopur", "Sikar", "Sirohi", "Sri Ganganagar", "Tonk", "Udaipur"
+  ],
+  "West Bengal": [
+    "Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur",
+    "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong",
+    "Kolkata", "Malda", "Murshidabad", "Nadia", "North 24 Parganas",
+    "Paschim Bardhaman", "Paschim Medinipur", "Purba Bardhaman", "Purba Medinipur",
+    "Purulia", "South 24 Parganas", "Uttar Dinajpur"
+  ]
+};
 
 export default function DashboardPage() {
   const [tab, setTab] = useState("users");
@@ -30,16 +61,15 @@ export default function DashboardPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     state: "",
-    district: "",
-    village: "",
-    pincode: ""
+    district: ""
   });
   const [activeFilters, setActiveFilters] = useState({
     state: "",
-    district: "",
-    village: "",
-    pincode: ""
+    district: ""
   });
+
+  // Available districts based on selected state
+  const [availableDistricts, setAvailableDistricts] = useState([]);
 
   // Stats
   const [stats, setStats] = useState({
@@ -48,24 +78,35 @@ export default function DashboardPage() {
     filteredSubmissions: 0
   });
 
-  // Filter Options
-  const [filterOptions, setFilterOptions] = useState({
-    states: [],
-    districts: [],
-    villages: []
-  });
-
-  const router = useRouter();
-
   // Check authentication
   useEffect(() => {
     const verifyAuth = async () => {
-      const res = await fetch("/api/auth/verify", { credentials: "include" });
-      const data = await res.json();
-      if (!data.authenticated) router.replace("/login");
+      try {
+        const res = await fetch("/api/auth/verify", { credentials: "include" });
+        const data = await res.json();
+        if (!data.authenticated) {
+          window.location.replace("/login");
+        }
+      } catch (err) {
+        console.error("Auth verification failed:", err);
+      }
     };
     verifyAuth();
-  }, [router]);
+  }, []);
+
+  // Update available districts when state filter changes
+  useEffect(() => {
+    if (filters.state) {
+      setAvailableDistricts(STATE_DISTRICTS[filters.state] || []);
+      // Reset district if it doesn't belong to new state
+      if (!STATE_DISTRICTS[filters.state]?.includes(filters.district)) {
+        setFilters(prev => ({ ...prev, district: "" }));
+      }
+    } else {
+      setAvailableDistricts([]);
+      setFilters(prev => ({ ...prev, district: "" }));
+    }
+  }, [filters.state]);
 
   // Fetch users when tab changes or page changes
   useEffect(() => {
@@ -80,13 +121,6 @@ export default function DashboardPage() {
       fetchSubmissions();
     }
   }, [tab, subPage, subSearch, activeFilters]);
-
-  // Fetch filter options when submissions tab is opened
-  useEffect(() => {
-    if (tab === "submissions") {
-      fetchFilterOptions();
-    }
-  }, [tab]);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -117,9 +151,7 @@ export default function DashboardPage() {
         page: subPage.toString(),
         search: subSearch,
         ...(activeFilters.state && { state: activeFilters.state }),
-        ...(activeFilters.district && { district: activeFilters.district }),
-        ...(activeFilters.village && { village: activeFilters.village }),
-        ...(activeFilters.pincode && { pincode: activeFilters.pincode })
+        ...(activeFilters.district && { district: activeFilters.district })
       });
 
       const res = await fetch(`/api/dashboard?${params.toString()}`, {
@@ -140,26 +172,6 @@ export default function DashboardPage() {
       setError(err.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchFilterOptions = async () => {
-    try {
-      const res = await fetch('/api/dashboard/filters', {
-        credentials: 'include'
-      });
-      
-      if (res.ok) {
-        const data = await res.json();
-   
-        setFilterOptions({
-          states: data.states || [],
-          districts: data.districts || [],
-          villages: data.villages || []
-        });
-      }
-    } catch (err) {
-      console.error('Failed to fetch filter options:', err);
     }
   };
 
@@ -234,6 +246,32 @@ export default function DashboardPage() {
     }
   };
 
+  const handleDeleteSubmission = async (id) => {
+    if (!confirm("Are you sure you want to delete this submission?")) return;
+    
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/dashboard/${id}`, { 
+        method: "DELETE",
+        credentials: 'include'
+      });
+      
+      if (res.ok) {
+        setSubmissions(submissions.filter((s) => s.id !== id));
+        setSuccessMsg("Submission deleted successfully");
+        setTimeout(() => setSuccessMsg(""), 3000);
+        // Refresh to update stats
+        fetchSubmissions();
+      } else {
+        setError("Failed to delete submission");
+      }
+    } catch (err) {
+      setError("Network error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLogout = async() => {
     setLoading(true);
     try {
@@ -245,7 +283,7 @@ export default function DashboardPage() {
       if (res.ok) {
         setSuccessMsg("Logout Successfully");
         setTimeout(() => {
-          router.replace("/login");
+          window.location.replace("/login");
         }, 1000);
       } else {
         setError("Failed to Logout");
@@ -260,15 +298,11 @@ export default function DashboardPage() {
   const clearFilters = () => {
     setFilters({
       state: "",
-      district: "",
-      village: "",
-      pincode: ""
+      district: ""
     });
     setActiveFilters({
       state: "",
-      district: "",
-      village: "",
-      pincode: ""
+      district: ""
     });
     setSubSearchInput("");
     setSubSearch("");
@@ -565,7 +599,7 @@ export default function DashboardPage() {
                       <Search size={22} className="text-gray-400" />
                       <input
                         type="text"
-                        placeholder="Search by name or email..."
+                        placeholder="Search by name, email, state, district, or village..."
                         value={subSearchInput}
                         onChange={(e) => setSubSearchInput(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSubmissionSearch()}
@@ -620,7 +654,7 @@ export default function DashboardPage() {
                         Clear All
                       </button>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
                         <select
@@ -629,7 +663,7 @@ export default function DashboardPage() {
                           className="w-full p-3 border-2 border-orange-200 rounded-xl outline-none focus:border-orange-500 transition-all bg-white shadow-sm"
                         >
                           <option value="">All States</option>
-                          {filterOptions.states.map(state => (
+                          {Object.keys(STATE_DISTRICTS).map(state => (
                             <option key={state} value={state}>{state}</option>
                           ))}
                         </select>
@@ -639,36 +673,14 @@ export default function DashboardPage() {
                         <select
                           value={filters.district}
                           onChange={(e) => handleFilterChange('district', e.target.value)}
-                          className="w-full p-3 border-2 border-orange-200 rounded-xl outline-none focus:border-orange-500 transition-all bg-white shadow-sm"
+                          disabled={!filters.state}
+                          className="w-full p-3 border-2 border-orange-200 rounded-xl outline-none focus:border-orange-500 transition-all bg-white shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                         >
                           <option value="">All Districts</option>
-                          {filterOptions.districts.map(district => (
+                          {availableDistricts.map(district => (
                             <option key={district} value={district}>{district}</option>
                           ))}
                         </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Village</label>
-                        <select
-                          value={filters.village}
-                          onChange={(e) => handleFilterChange('village', e.target.value)}
-                          className="w-full p-3 border-2 border-orange-200 rounded-xl outline-none focus:border-orange-500 transition-all bg-white shadow-sm"
-                        >
-                          <option value="">All Villages</option>
-                          {filterOptions.villages.map(village => (
-                            <option key={village} value={village}>{village}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Pincode</label>
-                        <input
-                          type="text"
-                          placeholder="Enter pincode"
-                          value={filters.pincode}
-                          onChange={(e) => handleFilterChange('pincode', e.target.value)}
-                          className="w-full p-3 border-2 border-orange-200 rounded-xl outline-none focus:border-orange-500 transition-all bg-white shadow-sm"
-                        />
                       </div>
                     </div>
                     <div className="flex justify-end">
@@ -712,10 +724,9 @@ export default function DashboardPage() {
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">State</th>
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">District</th>
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Village</th>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Pincode</th>
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Email</th>
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Phone</th>
-                        <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">Action</th>
+                        <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -725,17 +736,25 @@ export default function DashboardPage() {
                           <td className="p-5 text-gray-600">{s.state}</td>
                           <td className="p-5 text-gray-600">{s.district}</td>
                           <td className="p-5 text-gray-600">{s.village}</td>
-                          <td className="p-5 text-gray-600 font-medium">{s.pincode || 'N/A'}</td>
                           <td className="p-5 text-gray-600">{s.email}</td>
                           <td className="p-5 text-gray-600">{s.phone}</td>
                           <td className="p-5 text-center">
-                            <button
-                              onClick={() => setSelectedSubmission(s)}
-                              className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                              title="View details"
-                            >
-                              <Eye size={20} />
-                            </button>
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => setSelectedSubmission(s)}
+                                className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+                                title="View details"
+                              >
+                                <Eye size={20} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteSubmission(s.id)}
+                                className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+                                title="Delete submission"
+                              >
+                                <Trash2 size={20} />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -811,6 +830,17 @@ export default function DashboardPage() {
                 })}
               </div>
               <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => {
+                    if (confirm("Are you sure you want to delete this submission?")) {
+                      handleDeleteSubmission(selectedSubmission.id);
+                      setSelectedSubmission(null);
+                    }
+                  }}
+                  className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+                >
+                  Delete
+                </button>
                 <button
                   onClick={() => setSelectedSubmission(null)}
                   className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"

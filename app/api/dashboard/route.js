@@ -1,50 +1,44 @@
 // app/api/dashboard/route.js
 import { prisma } from "@/lib/prisma";
 
-
 export async function GET(req) {
   try {
-    // Verify authentication
+    // Verify authentication (add your auth check here if needed)
 
     const { searchParams } = req.nextUrl;
     const search = searchParams.get("search") || "";
     const state = searchParams.get("state") || "";
     const district = searchParams.get("district") || "";
-    const village = searchParams.get("village") || "";
-    const pincode = searchParams.get("pincode") || "";
     const page = parseInt(searchParams.get("page") || "1", 10);
 
-    const take = 20; // Items per page
+    const take = 50; // Items per page
     const skip = (page - 1) * take;
 
     // Build optimized where clause
     const where = {};
     const conditions = [];
 
-    // Search condition (name or email)
+    // Enhanced search condition (name, email, state, district, or village)
     if (search.trim()) {
       conditions.push({
         OR: [
-          { name: { contains: search,  } },
-          { email: { contains: search,  } },
+          { name: { contains: search } },
+          { email: { contains: search } },
+          { state: { contains: search } },
+          { district: { contains: search } },
+          { village: { contains: search } },
         ],
       });
     }
 
-    // Filter conditions
+    // Filter conditions (only state and district)
     if (state) {
-      conditions.push({ state: { equals: state,  } });
+      conditions.push({ state: { equals: state } });
     }
     if (district) {
-      conditions.push({ district: { equals: district,  } });
+      conditions.push({ district: { equals: district } });
     }
-    if (village) {
-      conditions.push({ village: { equals: village, } });
-    }
-    if (pincode) {
-      conditions.push({ pincode: { equals: pincode } });
-    }
-
+    
     if (conditions.length > 0) {
       where.AND = conditions;
     }
@@ -63,6 +57,7 @@ export async function GET(req) {
           district: true,
           village: true,
           pincode: true,
+          description:true,
           createdAt: true,
         },
         skip,

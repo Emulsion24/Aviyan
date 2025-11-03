@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogIn, Home, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -65,7 +66,14 @@ export default function LoginPage() {
         {/* Logo/Header Section */}
         <div className="text-center mb-8 animate-fadeIn">
           <div className="inline-block bg-gradient-to-br from-orange-400 to-yellow-500 p-6 rounded-3xl shadow-2xl mb-4 transform hover:scale-105 transition-transform">
-            <span className="text-6xl">🐄</span>
+       <Image
+                  src="/logo.jpg"
+                  alt="गौ सम्मान लोगो"
+                  width={80}
+                  height={80}
+                  className="rounded-full object-cover"
+                  priority
+                />
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent mb-2">
             गौ सम्मान आह्वान

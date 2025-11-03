@@ -1,5 +1,5 @@
 // app/page.js
-import Hero from "./Hero";
+import HeroWithNav from "./Hero";
 import About from "./about";
 import Objectives from "./objective";
 import RegistrationForm from "./registraction";
@@ -9,7 +9,7 @@ import Footer from "./footer";
 export default function Page() {
   return (
     <main className="min-h-screen">
-      <Hero />
+      <HeroWithNav />
       <About />
       <Objectives />
       <RegistrationForm />

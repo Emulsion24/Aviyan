@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     const data = await req.json();
-    const { name, state, district, village, pincode, email, altphone,phone } = data;
-
-    if (!name || !state || !district || !village || !pincode || !email || !phone) {
+    const { name, state, district, village, pincode, email, altphone,phone, description } = data;
+console.log(data);
+    if (!name || !state || !district || !village || !pincode || !phone) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }
@@ -14,7 +14,7 @@ export async function POST(req) {
     }
 
     await prisma.submission.create({
-      data: { name, state, district, village, pincode, email, altphone,phone },
+      data: { name, state, district, village, pincode, email,altphone,phone,description},
     });
 
     return NextResponse.json({
