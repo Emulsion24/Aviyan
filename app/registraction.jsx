@@ -1,4 +1,5 @@
 "use client";
+import toast from "react-hot-toast";
 
 import { useState, useEffect } from "react";
 import { CheckCircle2, Loader2, User, Mail, Phone, MapPin, Home, Building2, Map } from "lucide-react";
@@ -52,7 +53,7 @@ export default function RegistrationForm() {
       setAvailableDistricts([]);
       setFormData(prev => ({ ...prev, district: "" }));
     }
-  }, [formData.state]);
+  }, [formData.state, formData.district]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -128,6 +129,7 @@ export default function RegistrationForm() {
 
       if (result.success) {
         setSuccess(true);
+        toast.success("पंजीकरण सफल हुआ!");
         setFormData({
           name: "",
           email: "",
@@ -141,18 +143,36 @@ export default function RegistrationForm() {
         });
         
         // Scroll to top to show success message
-        if (typeof window !== 'undefined') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+     setTimeout(() => {
+    const messageElement = document.getElementById('message');
+    if (messageElement) {
+      messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
         
         // Hide success message after 5 seconds
         setTimeout(() => setSuccess(false), 5000);
       } else {
         setError(result.message || "पंजीकरण में समस्या हुई। कृपया पुनः प्रयास करें।");
+        toast.error(result.message || "पंजीकरण में समस्या हुई। कृपया पुनः प्रयास करें।");
+        setTimeout(() => {
+    const errorElement = document.getElementById('error');
+    if (errorElement) {
+      errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
       }
     } catch (err) {
       console.error(err);
       setError("सबमिट करने में समस्या हुई। कृपया पुनः प्रयास करें।");
+      toast.error("सबमिट करने में समस्या हुई। कृपया पुनः प्रयास करें।");
+      setTimeout(() => {
+    const errorElement = document.getElementById('error');
+    if (errorElement) {
+      errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+      
     } finally {
       setLoading(false);
     }
@@ -165,33 +185,65 @@ export default function RegistrationForm() {
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute top-40 right-10 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-20 left-10 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style={{animationDelay: '4s'}}></div>
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 animate-fadeIn">
-          <div className="inline-block bg-gradient-to-br from-orange-400 to-yellow-500 p-4 rounded-2xl shadow-2xl mb-6 transform hover:scale-110 transition-transform duration-300">
-        <Image
-                         src="/logo.jpg"
-                         alt="गौ सम्मान लोगो"
-                         width={80}
-                         height={80}
-                         className="rounded-full object-cover"
-                         priority
-                       />
+        <div className="text-center mb-12">
+          <div className="inline-block mb-6">
+            <Image
+              src="/logo.jpg"
+              alt="गौ सम्मान लोगो"
+              width={100}
+              height={100}
+              className="rounded-full object-cover shadow-xl"
+              priority
+            />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent mb-3">
-            अभियान पंजीकरण फॉर्म
-          </h2>
-          <p className="text-gray-600 text-lg font-medium">गौ सम्मान आह्वान अभियान में शामिल हों</p>
+          
+          <div className="flex items-center justify-center gap-6 md:gap-8 mb-4">
+            {/* Left ornament */}
+            <Image
+              src="/3.png"
+              alt="left decoration"
+              width={64}
+              height={64}
+              className="w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
+            />
+
+            {/* Main Heading */}
+            <div className="flex-shrink-0">
+              <h2
+                className="text-4xl md:text-5xl font-extrabold leading-tight
+                  bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent
+                  tracking-wide drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]"
+              >
+                अभियान में शामिल हों
+              </h2>
+            </div>
+
+            {/* Right ornament */}
+            <Image
+              src="/2.png"
+              alt="right decoration"
+              width={64}
+              height={64}
+              className="w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
+              style={{ animationDelay: '1s' }}
+            />
+          </div>
+          
+          <div className="w-28 h-1.5 mx-auto bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 rounded-full shadow-md mb-4"></div>
+          
+          <p className="text-gray-600 text-lg font-medium">गौ सम्मान आह्वान अभियान के लिए पंजीकरण करें</p>
         </div>
 
         {/* Success Message */}
         {success && (
-          <div className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 text-green-800 p-6 rounded-2xl flex items-center gap-4 shadow-xl animate-slideIn">
+          <div id= "message" className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 text-green-800 p-6 rounded-2xl flex items-center gap-4 shadow-xl">
             <CheckCircle2 size={32} className="text-green-600 flex-shrink-0" />
             <div>
               <h3 className="font-bold text-xl mb-1">✅ पंजीकरण सफल हुआ!</h3>
@@ -202,7 +254,7 @@ export default function RegistrationForm() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-8 bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-500 text-red-800 p-6 rounded-2xl flex items-center gap-4 shadow-xl animate-shake">
+          <div id="error" className="mb-8 bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-500 text-red-800 p-6 rounded-2xl flex items-center gap-4 shadow-xl">
             <span className="text-3xl flex-shrink-0">❌</span>
             <div>
               <h3 className="font-bold text-xl mb-1">त्रुटि!</h3>
@@ -212,7 +264,7 @@ export default function RegistrationForm() {
         )}
 
         {/* Form */}
-        <div className="bg-white/90 backdrop-blur-xl border-2 border-orange-100 shadow-2xl rounded-3xl p-8 md:p-12 animate-slideUp">
+        <div className="bg-white/90 backdrop-blur-xl border-2 border-orange-100 shadow-2xl rounded-3xl p-8 md:p-12">
           <div className="space-y-8">
             {/* Personal Information Section */}
             <div>
@@ -272,7 +324,7 @@ export default function RegistrationForm() {
                     onChange={handleChange}
                     required
                     disabled={loading}
-                    maxLength="10"
+                    maxLength={10}
                     className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl outline-none focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-200 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="10 अंकों का मोबाइल नंबर"
                   />
@@ -290,7 +342,7 @@ export default function RegistrationForm() {
                     value={formData.altphone}
                     onChange={handleChange}
                     disabled={loading}
-                    maxLength="10"
+                    maxLength={10}
                     className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl outline-none focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-200 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="वैकल्पिक नंबर (यदि हो)"
                   />
@@ -394,7 +446,7 @@ export default function RegistrationForm() {
                     onChange={handleChange}
                     required
                     disabled={loading}
-                    maxLength="6"
+                    maxLength={6}
                     className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl outline-none focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-200 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="6 अंकों का पिन कोड"
                   />
@@ -412,9 +464,9 @@ export default function RegistrationForm() {
                   value={formData.description}
                   onChange={handleChange}
                   disabled={loading}
-                  rows="3"
+                  rows={3}
                   className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl outline-none focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-200 transition-all shadow-sm resize-none disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="औपचारिक विवरण:कार्य विवरण, पता आदि, यदि आवश्यक हो तो यहां दर्ज करें"
+                  placeholder="औपचारिक विवरण: कार्य विवरण, पता आदि, यदि आवश्यक हो तो यहां दर्ज करें"
                 />
               </div>
             </div>
@@ -457,7 +509,7 @@ export default function RegistrationForm() {
         </div>
 
         {/* Footer Note */}
-        <div className="text-center mt-8 text-gray-600 animate-fadeIn">
+        <div className="text-center mt-8 text-gray-600">
           <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
             <span className="text-lg">🔒</span>
             <p className="text-sm font-medium">
@@ -466,81 +518,6 @@ export default function RegistrationForm() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-          20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-
-        @keyframes blob {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.8s ease-out;
-        }
-
-        .animate-slideUp {
-          animation: slideUp 0.6s ease-out;
-        }
-
-        .animate-slideIn {
-          animation: slideIn 0.4s ease-out;
-        }
-
-        .animate-shake {
-          animation: shake 0.5s ease-out;
-        }
-
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
     </section>
   );
 }

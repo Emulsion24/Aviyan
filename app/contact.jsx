@@ -1,18 +1,52 @@
 "use client";
 import React from "react";
 import { Phone, MessageCircle } from "lucide-react";
+import Image from "next/image";
 
 const Contact = () => {
   return (
-    <section className="py-20 bg-yellow-50">
+    <section id="contact"className="py-20 bg-yellow-50">
       <div className="max-w-4xl mx-auto px-4 space-y-12">
         {/* Section Header */}
-        <div className="text-center space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800">
-            संपर्क करें
-          </h2>
-          <div className="w-24 h-1 mx-auto bg-yellow-600 rounded-full"></div>
-        </div>
+        <div className="relative text-center">
+                 <div className="flex items-center justify-center gap-6 md:gap-8">
+                   {/* Left ornament */}
+                   <Image
+                     src="/3.png"
+                     alt="left decoration"
+                     width={64}
+                     height={64}
+                     className="w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
+                   />
+       
+                   {/* Main Heading */}
+                   <div className="flex-shrink-0">
+                     <h2
+                       id="objectives"
+                       className="text-4xl md:text-5xl font-extrabold leading-tight
+                         bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent
+                         tracking-wide drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]"
+                     >
+                     संपर्क करे
+                     </h2>
+                   </div>
+       
+                   {/* Right ornament */}
+                   <Image
+                     src="/2.png"
+                     alt="right decoration"
+                     width={64}
+                     height={64}
+                     className="w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
+                     style={{ animationDelay: '1s' }}
+                   />
+                 </div>
+       
+                 {/* Underline */}
+                 <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 rounded-full shadow-md"></div>
+       
+                
+               </div>
 
         {/* Contact Cards */}
         <div className="grid md:grid-cols-2 gap-6">
@@ -62,7 +96,7 @@ const Contact = () => {
         {/* Important Info */}
         <div className="p-8 bg-white border border-yellow-200 rounded-xl shadow-sm">
           <div className="space-y-4 text-center">
-            <h3 className="text-2xl font-bold text-gray-800">
+            <h3 className="text-2xl md:text-3xl mt-1.5 font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent mb-3">
               महत्वपूर्ण सूचना
             </h3>
             <div className="space-y-3 text-gray-700">

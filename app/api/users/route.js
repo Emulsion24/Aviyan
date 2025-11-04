@@ -1,9 +1,56 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export async function GET(req) {
   try {
+    const token = req.cookies.get("auth_token")?.value;
+        
+        if (!token) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Unauthorized",
+              message: "No authentication token found",
+            },
+            { status: 401 }
+          );
+        }
+    
+        // Verify JWT token
+        // Verify JWT token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("Decoded token:", decoded); // Add this line to see what's in the token
+    } catch (err) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+          message: "Invalid or expired token",
+        },
+        { status: 401 }
+      );
+    }
+    
+    // Check if user exists and has admin role
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId || decoded.id }, // Try both
+      select: { id: true, email: true },
+    });
+    
+        if (!user) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Unauthorized",
+              message: "User not found",
+            },
+            { status: 401 }
+          );
+        }
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = parseInt(searchParams.get("limit")) || 10;

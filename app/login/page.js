@@ -65,12 +65,12 @@ export default function LoginPage() {
       <div className="relative w-full max-w-md">
         {/* Logo/Header Section */}
         <div className="text-center mb-8 animate-fadeIn">
-          <div className="inline-block bg-gradient-to-br from-orange-400 to-yellow-500 p-6 rounded-3xl shadow-2xl mb-4 transform hover:scale-105 transition-transform">
+          <div className="inline-block  ">
        <Image
                   src="/logo.jpg"
                   alt="गौ सम्मान लोगो"
-                  width={80}
-                  height={80}
+                  width={100}
+                  height={100}
                   className="rounded-full object-cover"
                   priority
                 />

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Menu, X, LogIn, UserPlus, Phone, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 const HeroWithNav = () => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -46,11 +47,9 @@ const HeroWithNav = () => {
               </div>
               <div className="text-gray-800">
                 <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent">
-                  गौ सम्मान आह्वान
+                  गौ सम्मान आह्वान अभियान
                 </h1>
-                <p className="text-xs md:text-sm text-gray-600">
-                  सेवा • सुरक्षा • सम्मान
-                </p>
+               
               </div>
             </div>
 
@@ -138,13 +137,13 @@ const HeroWithNav = () => {
             {/* Top Decorative Text */}
             <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8 animate-fadeIn">
               <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
-                ।। जय नंदी बावा ।।
+                । जय नंदी बावा ।
               </span>
               <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
-                ।। श्री करुनला ।।
+                । श्री करुनला ।
               </span>
               <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
-                ।। जय गोमाता ।।
+                । जय गोमाता ।
               </span>
             </div>
 
@@ -153,13 +152,13 @@ const HeroWithNav = () => {
               {/* Three Pillars */}
               <div className="flex flex-wrap justify-center gap-4 mb-8">
                 <div className="px-8 py-4 bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-2xl shadow-lg transform hover:scale-105 transition-transform border-2 border-yellow-500">
-                  <span className="text-2xl md:text-3xl font-bold">।। सेवा ।।</span>
+                  <span className="text-2xl md:text-3xl font-bold"> सेवा </span>
                 </div>
                 <div className="px-8 py-4 bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-2xl shadow-lg transform hover:scale-105 transition-transform border-2 border-yellow-500">
-                  <span className="text-2xl md:text-3xl font-bold">।। सुरक्षा ।।</span>
+                  <span className="text-2xl md:text-3xl font-bold"> सुरक्षा </span>
                 </div>
                 <div className="px-8 py-4 bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-2xl shadow-lg transform hover:scale-105 transition-transform border-2 border-yellow-500">
-                  <span className="text-2xl md:text-3xl font-bold">।। सम्मान ।।</span>
+                  <span className="text-2xl md:text-3xl font-bold"> सम्मान </span>
                 </div>
               </div>
 
@@ -190,31 +189,6 @@ const HeroWithNav = () => {
                     आह्वान अभियान
                   </h2>
                 </div>
-
-               
-
-                {/* Subtitle with Highlighted Leadership Roles */}
-                <div className="max-w-4xl mx-auto space-y-6">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400 blur-xl opacity-60 animate-pulse-slow"></div>
-                    <div className="relative px-6 py-5 md:px-10 md:py-6 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 rounded-2xl border-4 border-yellow-300 shadow-2xl">
-                      <p className="text-xl md:text-3xl font-black text-white drop-shadow-lg">
-                        <span className="inline-block px-3 py-1 bg-white/30 rounded-lg animate-float mr-2">प्रधान संरक्षक</span> 
-                        <span className="text-white"> - गौमाता (आद्यशक्ति मां सुरभि)</span>
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 blur-xl opacity-60 animate-pulse-slow animation-delay-1000"></div>
-                    <div className="relative px-6 py-5 md:px-10 md:py-6 bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 rounded-2xl border-4 border-orange-300 shadow-2xl">
-                      <p className="text-xl md:text-3xl font-black text-white drop-shadow-lg">
-                        <span className="inline-block px-3 py-1 bg-white/30 rounded-lg animate-float animation-delay-1000 mr-2">अध्यक्षता</span> 
-                        <span className="text-white"> - नंदी बाबा (नीलमणि वृषभदेव)</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {/* CTA Buttons */}
@@ -244,7 +218,7 @@ const HeroWithNav = () => {
                 <div className="flex flex-wrap justify-center gap-6 text-gray-700">
                   <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-lg">
                     <Phone size={20} className="text-orange-600" />
-                    <span className="font-semibold">संपर्क: +91 XXXXX XXXXX</span>
+                    <span className="font-semibold">संपर्क: +91 8239711108</span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-lg">
                     <Mail size={20} className="text-orange-600" />
@@ -257,23 +231,113 @@ const HeroWithNav = () => {
             {/* Bottom Decorative Elements */}
             <div className="mt-8 text-center">
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/70 backdrop-blur-sm rounded-full shadow-lg border-2 border-orange-200">
-                <span className="text-2xl">🕉️</span>
                 <p className="text-sm md:text-base font-semibold text-gray-700">
-                  सर्वे भवन्तु सुखिनः सर्वे सन्तु निरामयाः
+                  सर्वे भवन्तु सुखिनः सर्वे सन्तु निरामया
                 </p>
-                <span className="text-2xl">🙏</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Decorative Bottom Flowers */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-around items-end opacity-50">
+        <div className="absolute bottom-0 left-0 right-0 flex justify-around items-end opacity-80">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="text-4xl md:text-6xl animate-grow" style={{ animationDelay: `${i * 0.3}s` }}>
-              🌺
+              <Image
+                src="/3.png"
+                alt="Decorative Flower"
+                width={100}
+                height={100}
+              />
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Leadership Cards Section */}
+      <section className="relative py-12 md:py-16 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto space-y-8">
+            
+            {/* प्रधान संरक्षक */}
+            <div className="relative group">
+              {/* Soft ambient glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-rose-400 blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+
+              {/* Main card with ancient border pattern */}
+              <div className="relative bg-gradient-to-r from-orange-600 via-red-600 to-rose-600 rounded-2xl overflow-hidden shadow-xl border-4 border-yellow-500 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
+                {/* Decorative corner patterns */}
+                <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-yellow-300 opacity-60"></div>
+                <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-yellow-300 opacity-60"></div>
+                <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-yellow-300 opacity-60"></div>
+                <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-yellow-300 opacity-60"></div>
+
+                {/* Content */}
+                <div className="relative px-8 py-6 md:px-12 md:py-8">
+                  <div className="text-center space-y-3">
+                    <div className="inline-flex items-center gap-3 px-6 py-2 bg-yellow-400/30 backdrop-blur-sm rounded-full border-2 border-yellow-300 shadow-lg">
+                      <span className="text-xl md:text-2xl font-bold text-yellow-100">✦</span>
+                      <span className="text-xl md:text-2xl font-bold text-white">प्रधान संरक्षक</span>
+                      <span className="text-xl md:text-2xl font-bold text-yellow-100">✦</span>
+                    </div>
+                    
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-yellow-200 drop-shadow-lg pt-2">
+                      गौमाता
+                    </h3>
+                    
+                    <div className="inline-block px-6 py-2 bg-orange-700/50 backdrop-blur-sm rounded-lg border-2 border-yellow-400/50">
+                      <p className="text-lg md:text-xl text-yellow-100 font-semibold">
+                        (आद्यशक्ति मां सुरभि)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom decorative wave */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
+              </div>
+            </div>
+
+            {/* अध्यक्षता */}
+            <div className="relative group">
+              {/* Soft ambient glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+
+              {/* Main card with ancient border pattern */}
+              <div className="relative bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 rounded-2xl overflow-hidden shadow-xl border-4 border-cyan-400 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
+                {/* Decorative corner patterns */}
+                <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-cyan-300 opacity-60"></div>
+                <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-cyan-300 opacity-60"></div>
+                <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-cyan-300 opacity-60"></div>
+                <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-cyan-300 opacity-60"></div>
+
+                {/* Content */}
+                <div className="relative px-8 py-6 md:px-12 md:py-8">
+                  <div className="text-center space-y-3">
+                    <div className="inline-flex items-center gap-3 px-6 py-2 bg-cyan-400/30 backdrop-blur-sm rounded-full border-2 border-cyan-300 shadow-lg">
+                      <span className="text-xl md:text-2xl font-bold text-cyan-100">✦</span>
+                      <span className="text-xl md:text-2xl font-bold text-white">अध्यक्षता</span>
+                      <span className="text-xl md:text-2xl font-bold text-cyan-100">✦</span>
+                    </div>
+                    
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-cyan-200 drop-shadow-lg pt-2">
+                      नंदी बाबा
+                    </h3>
+                    
+                    <div className="inline-block px-6 py-2 bg-indigo-800/50 backdrop-blur-sm rounded-lg border-2 border-cyan-400/50">
+                      <p className="text-lg md:text-xl text-cyan-100 font-semibold">
+                        (नीलमणि वृषभदेव)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom decorative wave */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400"></div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
@@ -305,8 +369,8 @@ const HeroWithNav = () => {
         }
 
         @keyframes pulse-slow {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
+          0%, 100% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.05); opacity: 0.8; }
         }
 
         @keyframes bounce-slow {
@@ -319,6 +383,16 @@ const HeroWithNav = () => {
           to { transform: scale(1); opacity: 1; }
         }
 
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+          50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.6); }
+        }
+
         .animate-fadeIn { animation: fadeIn 1s ease-out; }
         .animate-slideUp { animation: slideUp 0.8s ease-out; }
         .animate-float { animation: float 3s ease-in-out infinite; }
@@ -327,6 +401,18 @@ const HeroWithNav = () => {
         .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
         .animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
         .animate-grow { animation: grow 0.6s ease-out forwards; }
+        .animate-glow { animation: glow 2s ease-in-out infinite; }
+
+        .shimmer-effect {
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent
+          );
+          background-size: 200% 100%;
+          animation: shimmer 3s infinite;
+        }
 
         .animation-delay-1000 { animation-delay: 0.5s; }
         .animation-delay-2000 { animation-delay: 2s; }

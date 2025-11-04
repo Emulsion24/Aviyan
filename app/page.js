@@ -5,6 +5,7 @@ import Objectives from "./objective";
 import RegistrationForm from "./registraction";
 import Contact from "./contact";
 import Footer from "./footer";
+import DownloadSection from "./DownloadSection";
 
 export default function Page() {
   return (
@@ -13,6 +14,7 @@ export default function Page() {
       <About />
       <Objectives />
       <RegistrationForm />
+      <DownloadSection />
       <Contact />
       <Footer />
     </main>
