@@ -30,7 +30,7 @@ const HeroWithNav = () => {
   return (
     <>
       {/* Navigation - Fixed White Background */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b-2 border-orange-200">
+      <nav className="fixed top-0  left-0 right-0 z-50 bg-white shadow-md border-b-2 border-orange-200">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
@@ -45,12 +45,27 @@ const HeroWithNav = () => {
                   priority
                 />
               </div>
-              <div className="text-gray-800">
-                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent">
-                  गौ सम्मान आह्वान अभियान
-                </h1>
-               
-              </div>
+<div className="flex flex items-center justify-center leading-none min-h-[60px]">
+  <Image
+    src="/gau.png"
+    alt="गौ सम्मान टेक्स्ट लोगो"
+    width={160}
+    height={60}
+    priority
+    className="object-contain w-[100px] sm:w-[120px] md:w-[140px] lg:w-[160px] h-auto"
+  />
+  <Image
+    src="/samman.png"
+    alt="आह्वान अभियान टेक्स्ट लोगो"
+    width={160}
+    height={60}
+    priority
+    className="object-contain w-[100px] sm:w-[120px] md:w-[140px] lg:w-[160px] h-auto -mt-[6px]"
+  />
+</div>
+
+
+
             </div>
 
             {/* Desktop Navigation */}
@@ -179,18 +194,27 @@ const HeroWithNav = () => {
                 </div>
 
                 {/* Main Title */}
-                <div className="relative">
-                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 animate-float">
-                    <span className="bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 bg-clip-text text-transparent drop-shadow-lg">
-                      गौ सम्मान
-                    </span>
-                  </h1>
-                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-red-700 mb-4">
-                    आह्वान अभियान
-                  </h2>
-                </div>
-              </div>
+<div className="relative flex flex-col items-center justify-center leading-none mx-auto">
+  <Image
+    src="/gau.png"
+    alt="गौ सम्मान टेक्स्ट लोगो"
+    width={600}
+    height={400}
+    className="object-contain h-auto w-[250px] sm:w-[320px] md:w-[400px] lg:w-[480px] xl:w-[550px] mt-2"
+    priority
+  />
+  <Image
+    src="/samman.png"
+    alt="आह्वान अभियान टेक्स्ट लोगो"
+    width={600}
+    height={400}
+    className="object-contain h-auto w-[250px] sm:w-[320px] md:w-[400px] lg:w-[480px] xl:w-[550px] -translate-y-[8px]"
+    priority
+  />
+</div>
 
+              </div>
+  
               {/* CTA Buttons */}
               <div className="flex flex-wrap justify-center gap-4 pt-6">
                 <button
@@ -202,15 +226,7 @@ const HeroWithNav = () => {
                     अभियान में शामिल हों
                   </span>
                 </button>
-                <button
-                  onClick={goToLogin}
-                  className="px-10 py-5 text-xl font-bold rounded-2xl bg-white border-4 border-orange-500 text-orange-600 shadow-xl hover:bg-orange-50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
-                >
-                  <span className="flex items-center gap-3">
-                    <LogIn size={24} />
-                    लॉगिन करें
-                  </span>
-                </button>
+                
               </div>
 
               {/* Contact Info */}
@@ -253,6 +269,7 @@ const HeroWithNav = () => {
           ))}
         </div>
       </section>
+
 
       {/* Leadership Cards Section */}
       <section className="relative py-12 md:py-16 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">

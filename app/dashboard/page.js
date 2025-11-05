@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useState, useEffect } from "react";
 import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, ChevronDown, BarChart3, Users, FileText } from "lucide-react";
@@ -320,9 +321,17 @@ export default function DashboardPage() {
         <div className="bg-white rounded-3xl shadow-2xl p-6 mb-6 border border-orange-100">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-orange-400 to-yellow-500 p-4 rounded-2xl shadow-lg">
-                <span className="text-5xl">🐄</span>
-              </div>
+            
+               <Image 
+                  src="/logo.jpg"
+                  alt="Aviyan Logo"
+                  width={80}  
+                  height={80} 
+                   className="rounded-full object-cover shadow-xl"
+              priority   
+                
+                  />
+           
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent">
                   एडमिन डैशबोर्ड
