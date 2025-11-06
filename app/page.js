@@ -7,7 +7,7 @@ import Contact from "./contact";
 import Footer from "./footer";
 import DownloadSection from "./DownloadSection";
 import CampaignActionPlan from "./CampaigenActionPlan";
-import PravariList from "./PariwarList";
+import PravariSearchUI from "./PariwarList";
 
 export default function Page() {
   return (
@@ -18,7 +18,7 @@ export default function Page() {
       <CampaignActionPlan/>
       <RegistrationForm />
       <DownloadSection />
-      <PravariList/>
+      <PravariSearchUI/>
       <Contact />
       <Footer />
     </main>

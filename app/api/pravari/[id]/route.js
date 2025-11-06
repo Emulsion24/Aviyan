@@ -1,0 +1,296 @@
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+// GET - Fetch a single pravari by ID
+export async function GET(req, context) {
+  try {
+     const token = req.cookies.get("auth_token")?.value;
+            
+            if (!token) {
+              return NextResponse.json(
+                {
+                  success: false,
+                  error: "Unauthorized",
+                  message: "No authentication token found",
+                },
+                { status: 401 }
+              );
+            }
+        
+            // Verify JWT token
+            // Verify JWT token
+        let decoded;
+        try {
+          decoded = jwt.verify(token, process.env.JWT_SECRET);
+          console.log("Decoded token:", decoded); // Add this line to see what's in the token
+        } catch (err) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Unauthorized",
+              message: "Invalid or expired token",
+            },
+            { status: 401 }
+          );
+        }
+        
+        // Check if user exists and has admin role
+        const user = await prisma.user.findUnique({
+          where: { id: decoded.userId || decoded.id }, // Try both
+          select: { id: true, email: true },
+        });
+        
+            if (!user) {
+              return NextResponse.json(
+                {
+                  success: false,
+                  error: "Unauthorized",
+                  message: "User not found",
+                },
+                { status: 401 }
+              );
+            }
+    const { id } = await context.params;
+
+    const pravari = await prisma.pravari.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!pravari) {
+      return NextResponse.json(
+        { success: false, error: 'Pravari not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: pravari,
+    });
+  } catch (error) {
+    console.error('Error fetching pravari:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch pravari' },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT - Update a pravari by ID
+export async function PUT(request, context) {
+  try {
+     const token = request.cookies.get("auth_token")?.value;
+            
+            if (!token) {
+              return NextResponse.json(
+                {
+                  success: false,
+                  error: "Unauthorized",
+                  message: "No authentication token found",
+                },
+                { status: 401 }
+              );
+            }
+        
+            // Verify JWT token
+            // Verify JWT token
+        let decoded;
+        try {
+          decoded = jwt.verify(token, process.env.JWT_SECRET);
+          console.log("Decoded token:", decoded); // Add this line to see what's in the token
+        } catch (err) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Unauthorized",
+              message: "Invalid or expired token",
+            },
+            { status: 401 }
+          );
+        }
+        
+        // Check if user exists and has admin role
+        const user = await prisma.user.findUnique({
+          where: { id: decoded.userId || decoded.id }, // Try both
+          select: { id: true, email: true },
+        });
+        
+            if (!user) {
+              return NextResponse.json(
+                {
+                  success: false,
+                  error: "Unauthorized",
+                  message: "User not found",
+                },
+                { status: 401 }
+              );
+            }
+   const { id } = await context.params;
+    const body = await request.json();
+    const { name, phone, email, role, village, address, state, district, experience } = body;
+
+    // Validation
+    if (!name || !phone || !email || !role || !village || !address || !state || !district) {
+      return NextResponse.json(
+        { success: false, error: 'All required fields must be provided' },
+        { status: 400 }
+      );
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+
+    // Validate phone format
+    const phoneRegex = /^\+?[\d\s-()]+$/;
+    if (!phoneRegex.test(phone)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid phone format' },
+        { status: 400 }
+      );
+    }
+
+    // Check if pravari exists
+    const existingPravari = await prisma.pravari.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!existingPravari) {
+      return NextResponse.json(
+        { success: false, error: 'Pravari not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check if email is being changed to one that already exists
+    if (email !== existingPravari.email) {
+      const emailExists = await prisma.pravari.findUnique({
+        where: { email: email.trim().toLowerCase() },
+      });
+
+      if (emailExists) {
+        return NextResponse.json(
+          { success: false, error: 'Email already exists' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Update pravari
+    const updatedPravari = await prisma.pravari.update({
+      where: { id: parseInt(id) },
+      data: {
+        name: name.trim(),
+        phone: phone.trim(),
+        email: email.trim().toLowerCase(),
+        role: role.trim(),
+        village: village.trim(),
+        address: address.trim(),
+        state: state.trim(),
+        district: district.trim(),
+        experience: experience ? experience.trim() : null,
+        updatedAt: new Date(),
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: updatedPravari,
+      message: 'Pravari updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating pravari:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to update pravari' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE - Delete a pravari by ID
+export async function DELETE(request, context) {
+  try {
+     const token = request.cookies.get("auth_token")?.value;
+            
+            if (!token) {
+              return NextResponse.json(
+                {
+                  success: false,
+                  error: "Unauthorized",
+                  message: "No authentication token found",
+                },
+                { status: 401 }
+              );
+            }
+        
+            // Verify JWT token
+            // Verify JWT token
+        let decoded;
+        try {
+          decoded = jwt.verify(token, process.env.JWT_SECRET);
+          console.log("Decoded token:", decoded); // Add this line to see what's in the token
+        } catch (err) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Unauthorized",
+              message: "Invalid or expired token",
+            },
+            { status: 401 }
+          );
+        }
+        
+        // Check if user exists and has admin role
+        const user = await prisma.user.findUnique({
+          where: { id: decoded.userId || decoded.id }, // Try both
+          select: { id: true, email: true },
+        });
+        
+            if (!user) {
+              return NextResponse.json(
+                {
+                  success: false,
+                  error: "Unauthorized",
+                  message: "User not found",
+                },
+                { status: 401 }
+              );
+            }
+    const { id } = await context.params;
+
+    // Check if pravari exists
+    const existingPravari = await prisma.pravari.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!existingPravari) {
+      return NextResponse.json(
+        { success: false, error: 'Pravari not found' },
+        { status: 404 }
+      );
+    }
+
+    // Delete pravari
+    await prisma.pravari.delete({
+      where: { id: parseInt(id) },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Pravari deleted successfully',
+    });
+  } catch (error) {
+    console.error('Error deleting pravari:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to delete pravari' },
+      { status: 500 }
+    );
+  }
+}

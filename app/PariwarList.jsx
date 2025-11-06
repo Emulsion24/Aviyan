@@ -1,417 +1,377 @@
 "use client";
 import React, { useState } from "react";
-import { Search, MapPin, User, Phone, Mail, Award } from "lucide-react";
+import { Search, MapPin, User, Phone, Mail, Award, Home, Loader2, AlertCircle } from "lucide-react";
 
-const PravariList = () => {
+const PravariSearchUI = () => {
   const [selectedState, setSelectedState] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedTehsil, setSelectedTehsil] = useState("");
+  const [villageSearch, setVillageSearch] = useState("");
   const [filteredPravari, setFilteredPravari] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Mock data structure
-  const mockData = {
-    states: [
-      {
-        id: "rajasthan",
-        name: "राजस्थान",
-        districts: [
-          {
-            id: "jaipur",
-            name: "जयपुर",
-            tehsils: [
-              { id: "jaipur-city", name: "जयपुर सिटी" },
-              { id: "amber", name: "आमेर" },
-              { id: "sanganer", name: "सांगानेर" }
-            ]
-          },
-          {
-            id: "jodhpur",
-            name: "जोधपुर",
-            tehsils: [
-              { id: "jodhpur-city", name: "जोधपुर सिटी" },
-              { id: "bilara", name: "बिलाड़ा" },
-              { id: "phalodi", name: "फलोदी" }
-            ]
-          },
-          {
-            id: "udaipur",
-            name: "उदयपुर",
-            tehsils: [
-              { id: "udaipur-city", name: "उदयपुर सिटी" },
-              { id: "girwa", name: "गिरवा" },
-              { id: "mavli", name: "मावली" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "maharashtra",
-        name: "महाराष्ट्र",
-        districts: [
-          {
-            id: "mumbai",
-            name: "मुंबई",
-            tehsils: [
-              { id: "mumbai-city", name: "मुंबई सिटी" },
-              { id: "andheri", name: "अंधेरी" },
-              { id: "kurla", name: "कुर्ला" }
-            ]
-          },
-          {
-            id: "pune",
-            name: "पुणे",
-            tehsils: [
-              { id: "pune-city", name: "पुणे सिटी" },
-              { id: "haveli", name: "हवेली" },
-              { id: "mulshi", name: "मुळशी" }
-            ]
-          },
-          {
-            id: "nagpur",
-            name: "नागपुर",
-            tehsils: [
-              { id: "nagpur-city", name: "नागपुर सिटी" },
-              { id: "kamptee", name: "कामठी" },
-              { id: "hingna", name: "हिंगणा" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "uttar-pradesh",
-        name: "उत्तर प्रदेश",
-        districts: [
-          {
-            id: "lucknow",
-            name: "लखनऊ",
-            tehsils: [
-              { id: "lucknow-city", name: "लखनऊ सिटी" },
-              { id: "malihabad", name: "मलीहाबाद" },
-              { id: "mohanlalganj", name: "मोहनलालगंज" }
-            ]
-          },
-          {
-            id: "varanasi",
-            name: "वाराणसी",
-            tehsils: [
-              { id: "varanasi-city", name: "वाराणसी सिटी" },
-              { id: "pindra", name: "पिंड्रा" },
-              { id: "chiraigaon", name: "चिरईगांव" }
-            ]
-          },
-          {
-            id: "agra",
-            name: "आगरा",
-            tehsils: [
-              { id: "agra-city", name: "आगरा सिटी" },
-              { id: "fatehabad", name: "फतेहाबाद" },
-              { id: "kheragarh", name: "खैरागढ़" }
-            ]
-          }
-        ]
-      }
+  // State-wise district data
+  const statesDistrictsData = {
+    "Andhra Pradesh": [
+      "Anantapuramu", "Chittoor", "East Godavari", "Guntur", "Krishna", "Kurnool", 
+      "Nellore (SPSR Nellore)", "Prakasam", "Srikakulam", "Visakhapatnam", "Vizianagaram", 
+      "West Godavari", "Alluri Sitharama Raju", "Anakapalli", "Annamayya", "Bapatla", 
+      "Eluru", "Kakinada", "Konaseema", "Nandyal", "NTR", "Palnadu", "Parvathipuram Manyam", 
+      "Sri Sathya Sai", "Tirupati"
     ],
-    pravariData: [
-      // Rajasthan - Jaipur
-      {
-        id: 1,
-        state: "rajasthan",
-        district: "jaipur",
-        tehsil: "jaipur-city",
-        name: "पंडित राजेश शर्मा",
-        role: "प्रमुख गो भक्त",
-        phone: "+91 98765 43210",
-        email: "rajesh.sharma@example.com",
-        address: "C-स्कीम, जयपुर",
-        experience: "15 वर्ष का गो सेवा अनुभव"
-      },
-      {
-        id: 2,
-        state: "rajasthan",
-        district: "jaipur",
-        tehsil: "jaipur-city",
-        name: "स्वामी गोपाल दास",
-        role: "प्रमुख संत",
-        phone: "+91 98765 43211",
-        email: "gopal.das@example.com",
-        address: "मालवीय नगर, जयपुर",
-        experience: "20 वर्ष का गो सेवा अनुभव"
-      },
-      {
-        id: 3,
-        state: "rajasthan",
-        district: "jaipur",
-        tehsil: "sanganer",
-        name: "श्रीमती सुनीता देवी",
-        role: "सहयोगी गो भक्त",
-        phone: "+91 98765 43212",
-        email: "sunita.devi@example.com",
-        address: "सांगानेर, जयपुर",
-        experience: "10 वर्ष का गो सेवा अनुभव"
-      },
-      // Rajasthan - Jodhpur
-      {
-        id: 4,
-        state: "rajasthan",
-        district: "jodhpur",
-        tehsil: "jodhpur-city",
-        name: "महंत रामकृष्ण जी",
-        role: "प्रमुख संत",
-        phone: "+91 98765 43213",
-        email: "ramkrishna@example.com",
-        address: "पाओटा, जोधपुर",
-        experience: "25 वर्ष का गो सेवा अनुभव"
-      },
-      {
-        id: 5,
-        state: "rajasthan",
-        district: "jodhpur",
-        tehsil: "jodhpur-city",
-        name: "श्री विक्रम सिंह",
-        role: "प्रमुख गो भक्त",
-        phone: "+91 98765 43214",
-        email: "vikram.singh@example.com",
-        address: "रातानाडा, जोधपुर",
-        experience: "12 वर्ष का गो सेवा अनुभव"
-      },
-      // Maharashtra - Mumbai
-      {
-        id: 6,
-        state: "maharashtra",
-        district: "mumbai",
-        tehsil: "mumbai-city",
-        name: "श्री गणेश पाटिल",
-        role: "प्रमुख गो भक्त",
-        phone: "+91 98765 43215",
-        email: "ganesh.patil@example.com",
-        address: "दादर, मुंबई",
-        experience: "18 वर्ष का गो सेवा अनुभव"
-      },
-      {
-        id: 7,
-        state: "maharashtra",
-        district: "mumbai",
-        tehsil: "andheri",
-        name: "स्वामी आनंद स्वरूप",
-        role: "प्रमुख संत",
-        phone: "+91 98765 43216",
-        email: "anand.swaroop@example.com",
-        address: "अंधेरी पूर्व, मुंबई",
-        experience: "22 वर्ष का गो सेवा अनुभव"
-      },
-      // Maharashtra - Pune
-      {
-        id: 8,
-        state: "maharashtra",
-        district: "pune",
-        tehsil: "pune-city",
-        name: "डॉ. संजय देशमुख",
-        role: "प्रमुख गो भक्त",
-        phone: "+91 98765 43217",
-        email: "sanjay.deshmukh@example.com",
-        address: "कोथरूड, पुणे",
-        experience: "14 वर्ष का गो सेवा अनुभव"
-      },
-      {
-        id: 9,
-        state: "maharashtra",
-        district: "pune",
-        tehsil: "haveli",
-        name: "श्रीमती मीरा कुलकर्णी",
-        role: "सहयोगी गो भक्त",
-        phone: "+91 98765 43218",
-        email: "meera.kulkarni@example.com",
-        address: "हवेली, पुणे",
-        experience: "8 वर्ष का गो सेवा अनुभव"
-      },
-      // Uttar Pradesh - Lucknow
-      {
-        id: 10,
-        state: "uttar-pradesh",
-        district: "lucknow",
-        tehsil: "lucknow-city",
-        name: "पंडित अमर नाथ तिवारी",
-        role: "प्रमुख संत",
-        phone: "+91 98765 43219",
-        email: "amar.tiwari@example.com",
-        address: "हजरतगंज, लखनऊ",
-        experience: "30 वर्ष का गो सेवा अनुभव"
-      },
-      {
-        id: 11,
-        state: "uttar-pradesh",
-        district: "lucknow",
-        tehsil: "malihabad",
-        name: "श्री राकेश वर्मा",
-        role: "प्रमुख गो भक्त",
-        phone: "+91 98765 43220",
-        email: "rakesh.verma@example.com",
-        address: "मलीहाबाद, लखनऊ",
-        experience: "16 वर्ष का गो सेवा अनुभव"
-      },
-      // Uttar Pradesh - Varanasi
-      {
-        id: 12,
-        state: "uttar-pradesh",
-        district: "varanasi",
-        tehsil: "varanasi-city",
-        name: "महंत विश्वनाथ पांडे",
-        role: "प्रमुख संत",
-        phone: "+91 98765 43221",
-        email: "vishwanath.pandey@example.com",
-        address: "दशाश्वमेध घाट, वाराणसी",
-        experience: "28 वर्ष का गो सेवा अनुभव"
-      },
-      {
-        id: 13,
-        state: "uttar-pradesh",
-        district: "varanasi",
-        tehsil: "varanasi-city",
-        name: "श्री सुरेश मिश्रा",
-        role: "सहयोगी गो भक्त",
-        phone: "+91 98765 43222",
-        email: "suresh.mishra@example.com",
-        address: "सिगरा, वाराणसी",
-        experience: "11 वर्ष का गो सेवा अनुभव"
-      }
-    ]
+    "Arunachal Pradesh": [
+      "Anjaw", "Capital Complex ( Itanagar )", "Changlang", "Dibang Valley", "East Kameng", 
+      "East Siang", "Kamle", "Kra Daadi", "Kurung Kumey", "Lepa Rada", "Lohit", "Longding", 
+      "Lower Dibang Valley", "Lower Siang", "Lower Subansiri", "Namsai", "Pakke Kessang", 
+      "Papum Pare", "Shi Yomi", "Siang", "Tawang", "Tirap", "Upper Siang", "Upper Subansiri", 
+      "West Kameng", "West Siang"
+    ],
+    "Assam": [
+      "Bajali", "Baksa", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo", "Chirang",
+      "Darrang", "Dhemaji", "Dhubri", "Dibrugarh", "Dima Hasao", "Goalpara", "Golaghat", "Hailakandi",
+      "Hojai", "Jorhat", "Kamrup", "Kamrup Metropolitan", "Karbi Anglong", "Karimganj", "Kokrajhar", 
+      "Lakhimpur", "Majuli", "Morigaon", "Nagaon", "Nalbari", "Sivasagar", "Sonitpur", "South Salmara-Mankachar",
+      "Tinsukia", "Udalguri", "West Karbi Anglong"
+    ],
+    "Bihar": [
+      "Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur", "Buxar",
+      "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui", "Jehanabad", "Kaimur", "Katihar",
+      "Khagaria", "Kishanganj", "Lakhisarai", "Madhubani", "Munger", "Muzaffarpur", "Nawada", "Nalanda",
+      "Narcanda", "Patna", "Purnia", "Rohtas", "Saharsa", "Samastipur", "Sheikhpura", "Sheohar",
+      "Sitamarhi", "Siwan", "Supaul", "Vaishali", "West Champaran"
+    ],
+    "Chhattisgarh": [
+      "Balod", "Baloda Bazar", "Balrampur", "Bastar", "Bijapur", "Bilaspur", "Dantewada", "Dhamtari",
+      "Durg", "Gariaband", "Janjgir-Champa", "Jashpur", "Kanker", "Kawardha", "Korba", "Korea", 
+      "Mahasamund", "Mungeli", "Narayanpur", "Raigarh", "Rajnandgaon", "Raipur", "Surajpur", "Sukma", "Surguja"
+    ],
+    "Goa": ["North Goa", "South Goa"],
+    "Gujarat": [
+      "Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad",
+      "Chhota Udepur", "Dahod", "Dang", "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kheda",
+      "Kutch", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar",
+      "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"
+    ],
+    "Haryana": [
+      "Ambala", "Charkhi Dadri", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", "Jind", "Kaithal",
+      "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", "Panchkula", "Panipat", "Rewari",
+      "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"
+    ],
+    "Himachal Pradesh": [
+      "Bilaspur", "Chamba", "Hamirpur", "Kangra", "Kinnaur", "Kullu", "Lahul & Spiti", "Mandi",
+      "Shimla", "Sirmaur", "Solan", "Una"
+    ],
+    "Jharkhand": [
+      "Bokaro", "Chatra", "Deoghar", "Dhanbad", "Dumka", "East Singhbhum", "Garhwa", "Giridih",
+      "Godda", "Gumla", "Hazaribagh", "Jamtara", "Khunti", "Koderma", "Latehar", "Lohardaga",
+      "Pakur", "Palamu", "Ramgarh", "Ranchi", "Sahibganj", "Seraikela-Kharsawan", "Simdega", "West Singhbhum"
+    ],
+    "Karnataka": [
+      "Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Hubli-Dharwad", "Mangaluru", "Belagavi", "Kalaburagi",
+      "Davanagere", "Ballari", "Vijayapura", "Raichur", "Shivamogga", "Tumakuru", "Bidar", "Hospet",
+      "Gadag-Betageri", "Robertsonpet", "Hassan", "Bhadravati", "Chitradurga", "Udupi", "Kolar", "Mandya",
+      "Chikkamagaluru", "Gangavati", "Bagalkot", "Ranebennuru", "Yadgir", "Haveri", "Bellary", "Koppal",
+      "Chamarajanagar", "Chickballapur", "Kodagu", "Ramanagara", "Uttara Kannada", "Dakshina Kannada"
+    ],
+    "Kerala": [
+      "Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam",
+      "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta",
+      "Thiruvananthapuram", "Thrissur", "Wayanad"
+    ],
+    "Madhya Pradesh": [
+      "Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar", "Balaghat", "Barwani", 
+      "Betul", "Bhind", "Bhopal", "Burhanpur", "Chhatarpur", "Chhindwara",
+      "Damoh", "Datia", "Dewas", "Dhar", "Dindori", "Guna", "Gwalior", 
+      "Harda", "Hoshangabad", "Indore", "Jabalpur", "Jhabua", "Katni", 
+      "Khandwa", "Khargone", "Mandla", "Mandsaur", "Morena", "Narsinghpur", 
+      "Neemuch", "Niwari", "Panna", "Raisen", "Rajgarh", "Ratlam", "Rewa", 
+      "Sagar", "Satna", "Sehore", "Seoni", "Shahdol", "Shajapur", "Sheopur", 
+      "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh", "Ujjain", "Umaria", "Vidisha"
+    ],
+    "Maharashtra": [
+      "Ahmednagar", "Akola", "Amravati", "Aurangabad", "Beed", "Bhandara",
+      "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Gondia", "Hingoli",
+      "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban",
+      "Nagpur", "Nanded", "Nandurbar", "Nashik", "Osmanabad", "Palghar",
+      "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg",
+      "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"
+    ],
+    "Manipur": [
+      "Bishnupur", "Chandel", "Churachandpur", "Imphal East", "Imphal West",
+      "Jiribam", "Kakching", "Kamjong", "Kangpokpi", "Noney", "Pherzawl",
+      "Senapati", "Tamenglong", "Tengnoupal", "Thoubal", "Ukhrul"
+    ],
+    "Meghalaya": [
+      "East Garo Hills", "East Jaintia Hills", "East Khasi Hills", "North Garo Hills",
+      "Ri Bhoi", "South Garo Hills", "South West Garo Hills", "South West Khasi Hills",
+      "West Garo Hills", "West Jaintia Hills", "West Khasi Hills"
+    ],
+    "Mizoram": [
+      "Aizawl", "Champhai", "Hnahthial", "Khawzawl", "Kolasib", "Lawngtlai",
+      "Lunglei", "Mamit", "Saiha", "Saitual", "Serchhip"
+    ],
+    "Nagaland": [
+      "Chümoukedima", "Dimapur", "Kiphire", "Kohima", "Longleng", "Mokokchung",
+      "Mon", "Niuland", "Noklak", "Peren", "Phek", "Tseminyu", "Tuensang", "Wokha", "Zünheboto"
+    ],
+    "Odisha": [
+      "Angul", "Balangir", "Balasore", "Bargarh", "Bhadrak", "Boudh", "Cuttack",
+      "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur",
+      "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Kendujhar", "Khordha",
+      "Koraput", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nayagarh", "Nuapada",
+      "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh"
+    ],
+    "Punjab": [
+      "Amritsar", "Barnala", "Bathinda", "Faridkot", "Fatehgarh Sahib", "Fazilka",
+      "Ferozepur", "Gurdaspur", "Hoshiarpur", "Jalandhar", "Kapurthala", "Ludhiana",
+      "Malerkotla", "Mansa", "Moga", "Mohali (SAS Nagar)", "Muktsar", "Pathankot",
+      "Patiala", "Rupnagar", "Sangrur", "Shaheed Bhagat Singh Nagar (Nawanshahr)", "Tarn Taran"
+    ],
+    "Rajasthan": [
+      "Ajmer", "Alwar", "Banswara", "Baran", "Barmer", "Bharatpur", "Bhilwara",
+      "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Dholpur", "Dungarpur",
+      "Hanumangarh", "Jaipur", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu",
+      "Jodhpur", "Karauli", "Kota", "Nagaur", "Pali", "Pratapgarh", "Rajsamand",
+      "Sawai Madhopur", "Sikar", "Sirohi", "Sri Ganganagar", "Tonk", "Udaipur"
+    ],
+    "Sikkim": [
+      "Gangtok", "Mangan (North Sikkim)", "Namchi (South Sikkim)", "Gyalshing (West Sikkim)", "Pakyong", "Soreng"
+    ],
+    "Tamil Nadu": [
+      "Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri",
+      "Dindigul", "Erode", "Kallakurichi", "Kanchipuram", "Kanyakumari", "Karur",
+      "Krishnagiri", "Madurai", "Mayiladuthurai", "Nagapattinam", "Namakkal",
+      "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem",
+      "Sivaganga", "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli",
+      "Tirunelveli", "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvannamalai",
+      "Tiruvarur", "Vellore", "Viluppuram", "Virudhunagar"
+    ],
+    "Telangana": [
+      "Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad", "Jagtial",
+      "Jangaon", "Jayashankar Bhupalpally", "Jogulamba Gadwal", "Kamareddy",
+      "Karimnagar", "Khammam", "Komaram Bheem Asifabad", "Mahabubabad",
+      "Mahabubnagar", "Mancherial", "Medak", "Medchal–Malkajgiri", "Mulugu",
+      "Nagarkurnool", "Nalgonda", "Narayanpet", "Nirmal", "Nizamabad",
+      "Peddapalli", "Rajanna Sircilla", "Rangareddy", "Sangareddy", "Siddipet",
+      "Suryapet", "Vikarabad", "Wanaparthy", "Warangal", "Yadadri Bhuvanagiri"
+    ],
+    "Tripura": [
+      "Dhalai", "Gomati", "Khowai", "North Tripura", "Sepahijala", "South Tripura",
+      "Unakoti", "West Tripura"
+    ],
+    "Uttarakhand": [
+      "Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar",
+      "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal",
+      "Udham Singh Nagar", "Uttarkashi"
+    ],
+    "Uttar Pradesh": [
+      "Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha (J.P. Nagar)",
+      "Auraiya", "Ayodhya (Faizabad)", "Azamgarh", "Baghpat", "Bahraich", "Ballia",
+      "Balrampur", "Banda", "Barabanki", "Bareilly", "Basti", "Bhadohi", "Bijnor",
+      "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", "Etah", "Etawah",
+      "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", "Ghaziabad",
+      "Ghazipur", "Gonda", "Gorakhpur", "Hamirpur", "Hapur (Panchsheel Nagar)",
+      "Hardoi", "Hathras", "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat",
+      "Kanpur Nagar", "Kasganj", "Kaushambi", "Kheri (Lakhimpur Kheri)", "Kushinagar",
+      "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura",
+      "Mau", "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit",
+      "Pratapgarh", "Prayagraj (Allahabad)", "Rae Bareli", "Rampur", "Saharanpur",
+      "Sambhal (Bhim Nagar)", "Sant Kabir Nagar", "Shahjahanpur", "Shamli", "Shravasti",
+      "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", "Unnao", "Varanasi"
+    ],
+    "West Bengal": [
+      "Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur",
+      "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong",
+      "Kolkata", "Malda", "Murshidabad", "Nadia", "North 24 Parganas",
+      "Paschim Bardhaman", "Paschim Medinipur", "Purba Bardhaman", "Purba Medinipur",
+      "Purulia", "South 24 Parganas", "Uttar Dinajpur"
+    ],
+    "Andaman and Nicobar Islands": [
+      "Nicobar", "North and Middle Andaman", "South Andaman"
+    ],
+    "Chandigarh": ["Chandigarh"],
+    "Dadra and Nagar Haveli and Daman and Diu": [
+      "Dadra and Nagar Haveli", "Daman", "Diu"
+    ],
+    "Delhi (National Capital Territory)": [
+      "Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi",
+      "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"
+    ],
+    "Jammu and Kashmir": [
+      "Anantnag", "Bandipora", "Baramulla", "Budgam", "Doda", "Ganderbal", "Jammu",
+      "Kathua", "Kishtwar", "Kulgam", "Kupwara", "Poonch", "Pulwama", "Rajouri",
+      "Ramban", "Reasi", "Samba", "Shopian", "Srinagar", "Udhampur"
+    ],
+    "Ladakh": ["Kargil", "Leh"],
+    "Lakshadweep": [
+      "Agatti", "Amini", "Andrott", "Bitra", "Chetlat", "Kadmat", "Kalpeni",
+      "Kavaratti", "Kilthan", "Minicoy"
+    ],
+    "Puducherry": ["Karaikal", "Mahe", "Puducherry", "Yanam"]
   };
 
   const getDistricts = () => {
-    const state = mockData.states.find(s => s.id === selectedState);
-    return state ? state.districts : [];
+    if (!selectedState) return [];
+    return statesDistrictsData[selectedState] || [];
   };
 
-  const getTehsils = () => {
-    const state = mockData.states.find(s => s.id === selectedState);
-    if (!state) return [];
-    const district = state.districts.find(d => d.id === selectedDistrict);
-    return district ? district.tehsils : [];
-  };
-
-  const handleSearch = () => {
-    if (!selectedState || !selectedDistrict || !selectedTehsil) {
-      alert("कृपया राज्य, जिला और तहसील का चयन करें");
+  const handleSearch = async () => {
+    if (!selectedState || !selectedDistrict) {
+      setError("Please select both State and District");
       return;
     }
 
-    const results = mockData.pravariData.filter(
-      p => p.state === selectedState && 
-           p.district === selectedDistrict && 
-           p.tehsil === selectedTehsil
-    );
+    setLoading(true);
+    setError("");
+    setShowResults(false);
 
-    setFilteredPravari(results);
-    setShowResults(true);
+    try {
+      // Build query parameters
+      const params = new URLSearchParams({
+        state: selectedState,
+        district: selectedDistrict,
+        page: '1',
+        limit: '100' // Get more results for frontend filtering
+      });
+
+      // Add village search if provided
+      if (villageSearch.trim()) {
+        params.append('search', villageSearch.trim());
+      }
+
+      const response = await fetch(`/api/pravari?${params.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch pravari data');
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setFilteredPravari(data.data || []);
+        setShowResults(true);
+      } else {
+        throw new Error(data.error || 'Failed to fetch pravari data');
+      }
+    } catch (err) {
+      console.error('Search error:', err);
+      setError(err.message || 'Failed to fetch pravari data. Please try again.');
+      setFilteredPravari([]);
+      setShowResults(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
     setSelectedState("");
     setSelectedDistrict("");
-    setSelectedTehsil("");
+    setVillageSearch("");
     setFilteredPravari([]);
     setShowResults(false);
+    setError("");
   };
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-200/30 rounded-full blur-3xl"></div>
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 space-y-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
+      <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="inline-block px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-lg">
-            <span className="text-white pt-1 pb-1 font-bold text-sm tracking-wide">प्रवारी खोजें</span>
+            <span className="text-white font-bold text-sm tracking-wide">Find Pravari</span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl pt-1 pb-2 font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            प्रवारी सूची
+          <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Pravari Directory
           </h2>
           
           <div className="w-32 h-1.5 mx-auto bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full shadow-md"></div>
           
           <p className="text-xl text-gray-700 font-medium max-w-3xl mx-auto">
-            अपने क्षेत्र के गो सेवा प्रवारी की जानकारी प्राप्त करें
+            Find Go Seva Pravari information in your region
           </p>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="max-w-5xl mx-auto p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         {/* Search Form */}
-        <div className="relative max-w-4xl mx-auto p-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-blue-100">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 rounded-2xl blur-xl"></div>
-          
-          <div className="relative space-y-6">
+        <div className="max-w-5xl mx-auto p-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-blue-100">
+          <div className="space-y-6">
             <div className="grid md:grid-cols-3 gap-6">
-              {/* State Selection */}
+              {/* State Dropdown */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-semibold">
                   <MapPin className="w-5 h-5 text-blue-600" />
-                  राज्य चुनें
+                  Select State
                 </label>
                 <select
                   value={selectedState}
                   onChange={(e) => {
                     setSelectedState(e.target.value);
                     setSelectedDistrict("");
-                    setSelectedTehsil("");
+                    setVillageSearch("");
                     setShowResults(false);
+                    setError("");
                   }}
-                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 text-gray-700"
+                  disabled={loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 >
-                  <option value="">राज्य का चयन करें</option>
-                  {mockData.states.map(state => (
-                    <option key={state.id} value={state.id}>{state.name}</option>
+                  <option value="">Select State</option>
+                  {Object.keys(statesDistrictsData).map(state => (
+                    <option key={state} value={state}>{state}</option>
                   ))}
                 </select>
               </div>
 
-              {/* District Selection */}
+              {/* District Dropdown */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-semibold">
                   <MapPin className="w-5 h-5 text-indigo-600" />
-                  जिला चुनें
+                  Select District
                 </label>
                 <select
                   value={selectedDistrict}
                   onChange={(e) => {
                     setSelectedDistrict(e.target.value);
-                    setSelectedTehsil("");
+                    setVillageSearch("");
                     setShowResults(false);
+                    setError("");
                   }}
-                  disabled={!selectedState}
+                  disabled={!selectedState || loading}
                   className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
                 >
-                  <option value="">जिला का चयन करें</option>
+                  <option value="">Select District</option>
                   {getDistricts().map(district => (
-                    <option key={district.id} value={district.id}>{district.name}</option>
+                    <option key={district} value={district}>{district}</option>
                   ))}
                 </select>
               </div>
 
-              {/* Tehsil Selection */}
+              {/* Village/Tehsil Search Input */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                  <MapPin className="w-5 h-5 text-purple-600" />
-                  तहसील चुनें
+                  <Home className="w-5 h-5 text-purple-600" />
+                  Search Village/Tehsil
                 </label>
-                <select
-                  value={selectedTehsil}
+                <input
+                  type="text"
+                  value={villageSearch}
                   onChange={(e) => {
-                    setSelectedTehsil(e.target.value);
+                    setVillageSearch(e.target.value);
                     setShowResults(false);
+                    setError("");
                   }}
-                  disabled={!selectedDistrict}
+                  disabled={!selectedDistrict || loading}
+                  placeholder="Type village name..."
                   className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-                >
-                  <option value="">तहसील का चयन करें</option>
-                  {getTehsils().map(tehsil => (
-                    <option key={tehsil.id} value={tehsil.id}>{tehsil.name}</option>
-                  ))}
-                </select>
+                />
               </div>
             </div>
 
@@ -419,34 +379,49 @@ const PravariList = () => {
             <div className="flex gap-4 justify-center pt-4">
               <button
                 onClick={handleSearch}
-                className="group relative px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden"
+                disabled={loading || !selectedState || !selectedDistrict}
+                className="group relative px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <span className="relative z-10 flex items-center gap-2">
-                  <Search className="w-5 h-5" />
-                  खोजें
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="w-5 h-5" />
+                      Search
+                    </>
+                  )}
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
 
               <button
                 onClick={handleReset}
-                className="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                disabled={loading}
+                className="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
-                रीसेट करें
+                Reset
               </button>
             </div>
           </div>
         </div>
 
         {/* Results */}
-        {showResults && (
-          <div className="space-y-6 animate-fadeIn">
+        {showResults && !loading && (
+          <div className="space-y-6">
             {filteredPravari.length > 0 ? (
               <>
                 <div className="text-center">
                   <h3 className="text-2xl font-bold text-gray-800">
-                    {filteredPravari.length} प्रवारी मिले
+                    {filteredPravari.length} Pravari Found
                   </h3>
+                  {villageSearch && (
+                    <p className="text-gray-600 mt-2">
+                      in village/tehsil: <span className="font-semibold">{villageSearch}</span>
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
@@ -455,10 +430,7 @@ const PravariList = () => {
                       key={pravari.id}
                       className="group relative p-6 bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-blue-100 hover:border-purple-300 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105"
                     >
-                      {/* Gradient background on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-500"></div>
-
-                      <div className="relative space-y-4">
+                      <div className="space-y-4">
                         {/* Header */}
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex items-center gap-3">
@@ -476,29 +448,41 @@ const PravariList = () => {
                         </div>
 
                         {/* Contact Info */}
-                        <div className="space-y-3 pl-14">
+                        <div className="space-y-3 pl-0">
                           <div className="flex items-center gap-3 text-gray-700">
-                            <Phone className="w-4 h-4 text-green-600" />
-                            <span>{pravari.phone}</span>
+                            <Phone className="w-4 h-4 text-green-600 flex-shrink-0" />
+                            <span className="font-medium">{pravari.phone}</span>
                           </div>
+                          
                           <div className="flex items-center gap-3 text-gray-700">
-                            <Mail className="w-4 h-4 text-blue-600" />
-                            <span className="text-sm">{pravari.email}</span>
+                            <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                            <span className="text-sm break-all">{pravari.email}</span>
                           </div>
+                          
                           <div className="flex items-start gap-3 text-gray-700">
-                            <MapPin className="w-4 h-4 text-red-600 mt-1" />
-                            <span>{pravari.address}</span>
+                            <Home className="w-4 h-4 text-purple-600 flex-shrink-0 mt-1" />
+                            <div>
+                              <p className="font-semibold text-purple-700">{pravari.village}</p>
+                              <p className="text-sm text-gray-600">{pravari.district}, {pravari.state}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-start gap-3 text-gray-700">
+                            <MapPin className="w-4 h-4 text-red-600 flex-shrink-0 mt-1" />
+                            <span className="text-sm">{pravari.address}</span>
                           </div>
                         </div>
 
                         {/* Experience Badge */}
-                        <div className="pl-14 pt-2">
-                          <div className="inline-block px-4 py-2 bg-gradient-to-r from-amber-100 to-orange-100 border border-orange-200 rounded-lg">
-                            <p className="text-orange-700 font-semibold text-sm">
-                              ✨ {pravari.experience}
-                            </p>
+                        {pravari.experience && (
+                          <div className="pt-2">
+                            <div className="inline-block px-4 py-2 bg-gradient-to-r from-amber-100 to-orange-100 border border-orange-200 rounded-lg">
+                              <p className="text-orange-700 font-semibold text-sm">
+                                ✨ {pravari.experience}
+                              </p>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -510,34 +494,24 @@ const PravariList = () => {
                   <Search className="w-12 h-12 text-gray-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                  कोई प्रवारी नहीं मिला
+                  No Pravari Found
                 </h3>
                 <p className="text-gray-600">
-                  इस क्षेत्र के लिए अभी प्रवारी की जानकारी उपलब्ध नहीं है।
+                  {villageSearch 
+                    ? `No Pravari found in village/tehsil "${villageSearch}" for this region.`
+                    : "No Pravari information is currently available for this region."
+                  }
+                </p>
+                <p className="text-gray-500 mt-2 text-sm">
+                  Try selecting a different state or district.
                 </p>
               </div>
             )}
           </div>
         )}
       </div>
-
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-out forwards;
-        }
-      `}} />
-    </section>
+    </div>
   );
 };
 
-export default PravariList;
+export default PravariSearchUI;

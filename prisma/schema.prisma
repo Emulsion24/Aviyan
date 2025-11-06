@@ -53,6 +53,23 @@ model Submission {
   @@map("submissions")
 }
 
-// Run these commands after updating schema:
-// 1. npx prisma migrate dev --name add_indexes
-// 2. npx prisma generate
+model Pravari {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String   @unique
+  role      String
+  village   String
+  address   String   @db.Text
+  email     String   @unique
+  state     String
+  district  String
+  experience String? @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([state, district])
+  @@index([village])
+  @@index([email])
+  @@index([phone])
+  @@map("pravari")
+}
