@@ -732,7 +732,7 @@ export default function DashboardPage() {
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Name</th>
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">State</th>
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">District</th>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Village</th>
+                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Village/Tehsil</th>
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Email</th>
                         <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Phone</th>
                         <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">Actions</th>

@@ -6,7 +6,7 @@ export async function POST(req) {
     const data = await req.json();
     const { name, state, district, village, pincode, email, altphone,phone, description } = data;
 console.log(data);
-    if (!name || !state || !district || !village || !pincode || !phone) {
+    if (!name || !state || !district || !village  || !phone) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }
@@ -14,7 +14,7 @@ console.log(data);
     }
 
     await prisma.submission.create({
-      data: { name, state, district, village, pincode, email,altphone,phone,description},
+      data: { name, state, district, village, pincode:pincode||null, email,altphone,phone,description},
     });
 
     return NextResponse.json({

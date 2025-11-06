@@ -103,11 +103,7 @@ export default function RegistrationForm() {
       return;
     }
 
-    if (!formData.pincode.trim() || !/^[0-9]{6}$/.test(formData.pincode)) {
-      setError("कृपया 6 अंकों का वैध पिन कोड दर्ज करें");
-      setLoading(false);
-      return;
-    }
+    
 
     // Optional email validation
     if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -419,7 +415,7 @@ export default function RegistrationForm() {
                 <div className="relative group">
                   <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                     <Home size={16} className="text-orange-500" />
-                    गांव / शहर <span className="text-red-500">*</span>
+                    गांव / शहर/तहसील <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -429,7 +425,7 @@ export default function RegistrationForm() {
                     required
                     disabled={loading}
                     className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl outline-none focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-200 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    placeholder="गांव या शहर का नाम"
+                    placeholder="गांव,शहर  या  तहसील का नाम"
                   />
                 </div>
 
@@ -437,14 +433,14 @@ export default function RegistrationForm() {
                 <div className="relative group">
                   <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                     <MapPin size={16} className="text-orange-500" />
-                    पिन कोड <span className="text-red-500">*</span>
+                    पिन कोड 
                   </label>
                   <input
                     type="text"
                     name="pincode"
                     value={formData.pincode}
                     onChange={handleChange}
-                    required
+            
                     disabled={loading}
                     maxLength={6}
                     className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl outline-none focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-200 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
@@ -484,7 +480,7 @@ export default function RegistrationForm() {
               <button
                 type="button"
                 onClick={handleSubmit}
-                disabled={loading || !formData.name || !formData.phone || !formData.state || !formData.district || !formData.village || !formData.pincode}
+                disabled={loading || !formData.name || !formData.phone || !formData.state || !formData.district || !formData.village }
                 className="group relative px-12 py-5 text-xl font-bold rounded-2xl text-white shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-600 hover:from-yellow-600 hover:via-orange-600 hover:to-amber-700 hover:shadow-orange-300"
               >
                 <span className="relative z-10 flex items-center justify-center gap-3">

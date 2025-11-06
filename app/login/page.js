@@ -206,7 +206,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-gray-600 text-sm animate-fadeIn">
-          <p>© 2024 Gau Samman Aahwan Abhiyan. All rights reserved.</p>
+          <p>© 2025 Gau Samman Aahwan Abhiyan. All rights reserved.</p>
         </div>
       </div>
 
