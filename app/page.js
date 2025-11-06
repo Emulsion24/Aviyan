@@ -6,6 +6,8 @@ import RegistrationForm from "./registraction";
 import Contact from "./contact";
 import Footer from "./footer";
 import DownloadSection from "./DownloadSection";
+import CampaignActionPlan from "./CampaigenActionPlan";
+import PravariList from "./PariwarList";
 
 export default function Page() {
   return (
@@ -13,8 +15,10 @@ export default function Page() {
       <HeroWithNav />
       <About />
       <Objectives />
+      <CampaignActionPlan/>
       <RegistrationForm />
       <DownloadSection />
+      <PravariList/>
       <Contact />
       <Footer />
     </main>

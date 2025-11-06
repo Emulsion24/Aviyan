@@ -8,114 +8,59 @@ const Contact = () => {
     <section id="contact"className="py-20 bg-yellow-50">
       <div className="max-w-4xl mx-auto px-4 space-y-12">
         {/* Section Header */}
-        <div className="relative text-center">
-                 <div className="flex items-center justify-center gap-6 md:gap-8">
-                   {/* Left ornament */}
-                   <Image
-                     src="/3.png"
-                     alt="left decoration"
-                     width={64}
-                     height={64}
-                     className="w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
-                   />
        
-                   {/* Main Heading */}
-                   <div className="flex-shrink-0">
-                     <h2
-                       id="objectives"
-                       className="text-4xl md:text-5xl font-extrabold leading-tight
-                         bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent
-                         tracking-wide drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]"
-                     >
-                     संपर्क करे
-                     </h2>
-                   </div>
-       
-                   {/* Right ornament */}
-                   <Image
-                     src="/2.png"
-                     alt="right decoration"
-                     width={64}
-                     height={64}
-                     className="w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
-                     style={{ animationDelay: '1s' }}
-                   />
-                 </div>
-       
-                 {/* Underline */}
-                 <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 rounded-full shadow-md"></div>
-       
-                
-               </div>
-
-        {/* Contact Cards */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Phone Card */}
-          <div className="p-8 text-center bg-white border-2 border-yellow-200 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-            <div className="flex flex-col items-center gap-4">
-              <div className="p-4 bg-yellow-100 rounded-full">
-                <Phone className="w-8 h-8 text-yellow-600" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  फ़ोन नंबर
-                </h3>
-                <a
-                  href="tel:8239711108"
-                  className="text-2xl font-semibold text-yellow-700 hover:underline"
-                >
-                  8239711108
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* WhatsApp Card */}
-          <div className="p-8 text-center bg-white border-2 border-yellow-200 rounded-xl shadow-sm hover:shadow-md transition duration-300">
-            <div className="flex flex-col items-center gap-4">
-              <div className="p-4 bg-green-100 rounded-full">
-                <MessageCircle className="w-8 h-8 text-green-600" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  WhatsApp
-                </h3>
-                <a
-                  href="https://wa.me/918239711108"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-2xl font-semibold text-green-700 hover:underline"
-                >
-                  8239711108
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Important Info */}
-        <div className="p-8 bg-white border border-yellow-200 rounded-xl shadow-sm">
-          <div className="space-y-4 text-center">
-            <h3 className="text-2xl md:text-3xl mt-1.5 font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent mb-3">
-              महत्वपूर्ण सूचना
-            </h3>
-            <div className="space-y-3 text-gray-700">
-              <p className="text-lg">
-                यह अभियान पूर्णतः अहिंसक होगा और किसी भी राष्ट्रीय अथवा किसी भी व्यक्ति या संस्था का विरोध नहीं करेगा।
-              </p>
-              <p className="text-lg font-semibold text-yellow-700">
-                इस अभियान हेतु किसी भी प्रकार का दान नहीं लिया जाता है।
-              </p>
-              <p>
-                यदि कोई इस अभियान के नाम में दान मांगे तो{" "}
-                <span className="font-semibold text-yellow-700">
-                  8239711108
-                </span>{" "}
-                नंबर पर शिकायत करें।
-              </p>
-            </div>
-          </div>
-        </div>
+       <div className="relative p-10 bg-white/90 border border-yellow-200 rounded-2xl shadow-[0_10px_25px_rgba(255,183,0,0.15)] hover:shadow-[0_12px_40px_rgba(255,153,0,0.25)] transition-all duration-500">
+  {/* glowing background */}
+  <div className="absolute inset-0 bg-gradient-to-br from-yellow-300/15 via-amber-200/10 to-orange-200/20 blur-xl opacity-70 rounded-2xl"></div>
+
+  <div className="relative text-center space-y-8">
+    {/* Title */}
+    <h3 className="text-3xl pt-1 pb-1 md:text-4xl font-extrabold bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent drop-shadow-md">
+      अत्यंत महत्वपूर्ण स्मरण बिंदु
+    </h3>
+
+    {/* Content List */}
+    <ul className="max-w-4xl mx-auto space-y-6 text-lg md:text-xl text-gray-800 text-left leading-relaxed">
+      <li className="flex items-start gap-3">
+        <span className="text-amber-600 font-bold shrink-0">①</span>
+        <span>
+          यह अभियान किसी संस्था अथवा संगठन के बैनर तले ना होकर केवल ईश्वर, गोमाता, और नंदी बाबा के सानिध्य में होगा।
+        </span>
+      </li>
+
+      <li className="flex items-start gap-3">
+        <span className="text-amber-600 font-bold shrink-0">②</span>
+        <span>
+          इस अभियान में किसी आचार्य, संत, महंत, नेता, अभिनेता, कार्यकर्ता का फ़ोटो, पोस्टर, बैनर, होल्डिंग पर नहीं लगेगा; केवल नंदी महाराज और गोमाता का ही चित्र मुद्रित होगा।
+        </span>
+      </li>
+
+      <li className="flex items-start gap-3">
+        <span className="text-amber-600 font-bold shrink-0">③</span>
+        <span>
+          यह अभियान किसी भी राजनैतिक दल, संगठन, अथवा किसी भी राज्य अथवा केंद्र सरकार के विरुद्ध नहीं है। इस अभियान का उद्देश्य केवल यही है कि गोमाता को सेवा, सुरक्षा और सम्मान मिले।
+        </span>
+      </li>
+
+      <li className="flex items-start gap-3">
+        <span className="text-amber-600 font-bold shrink-0">④</span>
+        <span>
+          यह अभियान पूर्ण रूपेण अहिंसक होगा। इस दौरान किसी भी राष्ट्रीय अथवा निजी संपत्ति को नुक़सान पहुँचाने वाले विचारकों को पूरी तरह दूर रखा जाएगा।
+        </span>
+      </li>
+
+      <li className="flex items-start gap-3">
+        <span className="text-amber-600 font-bold shrink-0">⑤</span>
+        <span>
+          इस अभियान में कोई मंचीय उद्बोधन नहीं होगा, कोई माइक से भाषण नहीं होगा। गो प्रेमीजन अपनी वात, संकीर्तन, रैली और प्रार्थना पत्र के माध्यम से अपनी बात रखेंगे।
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+
       </div>
     </section>
   );

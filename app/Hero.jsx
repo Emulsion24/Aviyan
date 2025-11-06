@@ -1,4 +1,5 @@
 "use client";
+import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Menu, X, LogIn, UserPlus, Phone, Mail } from "lucide-react";
@@ -165,17 +166,18 @@ const HeroWithNav = () => {
             {/* Main Content Card */}
             <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border-4 border-orange-200 p-8 md:p-12 animate-slideUp">
               {/* Three Pillars */}
-              <div className="flex flex-wrap justify-center gap-4 mb-8">
-                <div className="px-8 py-4 bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-2xl shadow-lg transform hover:scale-105 transition-transform border-2 border-yellow-500">
-                  <span className="text-2xl md:text-3xl font-bold"> सेवा </span>
-                </div>
-                <div className="px-8 py-4 bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-2xl shadow-lg transform hover:scale-105 transition-transform border-2 border-yellow-500">
-                  <span className="text-2xl md:text-3xl font-bold"> सुरक्षा </span>
-                </div>
-                <div className="px-8 py-4 bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-2xl shadow-lg transform hover:scale-105 transition-transform border-2 border-yellow-500">
-                  <span className="text-2xl md:text-3xl font-bold"> सम्मान </span>
-                </div>
-              </div>
+              <div className="flex flex-wrap justify-center items-center mb-10 gap-8">
+  {["। सेवा ।", "। सुरक्षा ।", "। सम्मान ।"].map((text, i) => (
+    <span
+      key={i}
+      className="relative text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-400 drop-shadow-[0_0_10px_rgba(255,193,7,0.4)]"
+    >
+      {text}
+      <span className="absolute inset-x-0 -bottom-1 h-[1px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent opacity-60"></span>
+    </span>
+  ))}
+</div>
+
 
               {/* Central Logo and Title */}
               <div className="text-center space-y-6 mb-8">
@@ -230,22 +232,72 @@ const HeroWithNav = () => {
               </div>
 
               {/* Contact Info */}
-              <div className="mt-8 pt-6 border-t-2 border-orange-200">
-                <div className="flex flex-wrap justify-center gap-6 text-gray-700">
-                  <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-lg">
-                    <Phone size={20} className="text-orange-600" />
-                    <span className="font-semibold">संपर्क: +91 8239711108</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-lg">
-                    <Mail size={20} className="text-orange-600" />
-                    <span className="font-semibold">info@gosamman.org</span>
-                  </div>
-                </div>
-              </div>
+               <div className="mt-8 pt-6 border-t-2 border-orange-200">
+      {/* Heading */}
+      <div className="text-center mb-6">
+        <h3 className="text-2xl md:text-3xl font-bold text-orange-700 mb-2">
+          संपर्क और जुड़ाव
+        </h3>
+        <p className="text-gray-700 max-w-3xl mx-auto px-4 leading-relaxed">
+          गो सेवा और गो रक्षा के माध्यम से होने वाले राष्ट्र रक्षा एवं संस्कृति रक्षा के इस 
+          निष्काम और पवित्र अभियान में सम्मिलित होने के लिए 
+          <span className="font-semibold text-orange-600"> व्हाट्सएप नंबर 8239711008 </span> 
+          पर अपनी विस्तृत जानकारी भेजें।  
+          अधिक जानकारी के लिए निम्न माध्यमों से संपर्क करें।
+        </p>
+      </div>
+
+      {/* Contact Buttons */}
+      <div className="flex flex-wrap justify-center gap-6 text-gray-700">
+        {/* WhatsApp Contact */}
+        <a
+          href="https://wa.me/918239711008"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 px-6 py-3 bg-green-50 rounded-xl hover:bg-green-100 transition-all duration-300 shadow-sm hover:shadow-md"
+        >
+          <FaWhatsapp className="text-green-600 text-2xl" />
+          <span className="font-semibold text-lg text-gray-800">
+            WhatsApp: +91 8239711008
+          </span>
+        </a>
+
+        {/* Email Contact */}
+        <a
+          href="mailto:info@gosamman.org"
+          className="flex items-center gap-3 px-6 py-3 bg-orange-50 rounded-xl hover:bg-orange-100 transition-all duration-300 shadow-sm hover:shadow-md"
+        >
+          <FaEnvelope className="text-orange-600 text-2xl" />
+          <span className="font-semibold text-lg text-gray-800">
+            info@gosamman.org
+          </span>
+        </a>
+      </div>
+
+      {/* Info Text Below */}
+      <div className="max-w-4xl mx-auto mt-8 text-gray-700 text-center leading-relaxed px-4">
+        <p className="mb-4">
+          इस अभियान में सहयोग हेतु आप भी इस प्रकार के पत्रक छपवाकर वितरित कर सकते हैं। 
+          ध्यान रखें — इसमें <span className="font-semibold text-orange-600">“सौजन्य से”</span>, 
+          अपना नाम, संस्था या संगठन का नाम लिखे बिना यथारूप पर्चा छपवाकर अपने क्षेत्र में वितरित करें 
+          एवं गौसेवा में सहयोग करें।
+        </p>
+        <p className="mb-4">
+          छपवाने के लिए सीडीआर फाइल या पीडीएफ फाइल हेतु ऊपर दिए गए 
+          <span className="font-semibold text-green-600"> व्हाट्सएप नंबर </span> 
+          पर संपर्क करें।
+        </p>
+        <p className="text-red-600 font-semibold">
+          ⚠️ इस अभियान हेतु किसी भी प्रकार का दान या चंदा स्वीकार नहीं किया जा रहा है।  
+          अगर कोई इस अभियान के नाम से दान या चंदा मांगे, तो तुरंत  
+          <span className="text-green-700"> 8239711008 </span> नंबर पर शिकायत करें।
+        </p>
+      </div>
+    </div>
             </div>
 
             {/* Bottom Decorative Elements */}
-            <div className="mt-8 text-center">
+            <div className="mt-8  mb-8 text-center">
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/70 backdrop-blur-sm rounded-full shadow-lg border-2 border-orange-200">
                 <p className="text-sm md:text-base font-semibold text-gray-700">
                   सर्वे भवन्तु सुखिनः सर्वे सन्तु निरामया
@@ -256,18 +308,28 @@ const HeroWithNav = () => {
         </div>
 
         {/* Decorative Bottom Flowers */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-around items-end opacity-80">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="text-4xl md:text-6xl animate-grow" style={{ animationDelay: `${i * 0.3}s` }}>
-              <Image
-                src="/3.png"
-                alt="Decorative Flower"
-                width={100}
-                height={100}
-              />
-            </div>
-          ))}
-        </div>
+<div className="absolute bottom-0 left-0 right-0 flex justify-around items-end opacity-80">
+  {[...Array(6)].map((_, i) => (
+    <div
+      key={i}
+      className="text-4xl md:text-6xl "
+      style={{
+ 
+        transform: i >= 3 ? "scale(1) scaleX(-1)" : "scale(1)",
+      }}
+    >
+      <Image
+        src="/3.png"
+        alt="Decorative Flower"
+        width={100}
+        height={100}
+      />
+    </div>
+  ))}
+</div>
+
+
+
       </section>
 
 
@@ -290,69 +352,69 @@ const HeroWithNav = () => {
                 <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-yellow-300 opacity-60"></div>
 
                 {/* Content */}
-                <div className="relative px-8 py-6 md:px-12 md:py-8">
-                  <div className="text-center space-y-3">
-                    <div className="inline-flex items-center gap-3 px-6 py-2 bg-yellow-400/30 backdrop-blur-sm rounded-full border-2 border-yellow-300 shadow-lg">
-                      <span className="text-xl md:text-2xl font-bold text-yellow-100">✦</span>
-                      <span className="text-xl md:text-2xl font-bold text-white">प्रधान संरक्षक</span>
-                      <span className="text-xl md:text-2xl font-bold text-yellow-100">✦</span>
-                    </div>
-                    
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-yellow-200 drop-shadow-lg pt-2">
-                      गौमाता
-                    </h3>
-                    
-                    <div className="inline-block px-6 py-2 bg-orange-700/50 backdrop-blur-sm rounded-lg border-2 border-yellow-400/50">
-                      <p className="text-lg md:text-xl text-yellow-100 font-semibold">
-                        (आद्यशक्ति मां सुरभि)
-                      </p>
-                    </div>
-                  </div>
-                </div>
+               <div className="relative group">
+  {/* Soft glowing background */}
+  <div className="absolute inset-0 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400 blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+
+  {/* Main card */}
+  <div className="relative bg-gradient-to-br from-orange-700 via-amber-700 to-yellow-700 rounded-2xl overflow-hidden shadow-xl border-4 border-yellow-400 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
+    {/* Decorative golden corners */}
+    <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-yellow-300 opacity-60"></div>
+    <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-yellow-300 opacity-60"></div>
+    <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-yellow-300 opacity-60"></div>
+    <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-yellow-300 opacity-60"></div>
+
+    {/* Content */}
+    <div className="relative px-8 py-10 md:px-12 md:py-12 text-center space-y-8">
+      {/* Title */}
+      <div className="inline-flex items-center gap-3 px-8 py-3 bg-yellow-400/30 backdrop-blur-sm rounded-full border-2 border-yellow-300 shadow-lg">
+        <span className="text-xl md:text-2xl font-bold text-yellow-100">✦</span>
+        <span className="text-2xl md:text-3xl font-bold text-white">अभियान कार्यकारिणी</span>
+        <span className="text-xl md:text-2xl font-bold text-yellow-100">✦</span>
+      </div>
+
+      {/* Executive List */}
+      <div className="space-y-6 text-yellow-100 font-semibold">
+        <p className="text-2xl md:text-3xl font-bold text-yellow-200">
+          प्रधान संरक्षक - <span className="text-white">गौमाता</span>   <span className="text-lg md:text-xl text-yellow-100">(आद्यशक्ति मां सुरभि)</span>
+        </p>
+     
+
+        <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
+          अध्यक्षता - <span className="text-white">नंदी बाबा</span> <span className="text-lg md:text-xl text-yellow-100">(नीलमणि वृषभदेव)</span>
+        </p>
+       
+
+        <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
+          आशीर्वाद
+        </p>
+        <p className="text-lg md:text-xl text-yellow-100 leading-relaxed">
+          भारतीय परम्परा के समस्त आराध्य देवी देवता
+        </p>
+
+        <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
+          सहयोग
+        </p>
+        <p className="text-lg md:text-xl text-yellow-100 leading-relaxed max-w-3xl mx-auto">
+          भारतीय परम्परा के सभी आचार्य, मूर्धन्य संत, महापुरुष,  
+          सभी गो संत, गो भक्त, गोरक्षक, गो सेवक, गो पालक,  
+          गो पुत्र, गो वत्स, एवं गो प्रेमी जन
+        </p>
+      </div>
+    </div>
+
+    {/* Bottom border line */}
+    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
+  </div>
+</div>
+
 
                 {/* Bottom decorative wave */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
               </div>
             </div>
 
-            {/* अध्यक्षता */}
-            <div className="relative group">
-              {/* Soft ambient glow */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
-
-              {/* Main card with ancient border pattern */}
-              <div className="relative bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 rounded-2xl overflow-hidden shadow-xl border-4 border-cyan-400 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
-                {/* Decorative corner patterns */}
-                <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-cyan-300 opacity-60"></div>
-                <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-cyan-300 opacity-60"></div>
-                <div className="absolute bottom-0 left-0 w-16 h-16 border-b-4 border-l-4 border-cyan-300 opacity-60"></div>
-                <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-cyan-300 opacity-60"></div>
-
-                {/* Content */}
-                <div className="relative px-8 py-6 md:px-12 md:py-8">
-                  <div className="text-center space-y-3">
-                    <div className="inline-flex items-center gap-3 px-6 py-2 bg-cyan-400/30 backdrop-blur-sm rounded-full border-2 border-cyan-300 shadow-lg">
-                      <span className="text-xl md:text-2xl font-bold text-cyan-100">✦</span>
-                      <span className="text-xl md:text-2xl font-bold text-white">अध्यक्षता</span>
-                      <span className="text-xl md:text-2xl font-bold text-cyan-100">✦</span>
-                    </div>
-                    
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-cyan-200 drop-shadow-lg pt-2">
-                      नंदी बाबा
-                    </h3>
-                    
-                    <div className="inline-block px-6 py-2 bg-indigo-800/50 backdrop-blur-sm rounded-lg border-2 border-cyan-400/50">
-                      <p className="text-lg md:text-xl text-cyan-100 font-semibold">
-                        (नीलमणि वृषभदेव)
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom decorative wave */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400"></div>
-              </div>
-            </div>
+           
 
           </div>
         </div>

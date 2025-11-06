@@ -2,7 +2,7 @@
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 export const metadata = {
-  title: "Your Website Title",
+  title: "Gau Aviyan",
   description: "Your website description goes here",
 };
 

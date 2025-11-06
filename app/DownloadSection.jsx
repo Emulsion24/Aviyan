@@ -66,7 +66,7 @@ export default function DownloadsSection() {
             />
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl pt-1 pb-1 font-extrabold mb-4 bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
             डाउनलोड सेंटर
           </h2>
           

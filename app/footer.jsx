@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
 
 const Footer = () => {
   return (
@@ -49,7 +50,7 @@ const Footer = () => {
             <h4 className="text-lg font-semibold border-b border-orange-400 pb-2">संपर्क सूत्र</h4>
             <div className="space-y-3 text-orange-50">
               <div className="flex items-start space-x-2">
-                <Phone className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                <FaWhatsapp className="w-5 h-5 mt-0.5 flex-shrink-0" />
                 <span>+91 8239711108</span>
               </div>
               <div className="flex items-start space-x-2">
