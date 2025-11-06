@@ -2,7 +2,8 @@
 import React from "react";
 import Image from "next/image";
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa6";
+import { FaWhatsapp,FaFacebook,FaInstagram,FaTwitter } from "react-icons/fa6";
+import { FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -39,8 +40,8 @@ const Footer = () => {
             <h4 className="text-lg font-semibold border-b border-orange-400 pb-2">त्वरित लिंक</h4>
             <ul className="space-y-2 text-orange-50">
               <li><a href="#about" className="hover:text-white transition-colors">हमारे बारे में</a></li>
-              <li><a href="#objectives" className="hover:text-white transition-colors">सरकारसेमाँगे</a></li>
-              <li><a href="#contact" className="hover:text-white transition-colors">संपर्क करें</a></li>
+              <li><a href="#objectives" className="hover:text-white transition-colors">सरकार से माँगे</a></li>
+              
               <li><a href="#registration-form" className="hover:text-white transition-colors">हमारे साथ जुड़ें</a></li>
             </ul>
           </div>
@@ -51,11 +52,11 @@ const Footer = () => {
             <div className="space-y-3 text-orange-50">
               <div className="flex items-start space-x-2">
                 <FaWhatsapp className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                <span>+91 8239711108</span>
+                <span>+91 8239711008</span>
               </div>
               <div className="flex items-start space-x-2">
                 <Mail className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                <span className="break-all">info@gosamman.org</span>
+                <span className="break-all">gausamman@gmail.com</span>
               </div>
               <div className="flex items-start space-x-2">
                 <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
@@ -73,13 +74,13 @@ const Footer = () => {
             <div className="flex items-center space-x-4">
               <span className="text-orange-100 text-sm">हमसे जुड़ें:</span>
               <a 
-                href="https://facebook.com" 
+                href="https://www.facebook.com/share/14MgSqbK6e6/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 aria-label="Facebook"
               >
-                <Facebook className="w-5 h-5" />
+                <FaFacebook className="w-5 h-5" />
               </a>
               <a 
                 href="https://twitter.com" 
@@ -88,16 +89,16 @@ const Footer = () => {
                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 aria-label="Twitter"
               >
-                <Twitter className="w-5 h-5" />
+                <FaTwitter className="w-5 h-5" />
               </a>
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/gausmmaanaahvaan/?igsh=end1eGRrZ2ZlMHc%3D#" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 aria-label="Instagram"
               >
-                <Instagram className="w-5 h-5" />
+                <FaInstagram className="w-5 h-5" />
               </a>
               <a 
                 href="https://youtube.com" 
@@ -106,7 +107,7 @@ const Footer = () => {
                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 aria-label="YouTube"
               >
-                <Youtube className="w-5 h-5" />
+                <FaYoutube className="w-5 h-5" />
               </a>
             </div>
 

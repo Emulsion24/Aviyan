@@ -153,10 +153,10 @@ const HeroWithNav = () => {
             {/* Top Decorative Text */}
             <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8 animate-fadeIn">
               <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
-                । जय नंदी बावा ।
+                । जय नंदी बाबा ।
               </span>
               <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
-                । श्री करुनला ।
+                । श्री करनला ।
               </span>
               <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
                 । जय गोमाता ।
@@ -234,18 +234,7 @@ const HeroWithNav = () => {
               {/* Contact Info */}
                <div className="mt-8 pt-6 border-t-2 border-orange-200">
       {/* Heading */}
-      <div className="text-center mb-6">
-        <h3 className="text-2xl md:text-3xl font-bold text-orange-700 mb-2">
-          संपर्क और जुड़ाव
-        </h3>
-        <p className="text-gray-700 max-w-3xl mx-auto px-4 leading-relaxed">
-          गो सेवा और गो रक्षा के माध्यम से होने वाले राष्ट्र रक्षा एवं संस्कृति रक्षा के इस 
-          निष्काम और पवित्र अभियान में सम्मिलित होने के लिए 
-          <span className="font-semibold text-orange-600"> व्हाट्सएप नंबर 8239711008 </span> 
-          पर अपनी विस्तृत जानकारी भेजें।  
-          अधिक जानकारी के लिए निम्न माध्यमों से संपर्क करें।
-        </p>
-      </div>
+     
 
       {/* Contact Buttons */}
       <div className="flex flex-wrap justify-center gap-6 text-gray-700">
@@ -264,35 +253,18 @@ const HeroWithNav = () => {
 
         {/* Email Contact */}
         <a
-          href="mailto:info@gosamman.org"
+          href="mailto:gausamman@gmail.com"
           className="flex items-center gap-3 px-6 py-3 bg-orange-50 rounded-xl hover:bg-orange-100 transition-all duration-300 shadow-sm hover:shadow-md"
         >
           <FaEnvelope className="text-orange-600 text-2xl" />
           <span className="font-semibold text-lg text-gray-800">
-            info@gosamman.org
+            gausamman@gmail.com
           </span>
         </a>
       </div>
 
       {/* Info Text Below */}
-      <div className="max-w-4xl mx-auto mt-8 text-gray-700 text-center leading-relaxed px-4">
-        <p className="mb-4">
-          इस अभियान में सहयोग हेतु आप भी इस प्रकार के पत्रक छपवाकर वितरित कर सकते हैं। 
-          ध्यान रखें — इसमें <span className="font-semibold text-orange-600">“सौजन्य से”</span>, 
-          अपना नाम, संस्था या संगठन का नाम लिखे बिना यथारूप पर्चा छपवाकर अपने क्षेत्र में वितरित करें 
-          एवं गौसेवा में सहयोग करें।
-        </p>
-        <p className="mb-4">
-          छपवाने के लिए सीडीआर फाइल या पीडीएफ फाइल हेतु ऊपर दिए गए 
-          <span className="font-semibold text-green-600"> व्हाट्सएप नंबर </span> 
-          पर संपर्क करें।
-        </p>
-        <p className="text-red-600 font-semibold">
-          ⚠️ इस अभियान हेतु किसी भी प्रकार का दान या चंदा स्वीकार नहीं किया जा रहा है।  
-          अगर कोई इस अभियान के नाम से दान या चंदा मांगे, तो तुरंत  
-          <span className="text-green-700"> 8239711008 </span> नंबर पर शिकायत करें।
-        </p>
-      </div>
+     
     </div>
             </div>
 
@@ -300,7 +272,7 @@ const HeroWithNav = () => {
             <div className="mt-8  mb-8 text-center">
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/70 backdrop-blur-sm rounded-full shadow-lg border-2 border-orange-200">
                 <p className="text-sm md:text-base font-semibold text-gray-700">
-                  सर्वे भवन्तु सुखिनः सर्वे सन्तु निरामया
+                  मातर: सर्वभूतानाम्,गाव: सर्वसुखप्रदा:।
                 </p>
               </div>
             </div>

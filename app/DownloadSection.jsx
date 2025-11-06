@@ -19,7 +19,7 @@ export default function DownloadsSection() {
       title: "प्रिंट फाइल",
       description: "प्रिंट करने योग्य अभियान सामग्री",
       icon: Printer,
-      file: "/aviyan.cdr",
+      file: "/aviyan2.cdr",
       filename: "Gau-Samman-Printable.pdf",
       color: "from-blue-500 to-indigo-600",
       bgPattern: "from-blue-50 to-indigo-50"
