@@ -283,7 +283,7 @@ const PravariSearchUI = () => {
           </div>
           
           <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Pravari Directory
+            Pravari Darsika
           </h2>
           
           <div className="w-32 h-1.5 mx-auto bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full shadow-md"></div>

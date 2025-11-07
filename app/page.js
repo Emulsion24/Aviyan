@@ -14,6 +14,7 @@ export default function Page() {
     <main className="min-h-screen">
       <HeroWithNav />
       <About />
+     
       <Objectives />
       <CampaignActionPlan/>
       <RegistrationForm />

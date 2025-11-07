@@ -152,14 +152,14 @@ const HeroWithNav = () => {
           <div className="max-w-6xl mx-auto">
             {/* Top Decorative Text */}
             <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8 animate-fadeIn">
-              <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
-                । जय नंदी बाबा ।
+              <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2">
+                ।। जय नंदी बाबा ।।
               </span>
-              <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
-                । श्री करनला ।
+              <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2">
+                ।। श्री करनला ।।
               </span>
-              <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2 bg-white/60 backdrop-blur-sm rounded-lg shadow-md border-2 border-orange-200">
-                । जय गोमाता ।
+              <span className="text-lg md:text-xl font-bold text-red-600 px-4 py-2">
+                ।। जय गोमाता ।।
               </span>
             </div>
 
@@ -348,26 +348,26 @@ const HeroWithNav = () => {
       {/* Executive List */}
       <div className="space-y-6 text-yellow-100 font-semibold">
         <p className="text-2xl md:text-3xl font-bold text-yellow-200">
-          प्रधान संरक्षक - <span className="text-white">गौमाता</span>   <span className="text-lg md:text-xl text-yellow-100">(आद्यशक्ति मां सुरभि)</span>
+          प्रधान संरक्षक - <span className=" text-purple-400">गौमाता</span>   <span className="text-lg md:text-xl text-purple-400">(आद्यशक्ति मां सुरभि)</span>
         </p>
      
 
         <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
-          अध्यक्षता - <span className="text-white">नंदी बाबा</span> <span className="text-lg md:text-xl text-yellow-100">(नीलमणि वृषभदेव)</span>
+          अध्यक्षता - <span className=" text-purple-400">नंदी बाबा</span> <span className="text-lg md:text-xl  text-purple-400">(नीलमणि वृषभदेव)</span>
         </p>
        
 
         <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
           आशीर्वाद
         </p>
-        <p className="text-lg md:text-xl text-yellow-100 leading-relaxed">
+        <p className="text-lg md:text-xl  text-purple-400 leading-relaxed">
           भारतीय परम्परा के समस्त आराध्य देवी देवता
         </p>
 
         <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
           सहयोग
         </p>
-        <p className="text-lg md:text-xl text-yellow-100 leading-relaxed max-w-3xl mx-auto">
+        <p className="text-lg md:text-xl  text-purple-400 leading-relaxed max-w-3xl mx-auto">
           भारतीय परम्परा के सभी आचार्य, मूर्धन्य संत, महापुरुष,  
           सभी गो संत, गो भक्त, गोरक्षक, गो सेवक, गो पालक,  
           गो पुत्र, गो वत्स, एवं गो प्रेमी जन
