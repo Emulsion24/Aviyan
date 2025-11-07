@@ -48,8 +48,23 @@ export async function GET(request) {
       where,
       skip,
       take: limit,
+    
       orderBy: { createdAt: 'desc' },
-    });
+      select: {
+    id: true,
+    name: true,
+    phone: true,
+    email: true,
+    role: true,
+    village: true,
+    state: true,
+    district: true,
+    experience: true,
+    createdAt: true,
+     
+  },
+    },
+    );
 
     return NextResponse.json({
       success: true,
@@ -121,7 +136,7 @@ export async function POST(request) {
     const { name, phone, email, role, village, address, state, district, experience } = body;
 
     // Validation
-    if (!name || !phone || !email || !role || !village || !address || !state || !district) {
+    if (!name || !phone || !village  || !state || !district) {
       return NextResponse.json(
         { success: false, error: 'All required fields must be provided' },
         { status: 400 }
@@ -129,14 +144,7 @@ export async function POST(request) {
     }
 
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
-
+  
     // Validate phone format (basic validation)
     const phoneRegex = /^\+?[\d\s-()]+$/;
     if (!phoneRegex.test(phone)) {

@@ -20,7 +20,7 @@ export default function DownloadsSection() {
       description: "प्रिंट करने योग्य अभियान सामग्री",
       icon: Printer,
       file: "https://drive.google.com/file/d/1bfIik8txFdpgzy-Xbj-3BsTiRnCzRR_T/view?usp=sharing",
-      filename: "Gau-Samman-Printable.pdf",
+      filename: "Gau-Samman-Printable",
       color: "from-blue-500 to-indigo-600",
       bgPattern: "from-blue-50 to-indigo-50"
     },
@@ -75,6 +75,7 @@ export default function DownloadsSection() {
           <p className="text-gray-600 text-lg font-medium max-w-2xl mx-auto">
             अभियान से जुड़ी महत्वपूर्ण फाइलें डाउनलोड करें और अपने समुदाय में साझा करें
           </p>
+          
         </div>
 
         {/* Download Cards Grid */}
@@ -136,6 +137,11 @@ export default function DownloadsSection() {
             <div>
               <h4 className="font-bold text-gray-800 text-lg mb-2">📢 महत्वपूर्ण सूचना</h4>
               <ul className="text-gray-700 space-y-2 text-sm">
+                
+ <li className="flex items-start gap-2">
+                  <span className="text-orange-500 mt-1">•</span>
+                  <span>जो प्रिंटिंग वाली फाइल दी हुए हे उसे वैसे ही छपवानी हे, आपको ना एक शब्द हटाना हे और न ही एक शब्द जोड़ना हे</span>
+                </li>
                 <li className="flex items-start gap-2">
                   <span className="text-orange-500 mt-1">•</span>
                   <span>सभी फाइलें मुफ्त हैं और अभियान के प्रचार-प्रसार के लिए उपयोग की जा सकती हैं</span>

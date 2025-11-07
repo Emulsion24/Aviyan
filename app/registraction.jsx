@@ -453,7 +453,7 @@ export default function RegistrationForm() {
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                   <Home size={16} className="text-gray-400" />
-                  विवरण (वैकल्पिक)
+                  आप किस प्रकार की सेवाएं देना चाहते है ( किसी एक जिले की व्यवस्था , या किसी एक तहसील की व्यवस्था या पत्रक छपवाकर उनका वितरण करेंगे )
                 </label>
                 <textarea
                   name="description"
@@ -462,7 +462,7 @@ export default function RegistrationForm() {
                   disabled={loading}
                   rows={3}
                   className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl outline-none focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-200 transition-all shadow-sm resize-none disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="औपचारिक विवरण: कार्य विवरण, पता आदि, यदि आवश्यक हो तो यहां दर्ज करें"
+                  placeholder="आप किस प्रकार की सेवाएं देना चाहते है ( किसी एक जिले की व्यवस्था , या किसी एक तहसील की व्यवस्था या पत्रक छपवाकर उनका वितरण करेंगे )"
                 />
               </div>
             </div>

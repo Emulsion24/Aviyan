@@ -291,7 +291,7 @@ export default function DashboardPage() {
     phone: "",
     role: "",
     village: "",
-    address: "",
+    
     email: "",
     state: "",
     district: "",
@@ -829,7 +829,7 @@ export default function DashboardPage() {
                   <Award size={24} className="text-white" />
                 </div>
                 <div>
-                  <p className="text-orange-600 font-semibold text-sm">Total Pravaris</p>
+                  <p className="text-orange-600 font-semibold text-sm">Total Prabhari</p>
                   <p className="text-2xl font-bold text-orange-900">{stats.totalPravaris.toLocaleString()}</p>
                 </div>
               </div>
@@ -879,7 +879,7 @@ export default function DashboardPage() {
               }`}
             >
               <Award size={20} />
-              <span>Pravari</span>
+              <span>Prabhari</span>
               <span className={`px-3 py-1 rounded-full text-sm font-bold ${
                 tab === "pravari" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
               }`}>
@@ -1268,7 +1268,7 @@ export default function DashboardPage() {
                   <div className="bg-gradient-to-r from-orange-500 to-yellow-500 p-3 rounded-xl shadow-md">
                     <Award size={24} className="text-white" />
                   </div>
-                  {editingPravari ? "Edit Pravari" : "Add New Pravari"}
+                  {editingPravari ? "Edit Prabhari" : "Add New Prabhari"}
                 </h3>
                 <form onSubmit={editingPravari ? handleUpdatePravari : handleAddPravari}>
                   <div className="grid md:grid-cols-3 gap-4 mb-4">
@@ -1294,12 +1294,12 @@ export default function DashboardPage() {
                     />
                     <input
                       type="email"
-                      placeholder="Email Address *"
+                      placeholder="Email Address "
                       value={editingPravari ? editingPravari.email : newPravari.email}
                       onChange={(e) => editingPravari 
                         ? setEditingPravari({ ...editingPravari, email: e.target.value })
                         : setNewPravari({ ...newPravari, email: e.target.value })}
-                      required
+                      
                       className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
                     />
                   </div>
@@ -1348,24 +1348,15 @@ export default function DashboardPage() {
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <input
                       type="text"
-                      placeholder="Role/Position *"
+                      placeholder="Role/Position "
                       value={editingPravari ? editingPravari.role : newPravari.role}
                       onChange={(e) => editingPravari 
                         ? setEditingPravari({ ...editingPravari, role: e.target.value })
                         : setNewPravari({ ...newPravari, role: e.target.value })}
-                      required
+                      
                       className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
                     />
-                    <textarea
-                      placeholder="Address *"
-                      value={editingPravari ? editingPravari.address : newPravari.address}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, address: e.target.value })
-                        : setNewPravari({ ...newPravari, address: e.target.value })}
-                      required
-                      rows={1}
-                      className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white resize-none"
-                    />
+                   
                   </div>
                   <div className="mb-4">
                     <textarea
@@ -1394,7 +1385,7 @@ export default function DashboardPage() {
                       className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold rounded-xl px-8 py-3 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
                       {loading ? <Loader2 size={20} className="animate-spin" /> : editingPravari ? <Edit size={20} /> : <Award size={20} />}
-                      {editingPravari ? "Update Pravari" : "Add Pravari"}
+                      {editingPravari ? "Update Prabhari" : "Add Prabhari"}
                     </button>
                   </div>
                 </form>
@@ -1510,11 +1501,11 @@ export default function DashboardPage() {
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-20">
                   <Loader2 className="animate-spin text-orange-600 mb-4" size={56} />
-                  <p className="text-gray-600 font-semibold text-lg">Loading pravaris...</p>
+                  <p className="text-gray-600 font-semibold text-lg">Loading Prabhari...</p>
                 </div>
               ) : pravaris.length === 0 ? (
                 <div className="text-center py-20 bg-gray-50 rounded-2xl">
-                  <p className="text-gray-500 text-xl font-semibold">No pravaris found</p>
+                  <p className="text-gray-500 text-xl font-semibold">No Prabhari found</p>
                   {(pravariSearch || Object.values(activePravariFilters).some(f => f)) && (
                     <button
                       onClick={clearPravariFilters}
@@ -1682,7 +1673,7 @@ export default function DashboardPage() {
                   <div className="bg-gradient-to-r from-orange-500 to-yellow-500 p-3 rounded-xl">
                     <Award size={24} className="text-white" />
                   </div>
-                  Pravari Details
+                  Prabhari Details
                 </h3>
                 <button
                   onClick={() => setSelectedPravari(null)}

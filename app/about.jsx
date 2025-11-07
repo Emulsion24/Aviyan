@@ -106,7 +106,7 @@ const About = () => {
 
       <li className="flex items-start gap-3">
         <span className="text-amber-600 font-bold shrink-0">③</span>
-        <span>
+        <span >
           यह अभियान किसी भी राजनैतिक दल, संगठन, अथवा किसी भी राज्य अथवा केंद्र सरकार के विरुद्ध नहीं है। इस अभियान का उद्देश्य केवल यही है कि गोमाता को सेवा, सुरक्षा और सम्मान मिले।
         </span>
       </li>

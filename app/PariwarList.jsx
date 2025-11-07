@@ -274,22 +274,22 @@ const PravariSearchUI = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
+    <div id="pravari"className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="inline-block px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-lg">
-            <span className="text-white font-bold text-sm tracking-wide">Find Pravari</span>
+            <span className="text-white font-bold text-sm tracking-wide">Find Prabhari Darshika</span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Pravari Darsika
+          <h2 className="text-4xl pt-1 pb-1 md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+           प्रभारी दर्शिका
           </h2>
           
           <div className="w-32 h-1.5 mx-auto bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full shadow-md"></div>
           
           <p className="text-xl text-gray-700 font-medium max-w-3xl mx-auto">
-            Find Go Seva Pravari information in your region
+            Find Go Seva Prabhari information in your region
           </p>
         </div>
 
@@ -466,11 +466,7 @@ const PravariSearchUI = () => {
                               <p className="text-sm text-gray-600">{pravari.district}, {pravari.state}</p>
                             </div>
                           </div>
-                          
-                          <div className="flex items-start gap-3 text-gray-700">
-                            <MapPin className="w-4 h-4 text-red-600 flex-shrink-0 mt-1" />
-                            <span className="text-sm">{pravari.address}</span>
-                          </div>
+                     
                         </div>
 
                         {/* Experience Badge */}

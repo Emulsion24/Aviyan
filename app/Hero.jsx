@@ -329,7 +329,7 @@ const HeroWithNav = () => {
   <div className="absolute inset-0 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400 blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
 
   {/* Main card */}
-  <div className="relative bg-gradient-to-br from-orange-700 via-amber-700 to-yellow-700 rounded-2xl overflow-hidden shadow-xl border-4 border-yellow-400 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
+  <div className="relative bg-gradient-to-br from-orange-700 via-amber-400 to-yellow-700 rounded-2xl overflow-hidden shadow-xl border-4 border-yellow-400 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
     {/* Decorative golden corners */}
     <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-yellow-300 opacity-60"></div>
     <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-yellow-300 opacity-60"></div>
@@ -339,35 +339,36 @@ const HeroWithNav = () => {
     {/* Content */}
     <div className="relative px-8 py-10 md:px-12 md:py-12 text-center space-y-8">
       {/* Title */}
-      <div className="inline-flex items-center gap-3 px-8 py-3 bg-yellow-400/30 backdrop-blur-sm rounded-full border-2 border-yellow-300 shadow-lg">
-        <span className="text-xl md:text-2xl font-bold text-yellow-100">✦</span>
-        <span className="text-2xl md:text-3xl font-bold text-white">अभियान कार्यकारिणी</span>
-        <span className="text-xl md:text-2xl font-bold text-yellow-100">✦</span>
+      <div className="inline-flex items-center gap-3 px-8 py-3 bg-white  backdrop-blur-sm rounded-full border-2 border-yellow-300 shadow-lg">
+        <span className="text-xl md:text-2xl font-bold text-red-600">✦</span>
+        <span className="text-2xl md:text-4xl font-bold bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400 text-transparent"> अभियान कार्यकारिणी  </span>
+        <span className="text-xl md:text-2xl font-bold text-red-600">✦</span>
       </div>
 
       {/* Executive List */}
       <div className="space-y-6 text-yellow-100 font-semibold">
-        <p className="text-2xl md:text-3xl font-bold text-yellow-200">
-          प्रधान संरक्षक - <span className=" text-purple-400">गौमाता</span>   <span className="text-lg md:text-xl text-purple-400">(आद्यशक्ति मां सुरभि)</span>
+        <p className="text-2xl md:text-3xl font-extrabold text-yellow-200">
+          प्रधान संरक्षक - <span className=" text-lg md:text-2xl text-red-700">गौमाता</span>   <span className="text-lg md:text-2xl text-red-700">(आद्यशक्ति मां सुरभि)</span>
         </p>
      
 
-        <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
-          अध्यक्षता - <span className=" text-purple-400">नंदी बाबा</span> <span className="text-lg md:text-xl  text-purple-400">(नीलमणि वृषभदेव)</span>
+        <p className="text-2xl md:text-3xl font-semibold text-yellow-200 pt-4">
+          अध्यक्षता - <span className="text-lg md:text-2xl text-red-700">नंदी बाबा</span> <span className="text-lg md:text-2xl  text-red-700">(नीलमणि वृषभदेव)</span>
         </p>
        
-
+          <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-blue-500 via-blue-300 to-blue-900 rounded-full shadow-md"></div>
         <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
           आशीर्वाद
         </p>
-        <p className="text-lg md:text-xl  text-purple-400 leading-relaxed">
+        <p className="text-lg md:text-2xl  text-red-700 leading-relaxed">
           भारतीय परम्परा के समस्त आराध्य देवी देवता
         </p>
-
+ <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-blue-500 via-blue-300 to-blue-900 rounded-full shadow-md"></div>
         <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
           सहयोग
         </p>
-        <p className="text-lg md:text-xl  text-purple-400 leading-relaxed max-w-3xl mx-auto">
+        
+        <p className="text-lg md:text-2xl  text-red-700 leading-relaxed max-w-3xl mx-auto">
           भारतीय परम्परा के सभी आचार्य, मूर्धन्य संत, महापुरुष,  
           सभी गो संत, गो भक्त, गोरक्षक, गो सेवक, गो पालक,  
           गो पुत्र, गो वत्स, एवं गो प्रेमी जन

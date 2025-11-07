@@ -9,18 +9,18 @@ const Objectives = () => {
   const mainDemands = [
     {
       icon: <Award className="w-8 h-8 text-yellow-600" />,
-      title: "गौ माता को राष्ट्र माता",
-      description: "गौ माता को राष्ट्र माता के पद पर विराजमान करना",
+      title: "गौ माता को राष्ट्र माता के पद पर विराजमान करे \n(गौ माता को सम्मान मिले)",
+
     },
     {
       icon: <Shield className="w-8 h-8 text-yellow-600" />,
-      title: "केंद्रीय कानून",
-      description: "गो रक्षा हेतु केंद्रीय कानून का निर्माण",
+      title: "गो रक्षा हेतु केंद्रीय कानून बने ",
+
     },
     {
       icon: <Heart className="w-8 h-8 text-yellow-600" />,
-      title: "गौ हत्या समाप्ति",
-      description: "भारतवर्ष में गौ हत्या पूरी तरह समाप्त हो",
+      title: "भारतवर्ष में गौ हत्या पूरी तरह समाप्त हो ",
+
     },
   ];
 
@@ -160,12 +160,10 @@ const Objectives = () => {
                   {demand.icon}
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-gray-800">
+                  <h3 className="text-xl whitespace-pre-line font-bold text-gray-800">
                     {demand.title}
                   </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {demand.description}
-                  </p>
+            
                 </div>
               </div>
             </div>
