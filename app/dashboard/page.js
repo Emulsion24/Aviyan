@@ -297,6 +297,24 @@ export default function DashboardPage() {
     district: "",
     experience: ""
   });
+
+  // BAITHAK SUBMISSIONS
+const [baithaks, setBaithaks] = useState([]);
+const [baithakPage, setBaithakPage] = useState(1);
+const [baithakTotal, setBaithakTotal] = useState(1);
+const [baithakSearch, setBaithakSearch] = useState("");
+const [baithakSearchInput, setBaithakSearchInput] = useState("");
+const [selectedBaithak, setSelectedBaithak] = useState(null);
+const [showBaithakFilters, setShowBaithakFilters] = useState(false);
+const [baithakFilters, setBaithakFilters] = useState({
+  state: "",
+  district: ""
+});
+const [activeBaithakFilters, setActiveBaithakFilters] = useState({
+  state: "",
+  district: ""
+});
+const [baithakAvailableDistricts, setBaithakAvailableDistricts] = useState([]);
   //sevak
 
   // 1. Add state variables (after the existing state declarations)
@@ -562,7 +580,9 @@ const [stats, setStats] = useState({
   totalPravaris: 0,
   filteredPravaris: 0,
   totalSevaks: 0,
-  filteredSevaks: 0
+  filteredSevaks: 0,
+  totalBaithaks: 0,
+  filteredBaithaks: 0
 });
 
   // Check authentication
@@ -995,6 +1015,111 @@ const [stats, setStats] = useState({
   const handlePravariFilterChange = (key, value) => {
     setPravariFilters(prev => ({ ...prev, [key]: value }));
   };
+  useEffect(() => {
+  if (baithakFilters.state) {
+    setBaithakAvailableDistricts(STATE_DISTRICTS[baithakFilters.state] || []);
+    if (!STATE_DISTRICTS[baithakFilters.state]?.includes(baithakFilters.district)) {
+      setBaithakFilters(prev => ({ ...prev, district: "" }));
+    }
+  } else {
+    setBaithakAvailableDistricts([]);
+    setBaithakFilters(prev => ({ ...prev, district: "" }));
+  }
+}, [baithakFilters.state]);
+
+// Add useEffect to fetch baithaks (after other fetch useEffects)
+useEffect(() => {
+  if (tab === "baithak") {
+    fetchBaithaks();
+  }
+}, [tab, baithakPage, baithakSearch, activeBaithakFilters]);
+
+// Add fetch function
+const fetchBaithaks = async () => {
+  setLoading(true);
+  setError("");
+  try {
+    const params = new URLSearchParams({
+      page: baithakPage.toString(),
+      search: baithakSearch,
+      ...(activeBaithakFilters.state && { state: activeBaithakFilters.state }),
+      ...(activeBaithakFilters.district && { district: activeBaithakFilters.district })
+    });
+
+    const res = await fetch(`/api/registration?${params.toString()}`, {
+      credentials: 'include'
+    });
+    
+    if (!res.ok) throw new Error('Failed to fetch baithak submissions');
+    
+    const data = await res.json();
+    setBaithaks(data.data || []);
+    setBaithakTotal(data.pagination?.totalPages || 1);
+    setStats(prev => ({ 
+      ...prev, 
+      totalBaithaks: data.pagination?.total || 0,
+      filteredBaithaks: data.pagination?.total || 0
+    }));
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Add handler functions
+const handleBaithakSearch = () => {
+  setBaithakSearch(baithakSearchInput);
+  setBaithakPage(1);
+};
+
+const handleApplyBaithakFilters = () => {
+  setActiveBaithakFilters({ ...baithakFilters });
+  setBaithakPage(1);
+};
+
+const clearBaithakFilters = () => {
+  setBaithakFilters({
+    state: "",
+    district: ""
+  });
+  setActiveBaithakFilters({
+    state: "",
+    district: ""
+  });
+  setBaithakSearchInput("");
+  setBaithakSearch("");
+  setBaithakPage(1);
+};
+
+const handleBaithakFilterChange = (key, value) => {
+  setBaithakFilters(prev => ({ ...prev, [key]: value }));
+};
+
+const handleDeleteBaithak = async (id) => {
+  if (!confirm("Are you sure you want to delete this baithak submission?")) return;
+  
+  setLoading(true);
+  try {
+    const res = await fetch(`/api/registration/${id}`, { 
+      method: "DELETE",
+      credentials: 'include'
+    });
+    
+    if (res.ok) {
+      setBaithaks(baithaks.filter((b) => b.id !== id));
+      setSuccessMsg("Baithak submission deleted successfully");
+      setTimeout(() => setSuccessMsg(""), 3000);
+      fetchBaithaks();
+    } else {
+      setError("Failed to delete baithak submission");
+    }
+  } catch (err) {
+    setError("Network error");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4 md:p-8">
@@ -1049,6 +1174,18 @@ const [stats, setStats] = useState({
     <div>
       <p className="text-pink-600 font-semibold text-sm">Total प्रभारी सेवक</p>
       <p className="text-2xl font-bold text-pink-900">{stats.totalSevaks.toLocaleString()}</p>
+    </div>
+  </div>
+</div>
+
+<div className="bg-gradient-to-br from-teal-50 to-teal-100 p-4 rounded-2xl border-2 border-teal-200 shadow-md">
+  <div className="flex items-center gap-3">
+    <div className="bg-teal-500 p-3 rounded-xl">
+      <FileText size={24} className="text-white" />
+    </div>
+    <div>
+      <p className="text-teal-600 font-semibold text-sm">बैठक Submissions</p>
+      <p className="text-2xl font-bold text-teal-900">{stats.totalBaithaks.toLocaleString()}</p>
     </div>
   </div>
 </div>
@@ -1154,6 +1291,22 @@ const [stats, setStats] = useState({
     tab === "sevak" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
   }`}>
     {stats.totalSevaks.toLocaleString()}
+  </span>
+</button>
+<button
+  onClick={() => setTab("baithak")}
+  className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
+    tab === "baithak"
+      ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+      : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+  }`}
+>
+  <FileText size={20} />
+  <span>बैठक Submissions</span>
+  <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+    tab === "baithak" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
+  }`}>
+    {stats.totalBaithaks.toLocaleString()}
   </span>
 </button>
 
@@ -2243,6 +2396,209 @@ const [stats, setStats] = useState({
       </button>
     </div>
   </>
+)}{tab === "baithak" && (
+  <>
+    {/* Search & Filter Section */}
+    <div className="space-y-4 mb-6">
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1 flex items-center gap-3">
+          <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border-2 border-gray-200 focus-within:border-teal-500 transition-all shadow-sm">
+            <Search size={22} className="text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by name, email, state, district, or village..."
+              value={baithakSearchInput}
+              onChange={(e) => setBaithakSearchInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleBaithakSearch()}
+              className="bg-transparent outline-none w-full text-gray-700 placeholder-gray-400"
+            />
+          </div>
+          <button
+            onClick={handleBaithakSearch}
+            disabled={loading}
+            className="flex items-center gap-2 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 disabled:opacity-50"
+          >
+            <Search size={18} />
+            Search
+          </button>
+        </div>
+        <div className="flex gap-3 flex-wrap">
+          <button
+            onClick={() => setShowBaithakFilters(!showBaithakFilters)}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 ${
+              showBaithakFilters 
+                ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white' 
+                : 'bg-white text-gray-700 border-2 border-gray-300'
+            }`}
+          >
+            <Filter size={18} />
+            Filters
+            <ChevronDown size={18} className={`transition-transform ${showBaithakFilters ? 'rotate-180' : ''}`} />
+          </button>
+          <button
+            onClick={fetchBaithaks}
+            disabled={loading}
+            className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 disabled:opacity-50"
+          >
+            <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      {/* Advanced Filters */}
+      {showBaithakFilters && (
+        <div className="bg-gradient-to-r from-teal-50 to-cyan-50 p-6 rounded-2xl border-2 border-teal-200 shadow-lg animate-slideDown">
+          <div className="flex justify-between items-center mb-4">
+            <h4 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <Filter size={20} className="text-teal-600" />
+              Advanced Filters
+            </h4>
+            <button
+              onClick={clearBaithakFilters}
+              className="text-sm font-semibold text-teal-600 hover:text-teal-800 px-4 py-2 bg-white rounded-lg hover:bg-teal-100 transition-all shadow-sm"
+            >
+              Clear All
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
+              <select
+                value={baithakFilters.state}
+                onChange={(e) => handleBaithakFilterChange('state', e.target.value)}
+                className="w-full p-3 border-2 border-teal-200 rounded-xl outline-none focus:border-teal-500 transition-all bg-white shadow-sm"
+              >
+                <option value="">All States</option>
+                {Object.keys(STATE_DISTRICTS).map(state => (
+                  <option key={state} value={state}>{state}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">District</label>
+              <select
+                value={baithakFilters.district}
+                onChange={(e) => handleBaithakFilterChange('district', e.target.value)}
+                disabled={!baithakFilters.state}
+                className="w-full p-3 border-2 border-teal-200 rounded-xl outline-none focus:border-teal-500 transition-all bg-white shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
+              >
+                <option value="">All Districts</option>
+                {baithakAvailableDistricts.map(district => (
+                  <option key={district} value={district}>{district}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <button
+              onClick={handleApplyBaithakFilters}
+              disabled={loading}
+              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50"
+            >
+              <Filter size={18} />
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* Baithak Table */}
+    {loading ? (
+      <div className="flex flex-col items-center justify-center py-20">
+        <Loader2 className="animate-spin text-teal-600 mb-4" size={56} />
+        <p className="text-gray-600 font-semibold text-lg">Loading बैठक submissions...</p>
+      </div>
+    ) : baithaks.length === 0 ? (
+      <div className="text-center py-20 bg-gray-50 rounded-2xl">
+        <p className="text-gray-500 text-xl font-semibold">No बैठक submissions found</p>
+        {(baithakSearch || Object.values(activeBaithakFilters).some(f => f)) && (
+          <button
+            onClick={clearBaithakFilters}
+            className="mt-4 px-6 py-2 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition-all"
+          >
+            Clear Filters
+          </button>
+        )}
+      </div>
+    ) : (
+      <div className="overflow-x-auto border-2 border-gray-200 rounded-2xl shadow-lg">
+        <table className="w-full">
+          <thead className="bg-gradient-to-r from-teal-100 via-cyan-100 to-blue-100">
+            <tr>
+              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Name</th>
+              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">State</th>
+              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">District</th>
+              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Village/Tehsil</th>
+              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Email</th>
+              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Phone</th>
+              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Date</th>
+              <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {baithaks.map((b, idx) => (
+              <tr key={b.id} className={`border-t-2 border-gray-100 hover:bg-teal-50 transition-all ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                <td className="p-5 font-semibold text-gray-800">{b.name}</td>
+                <td className="p-5 text-gray-600">{b.state}</td>
+                <td className="p-5 text-gray-600">{b.district}</td>
+                <td className="p-5 text-gray-600">{b.village}</td>
+                <td className="p-5 text-gray-600">{b.email || 'N/A'}</td>
+                <td className="p-5 text-gray-600">{b.phone}</td>
+                <td className="p-5 text-gray-600 font-medium">
+                  {new Date(b.createdAt).toLocaleDateString('en-IN', { 
+                    day: '2-digit', 
+                    month: 'short', 
+                    year: 'numeric' 
+                  })}
+                </td>
+                <td className="p-5 text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => setSelectedBaithak(b)}
+                      className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+                      title="View details"
+                    >
+                      <Eye size={20} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteBaithak(b.id)}
+                      className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+                      title="Delete submission"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+
+    {/* Pagination */}
+    <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
+      <button
+        disabled={baithakPage === 1 || loading}
+        onClick={() => setBaithakPage((p) => p - 1)}
+        className="px-8 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl font-bold disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all hover:shadow-xl transform hover:scale-105 disabled:transform-none shadow-lg w-full sm:w-auto"
+      >
+        ← Previous
+      </button>
+      <span className="text-gray-800 font-bold text-lg px-6 py-3 bg-gray-100 rounded-xl shadow-inner">
+        Page {baithakPage} of {baithakTotal}
+      </span>
+      <button
+        disabled={baithakPage === baithakTotal || loading}
+        onClick={() => setBaithakPage((p) => p + 1)}
+        className="px-8 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl font-bold disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all hover:shadow-xl transform hover:scale-105 disabled:transform-none shadow-lg w-full sm:w-auto"
+      >
+        Next →
+      </button>
+    </div>
+  </>
 )}
 
         {/* Submission Detail Modal */}
@@ -2452,6 +2808,68 @@ const [stats, setStats] = useState({
         </button>
         <button
           onClick={() => setSelectedSevak(null)}
+          className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}{selectedBaithak && (
+  <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 backdrop-blur-sm animate-fadeIn" onClick={() => setSelectedBaithak(null)}>
+    <div className="bg-white rounded-3xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-teal-200 animate-scaleIn" onClick={(e) => e.stopPropagation()}>
+      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200">
+        <h3 className="text-3xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent flex items-center gap-3">
+          <div className="bg-gradient-to-r from-teal-500 to-cyan-500 p-3 rounded-xl">
+            <FileText size={24} className="text-white" />
+          </div>
+          बैठक Submission Details
+        </h3>
+        <button
+          onClick={() => setSelectedBaithak(null)}
+          className="text-gray-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+        >
+          <X size={24} />
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {Object.entries(selectedBaithak).map(([key, value]) => {
+          if (key === 'id') return null;
+          return (
+            <div key={key} className={`bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all ${key === 'meetingInfo' ? 'md:col-span-2' : ''}`}>
+              <span className="font-bold text-gray-700 capitalize text-sm block mb-2 text-teal-600">
+                {key.replace(/_/g, ' ')}:
+              </span>
+              <p className="text-gray-800 font-medium break-words">
+                {key === 'createdAt' 
+                  ? new Date(value).toLocaleString('en-IN', { 
+                      day: '2-digit', 
+                      month: 'short', 
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })
+                  : value || 'N/A'
+                }
+              </p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-6 flex justify-end gap-3">
+        <button
+          onClick={() => {
+            if (confirm("Are you sure you want to delete this बैठक submission?")) {
+              handleDeleteBaithak(selectedBaithak.id);
+              setSelectedBaithak(null);
+            }
+          }}
+          className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+        >
+          Delete
+        </button>
+        <button
+          onClick={() => setSelectedBaithak(null)}
           className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
         >
           Close
