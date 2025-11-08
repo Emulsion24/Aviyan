@@ -352,12 +352,12 @@ const HeroWithNav = () => {
         </p>
      
 
-        <p className="text-2xl md:text-3xl font-semibold text-yellow-200 pt-4">
+        <p className="text-2xl md:text-3xl font-extrabold text-yellow-200 pt-4">
           अध्यक्षता - <span className="text-lg md:text-2xl text-red-700">नंदी बाबा</span> <span className="text-lg md:text-2xl  text-red-700">(नीलमणि वृषभदेव)</span>
         </p>
        
           <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-blue-500 via-blue-300 to-blue-900 rounded-full shadow-md"></div>
-        <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
+        <p className="text-2xl md:text-3xl font-extrabold text-yellow-200 pt-4">
           आशीर्वाद
         </p>
         <p className="text-lg md:text-2xl  text-red-700 leading-relaxed">
