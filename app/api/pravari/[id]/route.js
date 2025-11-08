@@ -132,7 +132,7 @@ export async function PUT(request, context) {
     const { name, phone, email, role, village, address, state, district, experience } = body;
 
     // Validation
-    if (!name || !phone || !email || !role || !village || !address || !state || !district) {
+    if (!name || !phone ||  !village  || !state || !district) {
       return NextResponse.json(
         { success: false, error: 'All required fields must be provided' },
         { status: 400 }

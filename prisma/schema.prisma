@@ -73,3 +73,16 @@ model Pravari {
   @@index([phone])
   @@map("pravari")
 }
+
+model Sevak {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String?
+  state     String
+  district  String
+  village   String
+  category  String   // Zone Prabhari, Rajya Prabhari, Sambhag Prabhari
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
