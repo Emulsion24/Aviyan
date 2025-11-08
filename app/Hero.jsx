@@ -360,15 +360,15 @@ const HeroWithNav = () => {
         <p className="text-2xl md:text-3xl font-extrabold text-yellow-200 pt-4">
           आशीर्वाद
         </p>
-        <p className="text-lg md:text-2xl  text-red-700 leading-relaxed">
+        <p className="text-lg md:text-2xl font-extrabold text-red-700 leading-relaxed">
           भारतीय परम्परा के समस्त आराध्य देवी देवता
         </p>
  <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-blue-500 via-blue-300 to-blue-900 rounded-full shadow-md"></div>
-        <p className="text-2xl md:text-3xl font-bold text-yellow-200 pt-4">
+        <p className="text-2xl md:text-3xl font-extrabold text-yellow-200 pt-4">
           सहयोग
         </p>
         
-        <p className="text-lg md:text-2xl  text-red-700 leading-relaxed max-w-3xl mx-auto">
+        <p className="text-lg md:text-2xl font-extrabold text-red-700 leading-relaxed max-w-3xl mx-auto">
           भारतीय परम्परा के सभी आचार्य, मूर्धन्य संत, महापुरुष,  
           सभी गो संत, गो भक्त, गोरक्षक, गो सेवक, गो पालक,  
           गो पुत्र, गो वत्स, एवं गो प्रेमी जन
