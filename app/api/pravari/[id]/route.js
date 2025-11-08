@@ -139,14 +139,7 @@ export async function PUT(request, context) {
       );
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
+
 
     // Validate phone format
     const phoneRegex = /^\+?[\d\s-()]+$/;
