@@ -88,7 +88,7 @@ model Sevak {
   updatedAt DateTime @updatedAt
 }
 model Registration {
-  id            String   @id @default(cuid())
+  id            Int      @id @default(autoincrement())
   name          String
   phone         String
   email         String?

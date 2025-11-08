@@ -336,8 +336,8 @@ const HeroWithNav = () => {
             </button>
 
             <div className="bg-gradient-to-r from-orange-500 to-yellow-500 p-6 rounded-t-2xl">
-              <h2 className="text-3xl font-bold text-white text-center">त्वरित पंजीकरण फॉर्म</h2>
-              <p className="text-white/90 text-center mt-2">Quick Registration Form</p>
+              <h2 className="text-3xl font-bold text-white text-center">बैठक करवाने हेतु पंजीकरण</h2>
+              <p className="text-white/90 text-center mt-2">अपने क्षेत्र मे अभियान की बैठक करवाने हेतु ये फॉर्म भरे :</p>
             </div>
 
             <div className="p-6 space-y-4">
@@ -576,7 +576,7 @@ const HeroWithNav = () => {
                 </button>
                 
                 <button onClick={openPopup} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 text-white shadow-2xl hover:shadow-green-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
-                  <span className="flex items-center gap-3"><MapPin size={24} />त्वरित पंजीकरण</span>
+                  <span className="flex items-center gap-3"><MapPin size={24} />बैठक करवाने हेतु </span>
                 </button>
               </div>
 
