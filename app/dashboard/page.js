@@ -71,7 +71,7 @@ const STATE_DISTRICTS = {
     "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui", "Jehanabad", "Kaimur", "Katihar",
     "Khagaria", "Kishanganj", "Lakhisarai", "Madhubani", "Munger", "Muzaffarpur", "Nawada", "Nalanda",
     "Narcanda", "Patna", "Purnia", "Rohtas", "Saharsa", "Samastipur", "Sheikhpura", "Sheohar",
-    "Sitamarhi", "Siwan", "Supaul", "Vaishali", "West Champaran", "Begusarai"
+    "Sitamarhi", "Siwan", "Supaul", "Vaishali", "West Champaran", 
   ],
   "Chhattisgarh": [
     "Balod", "Baloda Bazar", "Balrampur", "Bastar", "Bijapur", "Bilaspur", "Dantewada", "Dhamtari",
@@ -325,7 +325,8 @@ const [newSevak, setNewSevak] = useState({
   email: "",
   state: "",
   district: "",
-  category: ""
+  category: "",
+  description: ""
 });
 const [sevakAvailableDistricts, setSevakAvailableDistricts] = useState([]);
 
@@ -467,7 +468,8 @@ const handleAddSevak = async (e) => {
         email: "",
         state: "",
         district: "",
-        category: ""
+        category: "",
+        description: ""
       });
       setSevakPage(1);
       fetchSevaks();
@@ -1965,12 +1967,22 @@ const [stats, setStats] = useState({
           </select>
           <input
             type="text"
-            placeholder="Village/Tehsil *"
+            placeholder="Village/Tehsil "
             value={editingSevak ? editingSevak.village : newSevak.village}
             onChange={(e) => editingSevak 
               ? setEditingSevak({ ...editingSevak, village: e.target.value })
               : setNewSevak({ ...newSevak, village: e.target.value })}
-            required
+        
+            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
+          />
+             <input
+            type="text"
+            placeholder="description "
+            value={editingSevak ? editingSevak.description : newSevak.description||""}
+            onChange={(e) => editingSevak 
+              ? setEditingSevak({ ...editingSevak, description: e.target.value })
+              : setNewSevak({ ...newSevak, description: e.target.value })}
+           
             className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
           />
           <select

@@ -29,10 +29,10 @@ export async function PUT(request, context) {
 
     const { id } =await context.params;
     const body = await request.json();
-    const { name, phone, email, state, district, village, category } = body;
+    const { name, phone, email, state, district, village,description, category } = body;
 
     // Validation
-    if (!name || !phone || !state || !district || !village || !category) {
+    if (!name || !phone || !state || !district  || !category) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }
@@ -86,8 +86,9 @@ export async function PUT(request, context) {
         email: email?.trim() || null,
         state: state.trim(),
         district: district.trim(),
-        village: village.trim(),
+        village: village.trim()|| null,
         category: category.trim(),
+        description: description?.trim() || null,
       },
     });
 

@@ -80,8 +80,9 @@ model Sevak {
   phone     String
   email     String?
   state     String
+  description String?
   district  String
-  village   String
+  village   String?
   category  String   // Zone Prabhari, Rajya Prabhari, Sambhag Prabhari
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
