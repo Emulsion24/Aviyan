@@ -603,7 +603,7 @@ const HeroWithNav = () => {
 
               {/* YouTube - Position 2 (45°) */}
               <a
-                href="https://www.youtube.com/@dhenutv"
+                href="https://www.youtube.com/channel/UCC9dQTSQXl4FeN0a9KTWZjg"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-red-50 hover:bg-red-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-red-200"
@@ -623,7 +623,7 @@ const HeroWithNav = () => {
 
               {/* Facebook - Position 4 (135°) */}
               <a
-                href="https://www.facebook.com/people/%E0%A4%97%E0%A5%8C-%E0%A4%B8%E0%A4%AE%E0%A5%8D%E0%A4%AE%E0%A4%BE%E0%A4%A8-%E0%A4%86%E0%A4%B9%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%A8-%E0%A4%85%E0%A4%AD%E0%A4%BF%E0%A4%AF%E0%A4%BE%E0%A4%A8/pfbid0tctmKc4T96rbmjdFGmDc2U77YfHheskkXdMJvsSwsuHGnNkvJdE9pszznsNx9sQVl/"
+                href="https://www.facebook.com/people/%E0%A4%97%E0%A5%8C-%E0%A4%B8%E0%A4%AE%E0%A5%8D%E0%A4%AE%E0%A4%BE%E0%A4%A8-%E0%A4%86%E0%A4%B9%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%A8-%E0%A4%85%E0%A4%AD%E0%A4%BF%E0%A4%AF%E0%A4%BE%E0%A4%A8/pfbid02xULUWGzGzaKavbxH6egvaq2ASTU6VWKsw7rukxDXQeGU8YN4hmxZpnyEYDETNDhol/?rdid=qaWNqeDzDHlXVYNo&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1Mtt9fjcZJ%2F"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-blue-50 hover:bg-blue-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-blue-200"
@@ -634,7 +634,7 @@ const HeroWithNav = () => {
 
               {/* Instagram - Position 5 (180° - Bottom) */}
               <a
-                href="https://www.instagram.com/gausmmaanaahvaan/#"
+                href="https://www.instagram.com/gausmmaanaahvaan/?igsh=end1eGRrZ2ZlMHc%3D#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-pink-50 hover:bg-pink-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-pink-200"
@@ -645,7 +645,7 @@ const HeroWithNav = () => {
 
               {/* Twitter - Position 6 (225°) */}
               <a
-                href="https://twitter.com"
+                href="https://x.com/GSAA2027?t=SGtchhWi3hqcLVeD5aF2Lg&s=09"
                 className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-sky-50 hover:bg-sky-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-sky-200"
                 style={{ transform: 'translate(calc(-50% + -78px), calc(-50% + 78px))', transformOrigin: 'center' }}
               >
@@ -654,7 +654,7 @@ const HeroWithNav = () => {
 
               {/* Spotify - Position 7 (270° - Left) */}
               <a
-                href="https://open.spotify.com"
+                href="https://open.spotify.com/user/31hpaxs5skl43g65frugwkxyzfwm?si=8N-tPs2GQ9ixaG-eKRU4rA&nd=1&dlsi=645dce9f1e184bff"
                 className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-emerald-50 hover:bg-emerald-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-emerald-200"
                 style={{ transform: 'translate(calc(-50% + -110px), calc(-50% + 0px))', transformOrigin: 'center' }}
               >

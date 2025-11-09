@@ -25,7 +25,7 @@ export async function GET(request,Content) {
         }
     const { id } = await Content.params;
     const registration = await prisma.registration.findUnique({
-      where: { id:id },
+      where: { id:parseInt(id) },
     });
 
     if (!registration) {
@@ -74,7 +74,7 @@ export async function PUT(
 
     // Check if registration exists
     const existingRegistration = await prisma.registration.findUnique({
-      where: { id: id},
+      where: { id: parseInt(id)},
     });
 
     if (!existingRegistration) {
@@ -179,7 +179,7 @@ export async function DELETE(
      const { id } = await Content.params;
     // Check if registration exists
     const existingRegistration = await prisma.registration.findUnique({
-      where: { id: id },
+      where: { id: parseInt(id) },
     });
 
     if (!existingRegistration) {

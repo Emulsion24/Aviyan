@@ -74,7 +74,7 @@ const Footer = () => {
             <div className="flex items-center space-x-4">
               <span className="text-orange-100 text-sm">हमसे जुड़ें:</span>
               <a 
-                href="https://www.facebook.com/share/14MgSqbK6e6/" 
+                href="https://www.facebook.com/people/%E0%A4%97%E0%A5%8C-%E0%A4%B8%E0%A4%AE%E0%A5%8D%E0%A4%AE%E0%A4%BE%E0%A4%A8-%E0%A4%86%E0%A4%B9%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%A8-%E0%A4%85%E0%A4%AD%E0%A4%BF%E0%A4%AF%E0%A4%BE%E0%A4%A8/pfbid02xULUWGzGzaKavbxH6egvaq2ASTU6VWKsw7rukxDXQeGU8YN4hmxZpnyEYDETNDhol/?rdid=qaWNqeDzDHlXVYNo&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1Mtt9fjcZJ%2F" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all hover:scale-110"
@@ -83,7 +83,7 @@ const Footer = () => {
                 <FaFacebook className="w-5 h-5" />
               </a>
               <a 
-                href="https://twitter.com" 
+                href="https://x.com/GSAA2027?t=SGtchhWi3hqcLVeD5aF2Lg&s=09" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all hover:scale-110"
@@ -101,7 +101,7 @@ const Footer = () => {
                 <FaInstagram className="w-5 h-5" />
               </a>
               <a 
-                href="https://youtube.com" 
+                href="https://www.youtube.com/channel/UCC9dQTSQXl4FeN0a9KTWZjg" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all hover:scale-110"
