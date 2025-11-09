@@ -116,7 +116,7 @@ export default function SocialMediaPage() {
             </div>
             
            {/* --- UPDATED BUTTON --- */}
-           <div className="flex justify-center items-center">
+           <div className="flex mt-10 justify-center items-center">
             <a
               href="https://www.gausamman.cloud/"
               target="_blank"
