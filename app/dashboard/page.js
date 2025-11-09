@@ -1270,7 +1270,7 @@ const handleDeleteBaithak = async (id) => {
               }`}
             >
               <Award size={20} />
-              <span>Prabhari</span>
+              <span>PrabhariDarshika</span>
               <span className={`px-3 py-1 rounded-full text-sm font-bold ${
                 tab === "pravari" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
               }`}>
