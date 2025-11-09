@@ -1727,48 +1727,61 @@ const handleDeleteBaithak = async (id) => {
                       className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
                     />
                   </div>
-                  <div className="grid md:grid-cols-3 gap-4 mb-4">
-                    <select
-                      value={editingPravari ? editingPravari.state : newPravari.state}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, state: e.target.value })
-                        : setNewPravari({ ...newPravari, state: e.target.value })}
-                      required
-                      className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-                    >
-                      <option value="">Select State *</option>
-                      {Object.keys(STATE_DISTRICTS).map(state => (
-                        <option key={state} value={state}>{state}</option>
-                      ))}
-                    </select>
-                    <select
-                      value={editingPravari ? editingPravari.district : newPravari.district}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, district: e.target.value })
-                        : setNewPravari({ ...newPravari, district: e.target.value })}
-                      required
-                      disabled={editingPravari ? !editingPravari.state : !newPravari.state}
-                      className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    >
-                      <option value="">Select District *</option>
-                      {(editingPravari 
-                        ? STATE_DISTRICTS[editingPravari.state] 
-                        : STATE_DISTRICTS[newPravari.state] || []
-                      ).map(district => (
-                        <option key={district} value={district}>{district}</option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      placeholder="Village/Tehsil *"
-                      value={editingPravari ? editingPravari.village : newPravari.village}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, village: e.target.value })
-                        : setNewPravari({ ...newPravari, village: e.target.value })}
-                      required
-                      className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-                    />
-                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 w-full">
+  <select
+    value={editingPravari ? editingPravari.state : newPravari.state}
+    onChange={(e) =>
+      editingPravari
+        ? setEditingPravari({ ...editingPravari, state: e.target.value })
+        : setNewPravari({ ...newPravari, state: e.target.value })
+    }
+    required
+    className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white w-full"
+  >
+    <option value="">Select State *</option>
+    {Object.keys(STATE_DISTRICTS).map((state) => (
+      <option key={state} value={state}>
+        {state}
+      </option>
+    ))}
+  </select>
+
+  <select
+    value={editingPravari ? editingPravari.district : newPravari.district}
+    onChange={(e) =>
+      editingPravari
+        ? setEditingPravari({ ...editingPravari, district: e.target.value })
+        : setNewPravari({ ...newPravari, district: e.target.value })
+    }
+    required
+    disabled={editingPravari ? !editingPravari.state : !newPravari.state}
+    className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white disabled:bg-gray-100 disabled:cursor-not-allowed w-full"
+  >
+    <option value="">Select District *</option>
+    {(editingPravari
+      ? STATE_DISTRICTS[editingPravari.state]
+      : STATE_DISTRICTS[newPravari.state] || []
+    ).map((district) => (
+      <option key={district} value={district}>
+        {district}
+      </option>
+    ))}
+  </select>
+
+  <input
+    type="text"
+    placeholder="Village/Tehsil *"
+    value={editingPravari ? editingPravari.village : newPravari.village}
+    onChange={(e) =>
+      editingPravari
+        ? setEditingPravari({ ...editingPravari, village: e.target.value })
+        : setNewPravari({ ...newPravari, village: e.target.value })
+    }
+    required
+    className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white w-full"
+  />
+</div>
+
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <input
                       type="text"
