@@ -133,7 +133,7 @@ export async function POST(request) {
       data: {
         name,
         phone,
-        email: email || "",
+        email: email?.trim() || null,
         altPhone: altPhone || null,
         state,
         district,
