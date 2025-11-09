@@ -143,7 +143,7 @@ export async function POST(request) {
       );
     }
 
-    // Validate email format
+
   
     // Validate phone format (basic validation)
     const phoneRegex = /^\+?[\d\s-()]+$/;
@@ -171,7 +171,7 @@ export async function POST(request) {
   data: {
     name: name?.trim(),
     phone: phone?.trim(),
-    email: email?.trim()?.toLowerCase() || null,
+    email: email?.trim()?.toLowerCase() || "",
     role: role.trim(),
     village: village?.trim() || "",
     address: address?.trim() || "",
