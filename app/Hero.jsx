@@ -802,12 +802,12 @@ const HeroWithNav = () => {
                         <p className="text-2xl md:text-3xl font-extrabold text-yellow-200">
                           प्रधान संरक्षक  
                         </p>
-                        <p><span className="text-lg md:text-2xl text-red-700">गौमाता</span> <span className="text-lg md:text-2xl text-red-700">(आद्यशक्ति मां सुरभि)</span></p>
+                        <p><span className="text-lg md:text-2xl font-extrabold text-red-700">गौमाता</span> <span className="text-lg md:text-2xl font-extrabold text-red-700">(आद्यशक्ति मां सुरभि)</span></p>
                      <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-blue-500 via-blue-300 to-blue-900 rounded-full shadow-md"></div>
                         <p className="text-2xl md:text-3xl font-extrabold text-yellow-200 pt-4">
                           अध्यक्ष  
                         </p>
-                        <p><span className="text-lg md:text-2xl text-red-700">नंदी बाबा</span> <span className="text-lg md:text-2xl text-red-700">(नीलमणि वृषभदेव)</span></p>
+                        <p><span className="text-lg font-extrabold md:text-2xl text-red-700">नंदी बाबा</span> <span className="text-lg font-extrabold  md:text-2xl text-red-700">(नीलमणि वृषभदेव)</span></p>
                        
                         <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-blue-500 via-blue-300 to-blue-900 rounded-full shadow-md"></div>
                         <p className="text-2xl md:text-3xl font-extrabold text-yellow-200 pt-4">आशीर्वाद</p>
