@@ -180,7 +180,7 @@ const Objectives = () => {
                        transition-all duration-300 overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-2">
-              {showAll ? "कम देखें" : "सभी आग्रह देखें"}
+              {showAll ? "कम देखें" : "अन्य सभी आग्रह विस्तार से देखे"}
               <svg 
                 className={`w-5 h-5 transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} 
                 fill="none" 

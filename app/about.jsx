@@ -100,28 +100,41 @@ const About = () => {
       <li className="flex items-start gap-3">
         <span className="text-amber-600 font-bold shrink-0">②</span>
         <span>
+         इस अभियान में कोई नेतृत्व कर्ता नहीं होगा  भारत के समस्त गो प्रेमी संत भक्त कार्यकर्ता समान रूप से कार्य करेंगे।
+        </span>
+      </li>
+            <li className="flex items-start gap-3">
+        <span className="text-amber-600 font-bold shrink-0">③</span>
+        <span>
           इस अभियान में किसी आचार्य, संत, महंत, नेता, अभिनेता, कार्यकर्ता का फ़ोटो, पोस्टर, बैनर, होल्डिंग पर नहीं लगेगा; केवल नंदी महाराज और गोमाता का ही चित्र मुद्रित होगा।
         </span>
       </li>
 
+
       <li className="flex items-start gap-3">
-        <span className="text-amber-600 font-bold shrink-0">③</span>
+        <span className="text-amber-600 font-bold shrink-0">④</span>
         <span >
           यह अभियान किसी भी राजनैतिक दल, संगठन, अथवा किसी भी राज्य अथवा केंद्र सरकार के विरुद्ध नहीं है। इस अभियान का उद्देश्य केवल यही है कि गोमाता को सेवा, सुरक्षा और सम्मान मिले।
         </span>
       </li>
 
       <li className="flex items-start gap-3">
-        <span className="text-amber-600 font-bold shrink-0">④</span>
+        <span className="text-amber-600 font-bold shrink-0">⑤</span>
         <span>
           यह अभियान पूर्ण रूपेण अहिंसक होगा। इस दौरान किसी भी राष्ट्रीय अथवा निजी संपत्ति को नुक़सान पहुँचाने वाले विचारकों को पूरी तरह दूर रखा जाएगा।
         </span>
       </li>
 
-      <li className="flex items-start gap-3">
-        <span className="text-amber-600 font-bold shrink-0">⑤</span>
+       <li className="flex items-start gap-3">
+        <span className="text-amber-600 font-bold shrink-0"> ⑥</span>
         <span>
-          इस अभियान में कोई मंचीय उद्बोधन नहीं होगा, कोई माइक से भाषण नहीं होगा। गो प्रेमीजन अपनी बात, संकीर्तन, रैली और प्रार्थना पत्र के माध्यम से अपनी बात रखेंगे।
+             इस अभियान में कोई मंचीय उद्बोधन नहीं होगा, कोई माइक से भाषण नहीं होगा। गो प्रेमीजन - संकीर्तन, रैली और प्रार्थना पत्र के माध्यम से अपनी बात रखेंगे।
+        </span>
+      </li>
+      <li className="flex items-start gap-3">
+        <span className="text-amber-600 font-bold shrink-0"> ⑦</span>
+        <span>
+            इस अभियान हेतु किसी भी प्रकार का दान या चंदा स्वीकार नहीं किया जा रहा है। अगर कोई इस अभियान के नाम से दान या चंदा मांगे, तो तुरंत 8239711008 नंबर पर शिकायत करें।
         </span>
       </li>
     </ul>

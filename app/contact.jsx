@@ -56,11 +56,36 @@ const Contact = () => {
           <span className="font-semibold text-green-600"> व्हाट्सएप नंबर </span> 
           पर संपर्क करें।
         </p>
-        <p className="text-red-600 font-semibold">
-          ⚠️ इस अभियान हेतु किसी भी प्रकार का दान या चंदा स्वीकार नहीं किया जा रहा है।  
-          अगर कोई इस अभियान के नाम से दान या चंदा मांगे, तो तुरंत  
-          <span className="text-green-700"> 8239711008 </span> नंबर पर शिकायत करें।
-        </p>
+    <div className="bg-gradient-to-r from-red-50 via-orange-50 to-yellow-50 border-4 border-red-500 rounded-2xl p-6 shadow-2xl animate-pulse-slow my-8">
+  <div className="flex items-center justify-center gap-3 mb-4">
+    <span className="text-4xl">⚠️</span>
+    <h3 className="text-2xl md:text-3xl font-extrabold text-red-700 uppercase tracking-wide">
+      NO Donation | कोई दान नहीं
+    </h3>
+    <span className="text-4xl">⚠️</span>
+  </div>
+  
+  <p className="text-red-700 font-bold text-lg md:text-xl text-center leading-relaxed">
+    इस अभियान हेतु किसी भी प्रकार का दान या चंदा स्वीकार नहीं किया जा रहा है।
+  </p>
+  
+  <p className="text-gray-800 font-semibold text-base md:text-lg text-center mt-4">
+    अगर कोई इस अभियान के नाम से दान या चंदा मांगे, तो तुरंत
+    <a 
+      href="tel:8239711008" 
+      className="inline-flex items-center gap-2 mx-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-bold shadow-lg hover:shadow-xl"
+    >
+      📞 8239711008
+    </a>
+    नंबर पर शिकायत करें।
+  </p>
+  
+  <div className="mt-4 text-center">
+    <p className="text-orange-700 font-bold text-sm md:text-base italic">
+      ⚡ सावधान रहें | किसी को भी पैसे न दें ⚡
+    </p>
+  </div>
+</div>
       </div>
 
     </section>
