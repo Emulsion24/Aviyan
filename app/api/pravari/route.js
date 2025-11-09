@@ -168,18 +168,20 @@ export async function POST(request) {
 
     // Create new pravari
     const pravari = await prisma.pravari.create({
-      data: {
-        name: name.trim(),
-        phone: phone.trim(),
-        email: email.trim().toLowerCase(),
-        role: role.trim(),
-        village: village.trim(),
-        address: address.trim(),
-        state: state.trim(),
-        district: district.trim(),
-        experience: experience ? experience.trim() : null,
-      },
-    });
+  data: {
+    name: name?.trim(),
+    phone: phone?.trim(),
+    email: email?.trim()?.toLowerCase() || null,
+    role: role.trim(),
+    village: village?.trim() || "",
+    address: address?.trim() || "",
+    state: state?.trim() || "",
+    district: district?.trim() || "",
+    experience: experience?.trim() || null,
+  },
+});
+
+
 
     return NextResponse.json({
       success: true,
