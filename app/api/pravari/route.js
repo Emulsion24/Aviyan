@@ -156,7 +156,7 @@ export async function POST(request) {
 
     // Check if email already exists
     const existingPravari = await prisma.pravari.findUnique({
-      where: { email },
+      where: { phone: phone?.trim() },
     });
 
     if (existingPravari) {
