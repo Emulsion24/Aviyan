@@ -162,19 +162,7 @@ export async function PUT(request, context) {
       );
     }
 
-    // Check if email is being changed to one that already exists
-    if (email !== existingPravari.email) {
-      const emailExists = await prisma.pravari.findUnique({
-        where: { email: email.trim().toLowerCase() },
-      });
-
-      if (emailExists) {
-        return NextResponse.json(
-          { success: false, error: 'Email already exists' },
-          { status: 400 }
-        );
-      }
-    }
+   
 
     // Update pravari
     const updatedPravari = await prisma.pravari.update({
