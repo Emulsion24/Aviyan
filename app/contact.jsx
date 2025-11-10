@@ -35,12 +35,12 @@ const Contact = () => {
       
               {/* Email Contact */}
               <a
-                href="mailto:gausamman@gmail.com"
+                href="mailto:GSAabhiyan2027@gmail.com"
                 className="flex items-center gap-3 px-6 py-3 bg-orange-50 rounded-xl hover:bg-orange-100 transition-all duration-300 shadow-sm hover:shadow-md"
               >
                 <FaEnvelope className="text-orange-600 text-2xl" />
                 <span className="font-semibold text-lg text-gray-800">
-                  gausamman@gmail.com
+                  GSAabhiyan2027@gmail.com
                 </span>
               </a>
             </div>
@@ -56,36 +56,43 @@ const Contact = () => {
           <span className="font-semibold text-green-600"> व्हाट्सएप नंबर </span> 
           पर संपर्क करें।
         </p>
-    <div className="bg-gradient-to-r from-red-50 via-orange-50 to-yellow-50 border-4 border-red-500 rounded-2xl p-6 shadow-2xl animate-pulse-slow my-8">
-  <div className="flex items-center justify-center gap-3 mb-4">
-    <span className="text-4xl">⚠️</span>
-    <h3 className="text-2xl md:text-3xl font-extrabold text-red-700 uppercase tracking-wide">
-      NO Donation | कोई दान नहीं
-    </h3>
-    <span className="text-4xl">⚠️</span>
-  </div>
-  
-  <p className="text-red-700 font-bold text-lg md:text-xl text-center leading-relaxed">
-    इस अभियान हेतु किसी भी प्रकार का दान या चंदा स्वीकार नहीं किया जा रहा है।
-  </p>
-  
-  <p className="text-gray-800 font-semibold text-base md:text-lg text-center mt-4">
-    अगर कोई इस अभियान के नाम से दान या चंदा मांगे, तो तुरंत
-    <a 
-      href="tel:8239711008" 
-      className="inline-flex items-center gap-2 mx-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-bold shadow-lg hover:shadow-xl"
-    >
-      📞 8239711008
-    </a>
-    नंबर पर शिकायत करें।
-  </p>
-  
-  <div className="mt-4 text-center">
-    <p className="text-orange-700 font-bold text-sm md:text-base italic">
-      ⚡ सावधान रहें | किसी को भी पैसे न दें ⚡
-    </p>
-  </div>
-</div>
+    {/* HIGHLIGHTED NO DONATION BOX START */}
+    <div className="bg-red-800 border-4 border-yellow-300 rounded-2xl p-6 shadow-2xl shadow-red-900/50 my-8 
+                    relative overflow-hidden
+                    before:content-[''] before:absolute before:inset-0 before:bg-yellow-300 before:opacity-20 before:animate-pulse-strong 
+                    before:rounded-2xl">
+      <div className="relative z-10 flex items-center justify-center gap-3 mb-4">
+        <span className="text-5xl animate-bounce-slow">🚨</span>
+        <h3 className="text-3xl md:text-4xl font-extrabold text-yellow-50 uppercase tracking-wide">
+          NO Donation | कोई दान नहीं
+        </h3>
+        <span className="text-5xl animate-bounce-slow">🚨</span>
+      </div>
+      
+      <p className="relative z-10 text-yellow-100 font-bold text-xl md:text-2xl text-center leading-relaxed mb-4">
+        इस अभियान हेतु किसी भी प्रकार का दान या चंदा स्वीकार नहीं किया जा रहा है।
+      </p>
+      
+      <p className="relative z-10 text-white font-semibold text-lg md:text-xl text-center mt-4">
+        अगर कोई इस अभियान के नाम से दान या चंदा मांगे, तो तुरंत
+        <a 
+          href="tel:8239711008" 
+          className="inline-flex items-center gap-2 mx-2 px-5 py-2 bg-green-500 text-white rounded-lg 
+                     hover:bg-green-600 transition-all font-bold shadow-lg hover:shadow-xl text-xl 
+                     ring-2 ring-green-400 animate-pulse-fast"
+        >
+          📞 8239711008
+        </a>
+        नंबर पर शिकायत करें।
+      </p>
+      
+      <div className="relative z-10 mt-6 text-center">
+        <p className="text-yellow-300 font-bold text-lg md:text-xl italic">
+          ⚡ सावधान रहें | किसी को भी पैसे न दें ⚡
+        </p>
+      </div>
+    </div>
+    {/* HIGHLIGHTED NO DONATION BOX END */}
       </div>
 
     </section>
