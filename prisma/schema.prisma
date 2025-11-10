@@ -60,7 +60,7 @@ model Pravari {
   role      String
   village   String
   address   String   @db.Text
-  email     String   @unique
+  email     String?
   state     String
   district  String
   experience String? @db.Text
