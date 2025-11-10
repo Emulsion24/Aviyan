@@ -154,17 +154,10 @@ export async function POST(request) {
       );
     }
 
-    // Check if email already exists
-    const existingPravari = await prisma.pravari.findUnique({
-      where: { phone: phone?.trim() },
-    });
+   
+  
 
-    if (existingPravari) {
-      return NextResponse.json(
-        { success: false, error: 'Email already exists' },
-        { status: 400 }
-      );
-    }
+   
 
     // Create new pravari
     const pravari = await prisma.pravari.create({
