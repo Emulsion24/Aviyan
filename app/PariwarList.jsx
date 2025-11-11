@@ -274,20 +274,26 @@ const PravariSearchUI = () => {
   };
 
   return (
-    <div id="pravari"className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
-      <div className="max-w-7xl mx-auto space-y-12">
+  <div
+  id="pravari"
+  className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8"
+>
+
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 mb-10">
           <div className="inline-block px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-lg">
-            <span className="text-white font-bold text-sm tracking-wide">Find Prabhari Darshika</span>
+            <span className="text-white font-bold text-sm tracking-wide">
+              Find Prabhari Darshika
+            </span>
           </div>
-          
+
           <h2 className="text-4xl pt-1 pb-1 md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-           प्रभारी दर्शिका
+            प्रभारी दर्शिका
           </h2>
-          
+
           <div className="w-32 h-1.5 mx-auto bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full shadow-md"></div>
-          
+
           <p className="text-xl text-gray-700 font-medium max-w-3xl mx-auto">
             Find Go Seva Prabhari information in your region
           </p>
@@ -295,14 +301,14 @@ const PravariSearchUI = () => {
 
         {/* Error Message */}
         {error && (
-          <div className="max-w-5xl mx-auto p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg flex items-center gap-3">
+          <div className="max-w-5xl mx-auto mb-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg flex items-center gap-3">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Search Form */}
-        <div className="max-w-5xl mx-auto p-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-blue-100">
+        <div className="max-w-5xl mx-auto p-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-blue-100 mb-8">
           <div className="space-y-6">
             <div className="grid md:grid-cols-3 gap-6">
               {/* State Dropdown */}
@@ -324,8 +330,10 @@ const PravariSearchUI = () => {
                   className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 >
                   <option value="">Select State</option>
-                  {Object.keys(statesDistrictsData).map(state => (
-                    <option key={state} value={state}>{state}</option>
+                  {Object.keys(statesDistrictsData).map((state) => (
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -348,13 +356,15 @@ const PravariSearchUI = () => {
                   className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
                 >
                   <option value="">Select District</option>
-                  {getDistricts().map(district => (
-                    <option key={district} value={district}>{district}</option>
+                  {getDistricts().map((district) => (
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
                   ))}
                 </select>
               </div>
 
-              {/* Village/Tehsil Search Input */}
+              {/* Village Search Input */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-semibold">
                   <Home className="w-5 h-5 text-purple-600" />
@@ -410,16 +420,17 @@ const PravariSearchUI = () => {
 
         {/* Results */}
         {showResults && !loading && (
-          <div className="space-y-6">
+          <div id="pravari-results" className="max-w-7xl mx-auto pb-12">
             {filteredPravari.length > 0 ? (
               <>
-                <div className="text-center">
+                <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-gray-800">
                     {filteredPravari.length} Pravari Found
                   </h3>
                   {villageSearch && (
                     <p className="text-gray-600 mt-2">
-                      in village/tehsil: <span className="font-semibold">{villageSearch}</span>
+                      in village/tehsil:{" "}
+                      <span className="font-semibold">{villageSearch}</span>
                     </p>
                   )}
                 </div>
@@ -431,45 +442,51 @@ const PravariSearchUI = () => {
                       className="group relative p-6 bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-blue-100 hover:border-purple-300 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105"
                     >
                       <div className="space-y-4">
-                        {/* Header */}
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex items-center gap-3">
                             <div className="p-3 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full">
                               <User className="w-6 h-6 text-blue-600" />
                             </div>
                             <div>
-                              <h4 className="text-xl font-bold text-gray-800">{pravari.name}</h4>
+                              <h4 className="text-xl font-bold text-gray-800">
+                                {pravari.name}
+                              </h4>
                               <div className="inline-block px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mt-1">
-                                <p className="text-white text-sm font-semibold">{pravari.role}</p>
+                                <p className="text-white text-sm font-semibold">
+                                  {pravari.role}
+                                </p>
                               </div>
                             </div>
                           </div>
                           <Award className="w-8 h-8 text-yellow-500" />
                         </div>
 
-                        {/* Contact Info */}
-                        <div className="space-y-3 pl-0">
+                        <div className="space-y-3">
                           <div className="flex items-center gap-3 text-gray-700">
                             <Phone className="w-4 h-4 text-green-600 flex-shrink-0" />
                             <span className="font-medium">{pravari.phone}</span>
                           </div>
-                          
+
                           <div className="flex items-center gap-3 text-gray-700">
                             <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                            <span className="text-sm break-all">{pravari.email}</span>
+                            <span className="text-sm break-all">
+                              {pravari.email}
+                            </span>
                           </div>
-                          
+
                           <div className="flex items-start gap-3 text-gray-700">
                             <Home className="w-4 h-4 text-purple-600 flex-shrink-0 mt-1" />
                             <div>
-                              <p className="font-semibold text-purple-700">{pravari.village}</p>
-                              <p className="text-sm text-gray-600">{pravari.district}, {pravari.state}</p>
+                              <p className="font-semibold text-purple-700">
+                                {pravari.village}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                {pravari.district}, {pravari.state}
+                              </p>
                             </div>
                           </div>
-                     
                         </div>
 
-                        {/* Experience Badge */}
                         {pravari.experience && (
                           <div className="pt-2">
                             <div className="inline-block px-4 py-2 bg-gradient-to-r from-amber-100 to-orange-100 border border-orange-200 rounded-lg">
@@ -493,10 +510,9 @@ const PravariSearchUI = () => {
                   No Pravari Found
                 </h3>
                 <p className="text-gray-600">
-                  {villageSearch 
+                  {villageSearch
                     ? `No Pravari found in village/tehsil "${villageSearch}" for this region.`
-                    : "No Pravari information is currently available for this region."
-                  }
+                    : "No Pravari information is currently available for this region."}
                 </p>
                 <p className="text-gray-500 mt-2 text-sm">
                   Try selecting a different state or district.

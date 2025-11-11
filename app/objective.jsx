@@ -1,24 +1,29 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
-import { Shield, Heart, Award, Leaf, BookOpen, Users, Stethoscope } from "lucide-react";
+import { Shield, Heart, Award, Leaf, BookOpen, Users, Stethoscope, BookA, BookOpenCheck } from "lucide-react";
+import { GiIndiaGate, GiThrust, GiWorld } from "react-icons/gi";
+import { SiIndiansuperleague, SiTrustedshops } from "react-icons/si";
+import { PiCow } from "react-icons/pi";
+import { FaCow } from "react-icons/fa6";
+import { RiGovernmentFill } from "react-icons/ri";
 
 const Objectives = () => {
   const [showAll, setShowAll] = useState(false);
 
   const mainDemands = [
     {
-      icon: <Award className="w-8 h-8 text-yellow-600" />,
+      icon: <RiGovernmentFill className="w-8 h-8 text-yellow-600" />,
       title: "गौ माता को राष्ट्र माता के पद पर विराजमान करे \n(गौ माता को सम्मान मिले)",
 
     },
     {
-      icon: <Shield className="w-8 h-8 text-yellow-600" />,
+      icon: <BookOpenCheck className="w-8 h-8 text-yellow-600" />,
       title: "गो रक्षा हेतु केंद्रीय कानून बने ",
 
     },
     {
-      icon: <Heart className="w-8 h-8 text-yellow-600" />,
+      icon: <GiIndiaGate className="w-8 h-8 text-yellow-600" />,
       title: "भारतवर्ष में गौ हत्या पूरी तरह समाप्त हो ",
 
     },
@@ -112,10 +117,10 @@ const Objectives = () => {
               <h2
                 id="objectives"
                 className="text-4xl md:text-5xl font-extrabold leading-tight
-                  bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent
+                  bg-gradient-to-r from-amber-600 pb-1 pt-1 via-orange-600 to-yellow-500 bg-clip-text text-transparent
                   tracking-wide drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]"
               >
-                सरकार से मुख्य आग्रह
+                भारत सरकार से गो रक्षा सम्बंधित मुख्य आग्रह
               </h2>
             </div>
 
@@ -136,9 +141,7 @@ const Objectives = () => {
           <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 rounded-full shadow-md"></div>
 
           {/* Subheading */}
-          <p className="mt-4 text-xl md:text-2xl text-gray-700 font-medium">
-            गौरक्षा संबंधित मुख्य आग्रह
-          </p>
+    
         </div>
 
         {/* 🪔 Main 3 Demands Grid */}
@@ -160,7 +163,7 @@ const Objectives = () => {
                   {demand.icon}
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl whitespace-pre-line font-bold text-gray-800">
+                  <h3 className="text-2xl whitespace-pre-line font-extrabold text-red-600">
                     {demand.title}
                   </h3>
             
@@ -171,7 +174,7 @@ const Objectives = () => {
         </div>
 
         {/* 🔽 View More Button */}
-        <div className="text-center">
+        <div className="text-center  mb-15">
           <button
             onClick={() => setShowAll(!showAll)}
             className="group relative px-10 py-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 
@@ -196,7 +199,7 @@ const Objectives = () => {
 
         {/* 🌿 Detailed Demands - Expandable */}
         {showAll && (
-          <div className="space-y-8 opacity-0 animate-fadeIn">
+          <div className="space-y-8 opacity-0 animate-fadeIn mb-15">
             {allDemands.map((section, idx) => (
               <div 
                 key={idx}
@@ -230,10 +233,20 @@ const Objectives = () => {
                 </div>
               </div>
             ))}
+            
           </div>
-        )}
-      </div>
 
+          
+        )}
+        
+      </div>
+ <div className="absolute bottom-0 left-0 right-0 flex justify-around items-end opacity-80">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="text-4xl md:text-6xl" style={{ transform: i >= 3 ? "scale(1) scaleX(-1)" : "scale(1)" }}>
+              <Image src="/3.png" alt="Decorative Flower" width={100} height={100} />
+            </div>
+          ))}
+        </div>
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes fadeIn {
           from {

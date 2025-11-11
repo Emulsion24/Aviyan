@@ -7,55 +7,99 @@ import Image from "next/image";
 const Contact = () => {
   return (
     <section id="contact" className="py-20 bg-yellow-50">
-     <div className="text-center mb-6">
-        <h3 className="text-2xl md:text-3xl font-bold text-orange-700 mb-2">
-          संपर्क और जुड़ाव
-        </h3>
-        <p className="text-gray-700 max-w-3xl mx-auto px-4 leading-relaxed">
-          गो सेवा और गो रक्षा के माध्यम से होने वाले राष्ट्र रक्षा एवं संस्कृति रक्षा के इस 
-          निष्काम और पवित्र अभियान में सम्मिलित होने के लिए 
-          <span className="font-semibold text-orange-600"> व्हाट्सएप नंबर 8239711008 </span> 
-          पर अपनी विस्तृत जानकारी भेजें।  
-          अधिक जानकारी के लिए निम्न माध्यमों से संपर्क करें।
-        </p>
-      </div>
-      <div className="flex flex-wrap justify-center gap-6 text-gray-700">
-              {/* WhatsApp Contact */}
-              <a
-                href="https://wa.me/918239711008"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-6 py-3 bg-green-50 rounded-xl hover:bg-green-100 transition-all duration-300 shadow-sm hover:shadow-md"
-              >
-                <FaWhatsapp className="text-green-600 text-2xl" />
-                <span className="font-semibold text-lg text-gray-800">
-                  WhatsApp: +91 8239711008
-                </span>
-              </a>
-      
-              {/* Email Contact */}
-              <a
-                href="mailto:GSAabhiyan2027@gmail.com"
-                className="flex items-center gap-3 px-6 py-3 bg-orange-50 rounded-xl hover:bg-orange-100 transition-all duration-300 shadow-sm hover:shadow-md"
-              >
-                <FaEnvelope className="text-orange-600 text-2xl" />
-                <span className="font-semibold text-lg text-gray-800">
-                  GSAabhiyan2027@gmail.com
-                </span>
-              </a>
-            </div>
- <div className="max-w-4xl mx-auto mt-8 text-gray-700 text-center leading-relaxed px-4">
+    <div
+  className="relative text-center mb-10 rounded-3xl p-10 
+             bg-gradient-to-br from-orange-400 via-amber-400 to-yellow-300 
+             border-4 border-yellow-200 shadow-[0_10px_40px_-5px_rgba(255,140,0,0.5)]
+             overflow-hidden"
+>
+  {/* Animated glow overlay */}
+  <div className="absolute inset-0 bg-gradient-to-tr from-yellow-200/20 to-transparent animate-pulse-slow"></div>
+
+  {/* Heading */}
+  <h3 className="relative text-3xl md:text-4xl font-extrabold text-white drop-shadow-lg mb-4 tracking-wide">
+    संपर्क और जुड़ाव
+  </h3>
+<div className="w-40 h-2 mx-auto mb-8 bg-gradient-to-r from-orange-600 via-amber-400 to-orange-700 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.7)]"></div>
+
+  {/* Description */}
+<p className="relative text-lg md:text-xl text-orange-900/90 font-medium max-w-3xl mx-auto leading-relaxed mb-8">
+  गो सेवा और गो रक्षा के माध्यम से होने वाले राष्ट्र रक्षा एवं संस्कृति रक्षा के इस 
+  निष्काम और पवित्र अभियान में सम्मिलित होने के लिए{" "}
+  <span className="font-semibold text-white bg-orange-600/70 px-2 py-1 rounded-lg shadow-sm">
+    व्हाट्सएप नंबर 8239711008
+  </span>{" "}
+  पर अपनी विस्तृत जानकारी भेजें। अधिक जानकारी के लिए निम्न माध्यमों से संपर्क करें।
+</p>
+
+
+  {/* Contact Buttons */}
+  <div className="relative flex flex-wrap justify-center gap-6">
+    {/* WhatsApp Contact */}
+    <a
+      href="https://wa.me/918239711008"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-3 px-7 py-3.5 
+                 bg-white/80 backdrop-blur-sm rounded-2xl 
+                 border border-green-200 hover:border-green-400
+                 hover:bg-green-50 transition-all duration-300 
+                 shadow-lg hover:shadow-green-300/40"
+    >
+      <FaWhatsapp className="text-green-600 text-3xl" />
+      <span className="font-bold text-lg text-green-800">
+        WhatsApp: +91 8239711008
+      </span>
+    </a>
+
+    {/* Email Contact */}
+    <a
+      href="mailto:GSAabhiyan2027@gmail.com"
+      className="flex items-center gap-3 px-7 py-3.5 
+                 bg-white/80 backdrop-blur-sm rounded-2xl 
+                 border border-orange-200 hover:border-orange-400
+                 hover:bg-orange-50 transition-all duration-300 
+                 shadow-lg hover:shadow-orange-300/40"
+    >
+      <FaEnvelope className="text-orange-600 text-3xl" />
+      <span className="font-bold text-lg text-orange-800">
+        GSAabhiyan2027@gmail.com
+      </span>
+    </a>
+  </div>
+
+  {/* Subtle background accent */}
+  <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-yellow-100/20 via-orange-200/10 to-transparent blur-2xl"></div>
+</div>
+
+     
+         
+ <div className="max-w-4xl mx-auto mt-8 text-gray-700 text-center font-extrabold leading-relaxed px-4">
+     <div className="bg-orange-400 border-4 border-yellow-300 text-white rounded-2xl p-6 shadow-2xl shadow-orange-900/50 my-8
+                 relative overflow-hidden
+                 before:content-[''] before:absolute before:inset-0 before:bg-yellow-300 before:opacity-20 before:animate-pulse-strong 
+                 before:rounded-2xl">
+               <h3 className="relative text-3xl md:text-4xl font-extrabold text-white drop-shadow-lg mb-4 tracking-wide">
+आपसे विशेष आग्रह
+  </h3>
+
+<div className="w-40 h-2 mx-auto mb-8 bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.7)]"></div>
+
+
+
+
         <p className="mb-4">
           इस अभियान में सहयोग हेतु आप भी इस प्रकार के पत्रक छपवाकर वितरित कर सकते हैं। 
-          ध्यान रखें — इसमें <span className="font-semibold text-orange-600">“सौजन्य से”</span>, 
+          ध्यान रखें — इसमें <span className="font-semibold text-red-600">“सौजन्य से”</span>, 
           अपना नाम, संस्था या संगठन का नाम लिखे बिना यथारूप पर्चा छपवाकर अपने क्षेत्र में वितरित करें 
           एवं गौसेवा में सहयोग करें।
         </p>
         <p className="mb-4">
           छपवाने के लिए सीडीआर फाइल या पीडीएफ फाइल हेतु ऊपर दिए गए 
-          <span className="font-semibold text-green-600"> व्हाट्सएप नंबर </span> 
+          <span className="font-semibold text-red-600"> व्हाट्सएप नंबर </span> 
           पर संपर्क करें।
         </p>
+        </div>
     {/* HIGHLIGHTED NO DONATION BOX START */}
     <div className="bg-red-800 border-4 border-yellow-300 rounded-2xl p-6 shadow-2xl shadow-red-900/50 my-8 
                     relative overflow-hidden
@@ -66,6 +110,7 @@ const Contact = () => {
         <h3 className="text-3xl md:text-4xl font-extrabold text-yellow-50 uppercase tracking-wide">
           NO Donation | कोई दान नहीं
         </h3>
+        
         <span className="text-5xl animate-bounce-slow">🚨</span>
       </div>
       

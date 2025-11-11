@@ -58,7 +58,7 @@ const CampaignActionPlan = () => {
       id: 4,
       title: "चतुर्थ चरण - राष्ट्रीय स्तर",
       date: "नवम्बर 2026 - फरवरी 2027",
-      actionDate: "27 फरवरी 2027 (शनिवार) - प्रातः 11 बजे",
+      actionDate: "27 फरवरी 2027 (शनिवार) ",
       icon: <Bell className="w-6 h-6" />,
       color: "from-purple-500 to-pink-500",
       bgColor: "from-purple-50 to-pink-50",

@@ -19,7 +19,7 @@ export default function DownloadsSection() {
       title: "प्रिंट फाइल",
       description: "प्रिंट करने योग्य अभियान सामग्री",
       icon: Printer,
-      file: "https://drive.google.com/file/d/1bfIik8txFdpgzy-Xbj-3BsTiRnCzRR_T/view?usp=sharing",
+      file: "https://drive.google.com/file/d/1COLb3QqAsFpYg6lt69HB7MTCKnj_UGUu/view?usp=drive_link",
       filename: "Gau-Samman-Printable",
       color: "from-blue-500 to-indigo-600",
       bgPattern: "from-blue-50 to-indigo-50"
@@ -46,7 +46,8 @@ export default function DownloadsSection() {
   };
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-yellow-50 via-white to-orange-50 overflow-hidden">
+    <section id="downlaod"
+    className="relative py-20 bg-gradient-to-br from-yellow-50 via-white to-orange-50 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
