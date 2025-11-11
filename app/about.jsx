@@ -20,38 +20,41 @@ const About = () => {
       {/* Card content */}
       <div className="relative p-8 md:p-12 bg-pink-200 backdrop-blur-sm border border-yellow-300 rounded-3xl shadow-[0_10px_40px_rgba(255,183,0,0.15)] group-hover:shadow-[0_12px_45px_rgba(255,153,0,0.25)] transition-all duration-500">
         <div className="relative text-center">
-                  <div className="flex items-center justify-center gap-6 md:gap-8">
-                {/* Left ornament */}
-                <Image
-                  src="/3.png"
-                  alt="left decoration"
-                  width={64}
-                  height={64}
-                  className="w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
-                />
-    
-                {/* Main Heading */}
-                <div className="flex-shrink-0 mb-2">
-                  <h2
-                    id="objectives"
-                    className="text-4xl md:text-5xl pb-1 pt-1 font-extrabold leading-tight
-                      bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent
-                      tracking-wide drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]"
-                  >
-                   अभियान का मुख्य उद्देश्य
-                  </h2>
-                </div>
-    
-                {/* Right ornament */}
-                <Image
-                  src="/2.png"
-                  alt="right decoration"
-                  width={64}
-                  height={64}
-                  className="w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
-                  style={{ animationDelay: '1s' }}
-                />
-              </div>
+              <div className="flex items-center justify-center gap-3 sm:gap-6 md:gap-8 px-2 sm:px-6 md:px-10 text-center flex-nowrap">
+  {/* Left ornament */}
+  <Image
+    src="/3.png"
+    alt="left decoration"
+    width={64}
+    height={64}
+    className="w-8 sm:w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0"
+  />
+
+  {/* Main Heading */}
+  <div className="flex-shrink text-center">
+    <h2
+      id="objectives"
+      className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight
+        bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent
+        tracking-wide drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]
+        pb-1 pt-1"
+    >
+      अभियान का मुख्य उद्देश्य
+    </h2>
+  </div>
+
+  {/* Right ornament */}
+  <Image
+    src="/2.png"
+    alt="right decoration"
+    width={64}
+    height={64}
+    className="w-8 sm:w-12 md:w-16 opacity-95 animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0"
+    style={{ animationDelay: '1s' }}
+  />
+</div>
+
+
     
               {/* Underline */}
               
