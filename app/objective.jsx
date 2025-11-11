@@ -99,15 +99,15 @@ const Objectives = () => {
       <div className="relative max-w-6xl mx-auto px-4 space-y-16">
         {/* 🌸 Header Section */}
         <div className="relative text-center">
-          <div className="flex items-center justify-center gap-3 sm:gap-5 md:gap-8 px-3 sm:px-6 md:px-10 flex-nowrap text-center">
+      <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 px-4 sm:px-6 md:px-10 flex-nowrap text-center">
   {/* Left ornament */}
-  <div className="w-8 sm:w-12 md:w-16 h-8 sm:h-12 md:h-16 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0">
+  <div className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0">
     <Image
       src="/3.png"
       alt="left decoration"
       width={64}
       height={64}
-      className="w-6 sm:w-10 md:w-14 opacity-95 drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
+      className="w-8 sm:w-10 md:w-14 opacity-95 drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
     />
   </div>
 
@@ -115,21 +115,18 @@ const Objectives = () => {
   <div className="flex-shrink text-center">
     <h2
       id="objectives"
-      className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-extrabold leading-tight
+      className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight
         bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent
         tracking-wide drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]
         pb-1 pt-1"
     >
       भारत सरकार से गो रक्षा सम्बंधित मुख्य आग्रह
     </h2>
-
-    {/* Optional decorative underline */}
-    <div className="mx-auto mt-2 h-[3px] w-20 sm:w-28 md:w-36 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 rounded-full shadow-md"></div>
   </div>
 
   {/* Right ornament */}
   <div
-    className="w-8 sm:w-12 md:w-16 h-8 sm:h-12 md:h-16 bg-gradient-to-br from-yellow-500 to-amber-400 rounded-full flex items-center justify-center animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0"
+    className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 bg-gradient-to-br from-yellow-500 to-amber-400 rounded-full flex items-center justify-center animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0"
     style={{ animationDelay: '1s' }}
   >
     <Image
@@ -137,10 +134,11 @@ const Objectives = () => {
       alt="right decoration"
       width={64}
       height={64}
-      className="w-6 sm:w-10 md:w-14 opacity-95 drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
+      className="w-8 sm:w-10 md:w-14 opacity-95 drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
     />
   </div>
 </div>
+
 
 
           {/* Underline */}
