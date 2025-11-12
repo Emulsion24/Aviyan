@@ -6,6 +6,7 @@ import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, C
 import ZonePrabhariManagement from "../../component/ZonePrabhariManagement";
 import StatePrabhariManagement from "../../component/StatePrabhariManagement";
 import SambhagManagement from "../../component/SambhagManagement";
+import DistrictPrabhariManagement from "../../component/DistrictPrabhariManagement";
 
 
 
@@ -1188,6 +1189,29 @@ const handleDeleteBaithak = async (id) => {
       </span>
     </button>
 
+    {/* District */}
+  <button
+      onClick={() => setTab("district")}
+      className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-between shadow-lg ${
+        tab === "district"
+          ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+          : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <Award size={20} />
+        <span>District Management</span>
+      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          tab === "district"
+            ? "bg-white text-orange-600"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {stats.totalPravaris.toLocaleString()}
+      </span>
+    </button>
     {/* Pravari */}
     <button
       onClick={() => setTab("pravari")}
@@ -1199,7 +1223,7 @@ const handleDeleteBaithak = async (id) => {
     >
       <div className="flex items-center gap-3">
         <Award size={20} />
-        <span>District & Tehsil Management</span>
+        <span>Tehsil Management</span>
       </div>
       <span
         className={`px-3 py-1 rounded-full text-sm font-bold ${
@@ -1208,9 +1232,11 @@ const handleDeleteBaithak = async (id) => {
             : "bg-gray-200 text-gray-700"
         }`}
       >
-        {stats.totalPravaris.toLocaleString()}
+        {0}
       </span>
     </button>
+
+
   </div>
 </div>
 
@@ -1955,6 +1981,11 @@ const handleDeleteBaithak = async (id) => {
          {tab === "sambhag" &&(
           <>
            <SambhagManagement/>
+          </>
+        
+        )}  {tab === "district" &&(
+          <>
+           <DistrictPrabhariManagement/>
           </>
         
         )} 

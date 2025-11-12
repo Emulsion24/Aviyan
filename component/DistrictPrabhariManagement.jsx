@@ -1,21 +1,19 @@
 "use client";
 import {
-  Search,
   Loader2,
   Trash2,
   UserPlus,
-  RefreshCw,
-  Eye,
   X,
   MapPin,
   Users,
   Edit,
-  Award,
   Plus,
+  Mail,
+  Phone,
+  Building,
   User,
-  Mail,     // Added
-  Phone,    // Added
-  Building, // Added
+  Map,
+  Search,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -34,7 +32,7 @@ const STATE_DISTRICTS = {
   Kerala: ["Alappuzha", "Ernakulam", "Idukki", "Kannur"],
   "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar"],
   Maharashtra: ["Ahmednagar", "Akola", "Amravati", "Aurangabad"],
-  Manipur: ["Bishupur", "Chandel", "Churachandpur", "Imphal East"],
+  Manipur: ["Bishnupur", "Chandel", "Churachandpur", "Imphal East"],
   Meghalaya: ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills"],
   Mizoram: ["Aizawl", "Champhai", "Hnahthial", "Khawzawl"],
   Nagaland: ["Chümoukedima", "Dimapur", "Kiphire", "Kohima"],
@@ -56,107 +54,126 @@ const STATE_DISTRICTS = {
   "Jammu and Kashmir": ["Anantnag", "Bandipora", "Baramulla", "Budgam"],
 };
 
-// --- MOCK DATA ADDED FROM OTHER COMPONENTS ---
+// New Mock Data: Tehsils within Districts
+const DISTRICT_TEHSILS = {
+  Ambala: ["Ambala Cantt.", "Barara", "Mullana", "Saha"],
+  Gurugram: ["Gurugram", "Manesar", "Pataudi", "Sohna"],
+  Mysuru: ["Hunsur", "Krishnarajanagara", "Mysuru", "Nanjangud"],
+  "Bengaluru Urban": ["Anekal", "Bengaluru East", "Bengaluru North", "Bengaluru South"],
+  Agra: ["Agra", "Bah", "Etmadpur", "Kheragarh"],
+  Aligarh: ["Aligarh", "Atrauli", "Gabhana", "Khair"],
+  Amritsar: ["Ajnala", "Amritsar-I", "Amritsar-II", "Baba Bakala"],
+  Faridkot: ["Faridkot", "Jaitu", "Kotkapura"],
+};
 
-// Initial mock data for State Prabharis
-const MOCK_STATE_PRABHARIS = [
-  {
-    id: 1,
-    state: "Punjab",
-    name: "Gurpreet Singh",
-    email: "gurpreet@example.com",
-    phone: "1111111111",
-  },
-  {
-    id: 2,
-    state: "Haryana",
-    name: "Deepak Kumar",
-    email: "deepak@example.com",
-    phone: "2222222222",
-  },
-  {
-    id: 3,
-    state: "Karnataka",
-    name: "Anand Reddy",
-    email: "", // Optional email
-    phone: "4444444444",
-  },
-  {
-    id: 4,
-    state: "Uttar Pradesh",
-    name: "Pawan Mishra",
-    email: "pawan@example.com",
-    phone: "5555555555",
-  },
+// New Mock Data: Tehsil Prabharis
+const mockTehsilPrabharis = {
+  "Ambala Cantt.": { name: "Ravi Verma", phone: "111-222-333", email: "ravi@t.com" },
+  Barara: { name: "Sunita Jain", phone: "222-333-444", email: "sunita@t.com" },
+  Gurugram: { name: "Anil Kapoor", phone: "333-444-555", email: "anil@t.com" },
+  Manesar: { name: "Pooja Hegde", phone: "444-555-666", email: "pooja@t.com" },
+  Mysuru: { name: "Kiran Kumar", phone: "555-666-777", email: "" },
+  "Bengaluru East": { name: "Deepa S.", phone: "666-777-888", email: "deepa@t.com" },
+  Agra: { name: "Mohit Singh", phone: "777-888-999", email: "mohit@t.com" },
+  Khair: { name: "Zoya Ali", phone: "888-999-000", email: "zoya@t.com" },
+  Faridkot: { name: "Balwinder Singh", phone: "999-000-111", email: "balwinder@t.com" },
+};
+
+// Main Mock Data: District Prabharis
+const MOCK_DISTRICT_PRABHARIS = [
+  { id: 1, state: "Haryana", district: "Ambala", name: "Ramesh Kumar", email: "ramesh@d.com", phone: "1234567890" },
+  { id: 2, state: "Haryana", district: "Gurugram", name: "Sita Sharma", email: "", phone: "0987654321" },
+  { id: 3, state: "Karnataka", district: "Mysuru", name: "Ganesh Patil", email: "ganesh@d.com", phone: "1122334455" },
+  { id: 4, state: "Uttar Pradesh", district: "Agra", name: "Aisha Khan", email: "aisha@d.com", phone: "2233445566" },
+  { id: 5, state: "Punjab", district: "Faridkot", name: "Jaspreet Kaur", email: "", phone: "3344556677" },
 ];
 
-// Mock data for Sambhags
-const MOCK_SAMBHAGS = [
-    { id: 1, name: "Haryana West", state: "Haryana", districts: ["Ambala", "Gurugram"], createdAt: "2024-03-01" },
-    { id: 2, name: "Karnataka South", state: "Karnataka", districts: ["Mysuru", "Bengaluru Urban"], createdAt: "2024-03-05" },
-    { id: 3, name: "UP West", state: "Uttar Pradesh", districts: ["Agra", "Aligarh"], createdAt: "2024-03-10" }
-];
 
-// Mock data for Sambhag Prabharis
-const MOCK_SAMBHAG_PRABHARIS = [
-    { id: 101, name: "Arun Mehra", email: "arun@example.com", phone: "9876543210", sambhagId: 1, sambhagName: "Haryana West" },
-    { id: 102, name: "Bina Das", email: "", phone: "9876543211", sambhagId: 2, sambhagName: "Karnataka South" },
-    { id: 103, name: "Chandan Lal", email: "chandan@example.com", phone: "9876543212", sambhagId: 3, sambhagName: "UP West" }
-];
-
-// --- END OF MOCK DATA ---
-
-
-const StatePrabhariManagement = () => {
+const DistrictPrabhariManagement = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  // State Prabharis
-  const [statePrabharis, setStatePrabharis] = useState([]);
-  const [filteredPrabharis, setFilteredPrabharis] = useState([]);
+  // District Prabharis State
+  const [districtPrabharis, setDistrictPrabharis] = useState([]);
   const [showPrabhariForm, setShowPrabhariForm] = useState(false);
   const [editingPrabhari, setEditingPrabhari] = useState(null);
   const [newPrabhari, setNewPrabhari] = useState({
     state: "",
+    district: "",
     name: "",
     email: "",
     phone: "",
   });
 
-  // Search
-  const [searchState, setSearchState] = useState(""); // Used for the state-wise filter
+  // State for form dropdowns
+  const [selectedState, setSelectedState] = useState("");
+  const [availableDistricts, setAvailableDistricts] = useState([]);
   
   // Modal State
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
-
+  
   useEffect(() => {
-    fetchStatePrabharis();
+    fetchDistrictPrabharis();
   }, []);
 
-  // Effect to filter prabharis whenever the main list or searchState changes
+  // Effect to update available districts when selectedState changes
   useEffect(() => {
-    if (searchState === "") {
-      setFilteredPrabharis(statePrabharis);
-    } else {
-      setFilteredPrabharis(
-        statePrabharis.filter((p) => p.state === searchState)
-      );
+    if (selectedState === "") {
+      setAvailableDistricts([]);
+      return;
     }
-  }, [searchState, statePrabharis]);
+    
+    // Get all districts for the selected state
+    const allDistrictsInState = STATE_DISTRICTS[selectedState] || [];
+    
+    // Get districts that are already assigned
+    const assignedDistricts = new Set(
+      districtPrabharis
+        .filter(p => p.state === selectedState)
+        .map(p => p.district)
+    );
+    
+    // If editing, allow the prabhari's current district to be in the list
+    if (editingPrabhari && editingPrabhari.state === selectedState) {
+      assignedDistricts.delete(editingPrabhari.district);
+    }
+    
+    // Filter out assigned districts
+    setAvailableDistricts(allDistrictsInState.filter(d => !assignedDistricts.has(d)));
 
-  const fetchStatePrabharis = () => {
+  }, [selectedState, districtPrabharis, editingPrabhari]);
+
+
+  const fetchDistrictPrabharis = () => {
     setLoading(true);
     try {
       // Simulate API call
-      setStatePrabharis(MOCK_STATE_PRABHARIS);
+      setDistrictPrabharis(MOCK_DISTRICT_PRABHARIS);
     } catch (err) {
-      setError("Failed to fetch state prabharis");
+      setError("Failed to fetch district prabharis");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    
+    const currentData = editingPrabhari || newPrabhari;
+    const setData = editingPrabhari ? setEditingPrabhari : setNewPrabhari;
+    
+    let updatedData = { ...currentData, [name]: value };
+
+    // If state is changed, reset district
+    if (name === "state") {
+      setSelectedState(value);
+      updatedData.district = ""; // Reset district
+    }
+
+    setData(updatedData);
+  };
+  
   const handleAddPrabhari = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -166,17 +183,16 @@ const StatePrabhariManagement = () => {
     try {
       // Simulate API call
       const newPrabhariData = {
-        id: Date.now(), // Use timestamp for a unique mock ID
+        id: Date.now(),
         ...newPrabhari,
       };
 
-      setStatePrabharis([...statePrabharis, newPrabhariData]);
-      setSuccessMsg("State Prabhari added successfully! ✓");
-      setNewPrabhari({ state: "", name: "", email: "", phone: "" });
-      setShowPrabhariForm(false);
+      setDistrictPrabharis([...districtPrabharis, newPrabhariData]);
+      setSuccessMsg("District Prabhari added successfully! ✓");
+      closeForm();
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to add state prabhari");
+      setError("Failed to add district prabhari");
     } finally {
       setLoading(false);
     }
@@ -190,59 +206,39 @@ const StatePrabhariManagement = () => {
 
     try {
       // Simulate API call
-      const updatedPrabharis = statePrabharis.map((p) =>
+      const updatedPrabharis = districtPrabharis.map((p) =>
         p.id === editingPrabhari.id ? editingPrabhari : p
       );
-      setStatePrabharis(updatedPrabharis);
-      setSuccessMsg("State Prabhari updated successfully! ✓");
-      setEditingPrabhari(null);
-      setShowPrabhariForm(false);
+      setDistrictPrabharis(updatedPrabharis);
+      setSuccessMsg("District Prabhari updated successfully! ✓");
+      closeForm();
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to update state prabhari");
+      setError("Failed to update district prabhari");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeletePrabhari = (id) => {
-    if (!confirm("Are you sure you want to delete this state prabhari?")) return;
+    if (!confirm("Are you sure you want to delete this district prabhari?")) return;
 
     setLoading(true);
     try {
       // Simulate API call
-      setStatePrabharis(statePrabharis.filter((p) => p.id !== id));
-      setSuccessMsg("State Prabhari deleted successfully");
+      setDistrictPrabharis(districtPrabharis.filter((p) => p.id !== id));
+      setSuccessMsg("District Prabhari deleted successfully");
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to delete state prabhari");
+      setError("Failed to delete district prabhari");
     } finally {
       setLoading(false);
     }
   };
-
-  // Gets states that do NOT already have a prabhari assigned
-  const getAvailableStates = () => {
-    const allStates = Object.keys(STATE_DISTRICTS);
-    const assignedStates = new Set(statePrabharis.map((p) => p.state));
-    
-    // If editing, allow the prabhari's current state to be in the list
-    if (editingPrabhari) {
-      assignedStates.delete(editingPrabhari.state);
-    }
-    
-    return allStates.filter((state) => !assignedStates.has(state));
-  };
-
+  
   const openEditForm = (prabhari) => {
     setEditingPrabhari(prabhari);
-    setShowPrabhariForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const openAddForm = () => {
-    setEditingPrabhari(null);
-    setNewPrabhari({ state: "", name: "", email: "", phone: "" });
+    setSelectedState(prabhari.state); // Set selected state to populate district dropdown
     setShowPrabhariForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -250,52 +246,32 @@ const StatePrabhariManagement = () => {
   const closeForm = () => {
     setEditingPrabhari(null);
     setShowPrabhariForm(false);
-    setError(""); // Clear errors when closing form
-  }
-
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    if (editingPrabhari) {
-      setEditingPrabhari({ ...editingPrabhari, [name]: value });
-    } else {
-      setNewPrabhari({ ...newPrabhari, [name]: value });
-    }
+    setSelectedState("");
+    setNewPrabhari({ state: "", district: "", name: "", email: "", phone: "" });
+    setError("");
   };
-  
-  // Helper function to get Sambhags and their Prabharis for the modal
-  const getSambhagDetailsForState = (state) => {
-    // 1. Find all sambhags in this state
-    const sambhagsInState = MOCK_SAMBHAGS.filter(s => s.state === state);
-    
-    // 2. For each sambhag, find its prabhari
-    return sambhagsInState.map(sambhag => {
-      const prabhari = MOCK_SAMBHAG_PRABHARIS.find(p => p.sambhagId === sambhag.id);
-      return {
-        sambhagName: sambhag.name,
-        prabhari: prabhari // This will be the prabhari object or undefined
-      };
-    });
+
+  const openAddForm = () => {
+    setEditingPrabhari(null);
+    setSelectedState("");
+    setNewPrabhari({ state: "", district: "", name: "", email: "", phone: "" });
+    setShowPrabhariForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   const formData = editingPrabhari || newPrabhari;
-  const availableStatesForDropdown = getAvailableStates();
-  
-  // Data for the modal
-  const sambhagDetails = selectedPrabhari 
-    ? getSambhagDetailsForState(selectedPrabhari.state) 
-    : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-red-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2 flex items-center gap-3">
-            <Users className="text-blue-600" size={40} />
-            State Prabhari Management
+            <MapPin className="text-purple-600" size={40} />
+            District Prabhari Management
           </h1>
           <p className="text-gray-600">
-            Manage prabharis responsible for each state
+            Manage prabharis for each district
           </p>
         </div>
 
@@ -311,11 +287,11 @@ const StatePrabhariManagement = () => {
           </div>
         )}
 
-        {/* State Prabharis Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-blue-200">
+        {/* District Prabharis Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-purple-200">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-              <User className="text-blue-600" size={28} />
+              <Users className="text-purple-600" size={28} />
               Prabhari List
             </h2>
             <button
@@ -324,21 +300,21 @@ const StatePrabhariManagement = () => {
                 transition-all shadow-lg hover:shadow-xl transform hover:scale-105
                 ${showPrabhariForm 
                   ? 'bg-gray-600 hover:bg-gray-700 text-white' 
-                  : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white'
+                  : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
                 }`}
             >
               {showPrabhariForm ? <X size={20} /> : <UserPlus size={20} />}
-              {showPrabhariForm ? "Cancel" : "Add State Prabhari"}
+              {showPrabhariForm ? "Cancel" : "Add District Prabhari"}
             </button>
           </div>
 
           {/* Add/Edit Prabhari Form */}
           {showPrabhariForm && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl mb-6 border-2 border-blue-200">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl mb-6 border-2 border-purple-200">
               <h3 className="text-xl font-bold text-gray-800 mb-4">
                 {editingPrabhari
-                  ? "Edit State Prabhari"
-                  : "Add New State Prabhari"}
+                  ? "Edit District Prabhari"
+                  : "Add New District Prabhari"}
               </h3>
               <form
                 onSubmit={
@@ -357,23 +333,47 @@ const StatePrabhariManagement = () => {
                       value={formData.state}
                       onChange={handleFormChange}
                       required
-                      className="w-full border-2 border-blue-200 focus:border-blue-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
+                      className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     >
                       <option value="">Select State</option>
-                      {/* If editing, show their current state first */}
-                      {editingPrabhari && (
-                        <option value={editingPrabhari.state}>
-                          {editingPrabhari.state}
-                        </option>
-                      )}
-                      {/* Show all other available states */}
-                      {availableStatesForDropdown.map((state) => (
+                      {Object.keys(STATE_DISTRICTS).map((state) => (
                         <option key={state} value={state}>
                           {state}
                         </option>
                       ))}
                     </select>
                   </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      District *
+                    </label>
+                    <select
+                      name="district"
+                      value={formData.district}
+                      onChange={handleFormChange}
+                      required
+                      disabled={!selectedState} // Disabled until a state is selected
+                      className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white disabled:bg-gray-100"
+                    >
+                      <option value="">Select District</option>
+                      {/* If editing, show their current district first */}
+                      {editingPrabhari && editingPrabhari.state === selectedState && (
+                        <option value={editingPrabhari.district}>
+                          {editingPrabhari.district}
+                        </option>
+                      )}
+                      {availableDistricts.map((district) => (
+                        <option key={district} value={district}>
+                          {district}
+                        </option>
+                      ))}
+                    </select>
+                     {selectedState && availableDistricts.length === 0 && (!editingPrabhari || editingPrabhari.state !== selectedState) && (
+                      <p className="text-xs text-red-600 mt-1">All districts in this state are already assigned.</p>
+                    )}
+                  </div>
+                </div>
+                <div className="grid md:grid-cols-3 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Name *
@@ -385,11 +385,9 @@ const StatePrabhariManagement = () => {
                       value={formData.name}
                       onChange={handleFormChange}
                       required
-                      className="w-full border-2 border-blue-200 focus:border-blue-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
+                      className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     />
                   </div>
-                </div>
-                <div className="grid md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Email (Optional)
@@ -400,7 +398,7 @@ const StatePrabhariManagement = () => {
                       placeholder="Email Address"
                       value={formData.email}
                       onChange={handleFormChange}
-                      className="w-full border-2 border-blue-200 focus:border-blue-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
+                      className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     />
                   </div>
                   <div>
@@ -414,15 +412,15 @@ const StatePrabhariManagement = () => {
                       value={formData.phone}
                       onChange={handleFormChange}
                       required
-                      className="w-full border-2 border-blue-200 focus:border-blue-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
+                      className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     />
                   </div>
                 </div>
                 <div className="flex gap-3 justify-end">
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50"
+                    disabled={loading || (availableDistricts.length === 0 && !editingPrabhari)}
+                    className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <Loader2 size={20} className="animate-spin" />
@@ -438,55 +436,31 @@ const StatePrabhariManagement = () => {
             </div>
           )}
 
-          {/* Search Filter */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border-2 border-gray-200 focus-within:border-blue-500 transition-all">
-              <Search size={22} className="text-gray-400" />
-              <select
-                value={searchState}
-                onChange={(e) => setSearchState(e.target.value)}
-                className="bg-transparent outline-none w-full text-gray-700"
-              >
-                <option value="">Search by State (All States)</option>
-                {Object.keys(STATE_DISTRICTS).map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* State Prabharis Table */}
-          {loading && statePrabharis.length === 0 ? (
+          {/* District Prabharis Table */}
+          {loading && districtPrabharis.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="animate-spin text-blue-600 mb-4" size={56} />
+              <Loader2 className="animate-spin text-purple-600 mb-4" size={56} />
               <p className="text-gray-600 font-semibold text-lg">
-                Loading State Prabharis...
+                Loading District Prabharis...
               </p>
             </div>
-          ) : filteredPrabharis.length === 0 ? (
+          ) : districtPrabharis.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-2xl">
               <Users className="mx-auto mb-4 text-gray-400" size={64} />
               <p className="text-gray-500 text-xl font-semibold">
-                No State Prabharis found
+                No District Prabharis found
               </p>
-              {searchState && (
-                <button
-                  onClick={() => setSearchState("")}
-                  className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-all"
-                >
-                  Clear Search
-                </button>
-              )}
             </div>
           ) : (
             <div className="overflow-x-auto border-2 border-gray-200 rounded-2xl shadow-lg">
               <table className="w-full">
-                <thead className="bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100">
+                <thead className="bg-gradient-to-r from-purple-100 via-pink-100 to-red-100">
                   <tr>
                     <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
                       State
+                    </th>
+                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
+                      District
                     </th>
                     <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
                       Name
@@ -503,18 +477,19 @@ const StatePrabhariManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPrabharis.map((p, idx) => (
+                  {districtPrabharis.map((p, idx) => (
                     <tr
                       key={p.id}
-                      onClick={() => setSelectedPrabhari(p)} // Added onClick
-                      className={`border-t-2 border-gray-100 hover:bg-blue-100 transition-all cursor-pointer ${
+                      onClick={() => setSelectedPrabhari(p)}
+                      className={`border-t-2 border-gray-100 hover:bg-purple-50 transition-all cursor-pointer ${
                         idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                       }`}
                     >
+                      <td className="p-5 font-semibold text-gray-800">{p.state}</td>
                       <td className="p-5">
-                        <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold text-sm">
+                        <span className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-semibold text-sm">
                           <MapPin size={16} />
-                          {p.state}
+                          {p.district}
                         </span>
                       </td>
                       <td className="p-5 font-semibold text-gray-800">
@@ -528,21 +503,21 @@ const StatePrabhariManagement = () => {
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={(e) => {
-                              e.stopPropagation(); // Prevent row click
-                              openEditForm(p);
+                                e.stopPropagation();
+                                openEditForm(p);
                             }}
                             className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                            title="Edit state prabhari"
+                            title="Edit district prabhari"
                           >
                             <Edit size={20} />
                           </button>
                           <button
                             onClick={(e) => {
-                              e.stopPropagation(); // Prevent row click
-                              handleDeletePrabhari(p.id);
+                                e.stopPropagation();
+                                handleDeletePrabhari(p.id);
                             }}
                             className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                            title="Delete state prabhari"
+                            title="Delete district prabhari"
                           >
                             <Trash2 size={20} />
                           </button>
@@ -557,7 +532,7 @@ const StatePrabhariManagement = () => {
         </div>
       </div>
       
-      {/* --- NEW: Prabhari Details Modal --- */}
+      {/* Prabhari Details Modal */}
       {selectedPrabhari && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
@@ -577,13 +552,13 @@ const StatePrabhariManagement = () => {
             {/* Modal Header */}
             <div className="text-center mb-6">
               <h2 className="text-3xl font-bold text-gray-800">{selectedPrabhari.name}</h2>
-              <p className="text-lg text-blue-600 font-semibold">State Prabhari</p>
+              <p className="text-lg text-purple-600 font-semibold">District Prabhari</p>
             </div>
 
             {/* Modal Content */}
             <div className="space-y-4">
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                <Mail size={20} className="text-blue-500 shrink-0" />
+                <Mail size={20} className="text-purple-500 shrink-0" />
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">Email</p>
                   <p className="text-gray-800 font-medium">{selectedPrabhari.email || "N/A"}</p>
@@ -591,7 +566,7 @@ const StatePrabhariManagement = () => {
               </div>
 
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                <Phone size={20} className="text-blue-500 shrink-0" />
+                <Phone size={20} className="text-purple-500 shrink-0" />
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">Phone</p>
                   <p className="text-gray-800 font-medium">{selectedPrabhari.phone}</p>
@@ -599,49 +574,53 @@ const StatePrabhariManagement = () => {
               </div>
 
               <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                <MapPin size={20} className="text-blue-500 shrink-0 mt-1" />
+                <MapPin size={20} className="text-purple-500 shrink-0 mt-1" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">State</p>
-                  <p className="text-gray-800 font-medium">{selectedPrabhari.state}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">Location</p>
+                  <p className="text-gray-800 font-medium">{selectedPrabhari.district}</p>
+                  <p className="text-gray-600 text-sm">{selectedPrabhari.state}</p>
                 </div>
               </div>
 
-              {/* Sambhags & Sambhag Prabharis */}
+              {/* Tehsils & Tehsil Prabharis */}
               <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                <Building size={20} className="text-blue-500 shrink-0 mt-1" />
+                <Map size={20} className="text-purple-500 shrink-0 mt-1" />
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
-                    Sambhags in {selectedPrabhari.state}
+                    Tehsils & Tehsil Prabharis
                   </p>
                   <div className="space-y-3">
-                    {sambhagDetails.length > 0 ? (
-                      sambhagDetails.map((item, index) => (
-                        <div key={index} className="p-3 bg-white border-2 border-blue-100 rounded-lg">
-                          <h4 className="font-bold text-gray-800">{item.sambhagName}</h4>
-                          {item.prabhari ? (
-                            <div className="mt-2 text-sm text-gray-600 space-y-1">
-                              <p className="flex items-center gap-2">
-                                <User size={14} className="text-gray-500" />
-                                <strong>{item.prabhari.name}</strong>
+                    {(DISTRICT_TEHSILS[selectedPrabhari.district] || []).length > 0 ? (
+                      DISTRICT_TEHSILS[selectedPrabhari.district].map((tehsil) => {
+                        const tehsilPrabhari = mockTehsilPrabharis[tehsil];
+                        return (
+                          <div key={tehsil} className="p-3 bg-white border-2 border-purple-100 rounded-lg">
+                            <h4 className="font-bold text-gray-800">{tehsil}</h4>
+                            {tehsilPrabhari ? (
+                              <div className="mt-2 text-sm text-gray-600 space-y-1">
+                                <p className="flex items-center gap-2">
+                                  <User size={14} className="text-gray-500" />
+                                  <strong>{tehsilPrabhari.name}</strong>
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <Mail size={14} className="text-gray-500" />
+                                  {tehsilPrabhari.email || "N/A"}
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <Phone size={14} className="text-gray-500" />
+                                  {tehsilPrabhari.phone}
+                                </p>
+                              </div>
+                            ) : (
+                              <p className="text-sm text-gray-500 mt-1">
+                                No Tehsil Prabhari assigned.
                               </p>
-                              <p className="flex items-center gap-2">
-                                <Mail size={14} className="text-gray-500" />
-                                {item.prabhari.email || "N/A"}
-                              </p>
-                              <p className="flex items-center gap-2">
-                                <Phone size={14} className="text-gray-500" />
-                                {item.prabhari.phone}
-                              </p>
-                            </div>
-                          ) : (
-                            <p className="text-sm text-gray-500 mt-1">
-                              No Sambhag Prabhari assigned.
-                            </p>
-                          )}
-                        </div>
-                      ))
+                            )}
+                          </div>
+                        );
+                      })
                     ) : (
-                      <p className="text-gray-600">No sambhags listed for this state.</p>
+                      <p className="text-gray-600">No tehsils listed for this district.</p>
                     )}
                   </div>
                 </div>
@@ -654,4 +633,4 @@ const StatePrabhariManagement = () => {
   );
 };
 
-export default StatePrabhariManagement;
+export default DistrictPrabhariManagement;
