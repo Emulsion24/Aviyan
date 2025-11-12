@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, ChevronDown, BarChart3, Users, FileText, Edit, Award } from "lucide-react";
 
 import ZonePrabhariManagement from "../../component/ZonePrabhariManagement";
+import StatePrabhariManagement from "../../component/StatePrabhariManagement";
+import SambhagManagement from "../../component/SambhagManagement";
 
 
 
@@ -1035,91 +1037,184 @@ const handleDeleteBaithak = async (id) => {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex gap-3 mt-6 flex-wrap">
-            <button
-              onClick={() => setTab("users")}
-              className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
-                tab === "users"
-                  ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
-                  : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-              }`}
-            >
-              <UserPlus size={20} />
-              <span>Users</span>
-              <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                tab === "users" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
-              }`}>
-                {stats.totalUsers.toLocaleString()}
-              </span>
-            </button>
-            <button
-              onClick={() => setTab("submissions")}
-              className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
-                tab === "submissions"
-                  ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
-                  : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-              }`}
-            >
-              <FileText size={20} />
-              <span>Submissions</span>
-              <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                tab === "submissions" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
-              }`}>
-                {stats.totalSubmissions.toLocaleString()}
-              </span>
-            </button>
-            <button
-              onClick={() => setTab("pravari")}
-              className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
-                tab === "pravari"
-                  ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
-                  : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-              }`}
-            >
-              <Award size={20} />
-              <span>Prabhari Darshika</span>
-              <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                tab === "pravari" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
-              }`}>
-                {stats.totalPravaris.toLocaleString()}
-              </span>
-            </button>
-                       
-<button
-  onClick={() => setTab("baithak")}
-  className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
-    tab === "baithak"
-      ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
-      : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-  }`}
->
-  <FileText size={20} />
-  <span>बैठक Submissions</span>
-  <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-    tab === "baithak" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
-  }`}>
-    {stats.totalBaithaks.toLocaleString()}
-  </span>
-</button>
- <button
-              onClick={() => setTab("zone")}
-              className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
-                tab === "zone"
-                  ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
-                  : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-              }`}
-            >
-              <Award size={20} />
-              <span>Zone Mangment</span>
-              <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                tab === "zone" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
-              }`}>
-                {0}
-              </span>
-            </button>
+    {/* Tabs Section */}
+<div className="mt-6 space-y-4">
+  {/* First Row - 3 Buttons */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+    {/* Users */}
+    <button
+      onClick={() => setTab("users")}
+      className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-between shadow-lg ${
+        tab === "users"
+          ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+          : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <UserPlus size={20} />
+        <span>Users</span>
+      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          tab === "users"
+            ? "bg-white text-orange-600"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {stats.totalUsers.toLocaleString()}
+      </span>
+    </button>
 
-          </div>
-        </div>
+    {/* Submissions */}
+    <button
+      onClick={() => setTab("submissions")}
+      className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-between shadow-lg ${
+        tab === "submissions"
+          ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+          : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <FileText size={20} />
+        <span>Submissions</span>
+      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          tab === "submissions"
+            ? "bg-white text-orange-600"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {stats.totalSubmissions.toLocaleString()}
+      </span>
+    </button>
+
+    {/* बैठक Submissions */}
+    <button
+      onClick={() => setTab("baithak")}
+      className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-between shadow-lg ${
+        tab === "baithak"
+          ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+          : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <FileText size={20} />
+        <span>बैठक Submissions</span>
+      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          tab === "baithak"
+            ? "bg-white text-orange-600"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {stats.totalBaithaks.toLocaleString()}
+      </span>
+    </button>
+  </div>
+
+  {/* Second Row - 4 Buttons */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+    {/* Zone */}
+    <button
+      onClick={() => setTab("zone")}
+      className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-between shadow-lg ${
+        tab === "zone"
+          ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+          : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <Award size={20} />
+        <span>Zone Management</span>
+      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          tab === "zone"
+            ? "bg-white text-orange-600"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {0}
+      </span>
+    </button>
+
+    {/* State */}
+    <button
+      onClick={() => setTab("state")}
+      className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-between shadow-lg ${
+        tab === "state"
+          ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+          : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <Award size={20} />
+        <span>State Management</span>
+      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          tab === "state"
+            ? "bg-white text-orange-600"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {0}
+      </span>
+    </button>
+
+    {/* Sambhag */}
+    <button
+      onClick={() => setTab("sambhag")}
+      className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-between shadow-lg ${
+        tab === "sambhag"
+          ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+          : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <Award size={20} />
+        <span>Sambhag Management</span>
+      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          tab === "sambhag"
+            ? "bg-white text-orange-600"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {0}
+      </span>
+    </button>
+
+    {/* Pravari */}
+    <button
+      onClick={() => setTab("pravari")}
+      className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-between shadow-lg ${
+        tab === "pravari"
+          ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+          : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <Award size={20} />
+        <span>District & Tehsil Management</span>
+      </div>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          tab === "pravari"
+            ? "bg-white text-orange-600"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        {stats.totalPravaris.toLocaleString()}
+      </span>
+    </button>
+  </div>
+</div>
+
+        </div>            
 
         {/* Messages */}
         {error && (
@@ -1851,6 +1946,22 @@ const handleDeleteBaithak = async (id) => {
           </>
         
         )} 
+  {tab === "state" &&(
+          <>
+           <StatePrabhariManagement/>
+          </>
+        
+        )} 
+         {tab === "sambhag" &&(
+          <>
+           <SambhagManagement/>
+          </>
+        
+        )} 
+
+
+
+
         {tab === "baithak" && (
   <>
     {/* Search & Filter Section */}
