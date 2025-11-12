@@ -3,6 +3,10 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, ChevronDown, BarChart3, Users, FileText, Edit, Award } from "lucide-react";
 
+import ZonePrabhariManagement from "../../component/ZonePrabhariManagement";
+
+
+
 // State-District mapping (simplified - 2 states only)
 const STATE_DISTRICTS = {
    "Andhra Pradesh": [
@@ -355,208 +359,11 @@ const SEVAK_CATEGORIES = [
   "Sambhag Prabhari"
 ];
 
-// 3. Update stats state to include sevak count
+
 
 
 // 4. Add useEffect for sevak districts
-useEffect(() => {
-  if (sevakFilters.state) {
-    setSevakAvailableDistricts(STATE_DISTRICTS[sevakFilters.state] || []);
-    if (!STATE_DISTRICTS[sevakFilters.state]?.includes(sevakFilters.district)) {
-      setSevakFilters(prev => ({ ...prev, district: "" }));
-    }
-  } else {
-    setSevakAvailableDistricts([]);
-    setSevakFilters(prev => ({ ...prev, district: "" }));
-  }
-}, [sevakFilters.state]);
 
-useEffect(() => {
-  if (newSevak.state) {
-    const districts = STATE_DISTRICTS[newSevak.state] || [];
-    if (!districts.includes(newSevak.district)) {
-      setNewSevak(prev => ({ ...prev, district: "" }));
-    }
-  }
-}, [newSevak.state]);
-
-useEffect(() => {
-  if (editingSevak?.state) {
-    const districts = STATE_DISTRICTS[editingSevak.state] || [];
-    if (!districts.includes(editingSevak.district)) {
-      setEditingSevak(prev => ({ ...prev, district: "" }));
-    }
-  }
-}, [editingSevak?.state]);
-
-// 5. Add useEffect to fetch sevaks
-useEffect(() => {
-  if (tab === "sevak") {
-    fetchSevaks();
-  }
-}, [tab, sevakPage, sevakSearch, activeSevakFilters]);
-
-// 6. Add fetch function
-const fetchSevaks = async () => {
-  setLoading(true);
-  setError("");
-  try {
-    const params = new URLSearchParams({
-      page: sevakPage.toString(),
-      search: sevakSearch,
-      ...(activeSevakFilters.state && { state: activeSevakFilters.state }),
-      ...(activeSevakFilters.district && { district: activeSevakFilters.district }),
-      ...(activeSevakFilters.category && { category: activeSevakFilters.category })
-    });
-
-    const res = await fetch(`/api/sevak?${params.toString()}`, {
-      credentials: 'include'
-    });
-    
-    if (!res.ok) throw new Error('Failed to fetch sevaks');
-    
-    const data = await res.json();
-    setSevaks(data.data || []);
-    setSevakTotal(data.totalPages || 1);
-    setStats(prev => ({ 
-      ...prev, 
-      totalSevaks: data.total || 0,
-      filteredSevaks: data.filteredTotal || 0
-    }));
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
-// 7. Add handler functions
-const handleSevakSearch = () => {
-  setSevakSearch(sevakSearchInput);
-  setSevakPage(1);
-};
-
-const handleApplySevakFilters = () => {
-  setActiveSevakFilters({ ...sevakFilters });
-  setSevakPage(1);
-};
-
-const clearSevakFilters = () => {
-  setSevakFilters({
-    state: "",
-    district: "",
-    category: ""
-  });
-  setActiveSevakFilters({
-    state: "",
-    district: "",
-    category: ""
-  });
-  setSevakSearchInput("");
-  setSevakSearch("");
-  setSevakPage(1);
-};
-
-const handleSevakFilterChange = (key, value) => {
-  setSevakFilters(prev => ({ ...prev, [key]: value }));
-};
-
-const handleAddSevak = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
-  setSuccessMsg("");
-
-  try {
-    const res = await fetch("/api/sevak", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: 'include',
-      body: JSON.stringify(newSevak),
-    });
-
-    const result = await res.json();
-    
-    if (result.success) {
-      setSuccessMsg("Sevak added successfully! ✓");
-      setNewSevak({
-        name: "",
-        phone: "",
-        village: "",
-        email: "",
-        state: "",
-        district: "",
-        category: "",
-        description: ""
-      });
-      setSevakPage(1);
-      fetchSevaks();
-      setTimeout(() => setSuccessMsg(""), 3000);
-    } else {
-      setError(result.error || "Failed to add sevak");
-    }
-  } catch (err) {
-    setError("Network error. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-const handleUpdateSevak = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
-  setSuccessMsg("");
-
-  try {
-    const res = await fetch(`/api/sevak/${editingSevak.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      credentials: 'include',
-      body: JSON.stringify(editingSevak),
-    });
-
-    const result = await res.json();
-    
-    if (result.success) {
-      setSuccessMsg("Sevak updated successfully! ✓");
-      setEditingSevak(null);
-      fetchSevaks();
-      setTimeout(() => setSuccessMsg(""), 3000);
-    } else {
-      setError(result.error || "Failed to update sevak");
-    }
-  } catch (err) {
-    setError("Network error. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-const handleDeleteSevak = async (id) => {
-  if (!confirm("Are you sure you want to delete this sevak?")) return;
-  
-  setLoading(true);
-  try {
-    const res = await fetch(`/api/sevak/${id}`, { 
-      method: "DELETE",
-      credentials: 'include'
-    });
-    
-    if (res.ok) {
-      setSevaks(sevaks.filter((s) => s.id !== id));
-      setSuccessMsg("Sevak deleted successfully");
-      setTimeout(() => setSuccessMsg(""), 3000);
-      fetchSevaks();
-    } else {
-      setError("Failed to delete sevak");
-    }
-  } catch (err) {
-    setError("Network error");
-  } finally {
-    setLoading(false);
-  }
-};
   // Advanced Filters
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -579,8 +386,7 @@ const [stats, setStats] = useState({
   filteredSubmissions: 0,
   totalPravaris: 0,
   filteredPravaris: 0,
-  totalSevaks: 0,
-  filteredSevaks: 0,
+
   totalBaithaks: 0,
   filteredBaithaks: 0
 });
@@ -1165,56 +971,36 @@ const handleDeleteBaithak = async (id) => {
                   <p className="text-2xl font-bold text-blue-900">{stats.totalUsers.toLocaleString()}</p>
                 </div>
               </div>
+
             </div>
-            <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-4 rounded-2xl border-2 border-pink-200 shadow-md">
-  <div className="flex items-center gap-3">
-    <div className="bg-pink-500 p-3 rounded-xl">
-      <Users size={24} className="text-white" />
-    </div>
-    <div>
-      <p className="text-pink-600 font-semibold text-sm">Total प्रभारी सेवक</p>
-      <p className="text-2xl font-bold text-pink-900">{stats.totalSevaks.toLocaleString()}</p>
-    </div>
-  </div>
-</div>
-
-<div className="bg-gradient-to-br from-teal-50 to-teal-100 p-4 rounded-2xl border-2 border-teal-200 shadow-md">
-  <div className="flex items-center gap-3">
-    <div className="bg-teal-500 p-3 rounded-xl">
-      <FileText size={24} className="text-white" />
-    </div>
-    <div>
-      <p className="text-teal-600 font-semibold text-sm">बैठक Submissions</p>
-      <p className="text-2xl font-bold text-teal-900">{stats.totalBaithaks.toLocaleString()}</p>
-    </div>
-  </div>
-</div>
-
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-2xl border-2 border-green-200 shadow-md">
+                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-2xl border-2 border-blue-200 shadow-md">
               <div className="flex items-center gap-3">
-                <div className="bg-green-500 p-3 rounded-xl">
+                <div className="bg-blue-500 p-3 rounded-xl">
                   <FileText size={24} className="text-white" />
                 </div>
                 <div>
-                  <p className="text-green-600 font-semibold text-sm">Total Submissions</p>
-                  <p className="text-2xl font-bold text-green-900">{stats.totalSubmissions.toLocaleString()}</p>
+                  <p className="text-blue-600 font-semibold text-sm">Total Submission</p>
+                  <p className="text-2xl font-bold text-blue-900">{stats.totalSubmissions.toLocaleString()}</p>
                 </div>
               </div>
+              
             </div>
+                  <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-4 rounded-2xl border-2 border-teal-200 shadow-md">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-teal-500 p-3 rounded-xl">
+                          <FileText size={24} className="text-white" />
+                         </div>
+                     <div>
+                    <p className="text-teal-600 font-semibold text-sm">बैठक Submissions</p>
+                    <p className="text-2xl font-bold text-teal-900">{stats.totalBaithaks.toLocaleString()}</p>
+                  </div>
+               </div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-2xl border-2 border-purple-200 shadow-md">
-              <div className="flex items-center gap-3">
-                <div className="bg-purple-500 p-3 rounded-xl">
-                  <BarChart3 size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-purple-600 font-semibold text-sm">Filtered Results</p>
-                  <p className="text-2xl font-bold text-purple-900">{stats.filteredSubmissions.toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
 
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-2xl border-2 border-orange-200 shadow-md">
+               
+            
+  </div>
+  <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-2xl border-2 border-orange-200 shadow-md">
               <div className="flex items-center gap-3">
                 <div className="bg-orange-500 p-3 rounded-xl">
                   <Award size={24} className="text-white" />
@@ -1225,6 +1011,27 @@ const handleDeleteBaithak = async (id) => {
                 </div>
               </div>
             </div>
+
+
+             <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-2xl border-2 border-purple-200 shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="bg-purple-500 p-3 rounded-xl">
+                  <BarChart3 size={24} className="text-white" />
+                </div>
+                <div>
+                  <p className="text-purple-600 font-semibold text-sm">Filtered Results</p>
+                  <p className="text-2xl font-bold text-purple-900">{stats.filteredSubmissions.toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+        
+    </div>
+
+         
+
+           
+
+          
           </div>
 
           {/* Tab Navigation */}
@@ -1277,22 +1084,7 @@ const handleDeleteBaithak = async (id) => {
                 {stats.totalPravaris.toLocaleString()}
               </span>
             </button>
-                        <button
-  onClick={() => setTab("sevak")}
-  className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
-    tab === "sevak"
-      ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
-      : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-  }`}
->
-  <Users size={20} />
-  <span>प्रभारी सेवक</span>
-  <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-    tab === "sevak" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
-  }`}>
-    {stats.totalSevaks.toLocaleString()}
-  </span>
-</button>
+                       
 <button
   onClick={() => setTab("baithak")}
   className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
@@ -1309,6 +1101,22 @@ const handleDeleteBaithak = async (id) => {
     {stats.totalBaithaks.toLocaleString()}
   </span>
 </button>
+ <button
+              onClick={() => setTab("zone")}
+              className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
+                tab === "zone"
+                  ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+              }`}
+            >
+              <Award size={20} />
+              <span>Zone Mangment</span>
+              <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                tab === "zone" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
+              }`}>
+                {0}
+              </span>
+            </button>
 
           </div>
         </div>
@@ -2032,384 +1840,18 @@ const handleDeleteBaithak = async (id) => {
                   Next →
                 </button>
               </div>
-              {/* Add this in the stats cards section */}
-
-
-{/* Add this tab button after Pravari button */}
-<button
-  onClick={() => setTab("sevak")}
-  className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-3 shadow-lg ${
-    tab === "sevak"
-      ? "bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white shadow-orange-300 scale-105"
-      : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
-  }`}
->
-  <Users size={20} />
-  <span>प्रभारी सेवक</span>
-  <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-    tab === "sevak" ? "bg-white text-orange-600" : "bg-gray-200 text-gray-700"
-  }`}>
-    {stats.totalSevaks.toLocaleString()}
-  </span>
-</button>
-
-{/* Add this entire SEVAK TAB section after the PRAVARI TAB section */}
+  
 
             </>
           )}
         </div>
-        {tab === "sevak" && (
-  <>
-    {/* Add/Edit Sevak Form */}
-    <div className="bg-gradient-to-r from-pink-50 via-purple-50 to-indigo-50 p-6 rounded-2xl mb-6 border-2 border-pink-200 shadow-lg">
-      <h3 className="text-2xl font-bold text-gray-800 mb-5 flex items-center gap-3">
-        <div className="bg-gradient-to-r from-pink-500 to-purple-500 p-3 rounded-xl shadow-md">
-          <Users size={24} className="text-white" />
-        </div>
-        {editingSevak ? "Edit प्रभारी सेवक" : "Add New प्रभारी सेवक"}
-      </h3>
-      <form onSubmit={editingSevak ? handleUpdateSevak : handleAddSevak}>
-        <div className="grid md:grid-cols-3 gap-4 mb-4">
-          <input
-            type="text"
-            placeholder="Full Name *"
-            value={editingSevak ? editingSevak.name : newSevak.name}
-            onChange={(e) => editingSevak 
-              ? setEditingSevak({ ...editingSevak, name: e.target.value })
-              : setNewSevak({ ...newSevak, name: e.target.value })}
-            required
-            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-          />
-          <input
-            type="tel"
-            placeholder="Phone Number *"
-            value={editingSevak ? editingSevak.phone : newSevak.phone}
-            onChange={(e) => editingSevak 
-              ? setEditingSevak({ ...editingSevak, phone: e.target.value })
-              : setNewSevak({ ...newSevak, phone: e.target.value })}
-            required
-            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={editingSevak ? editingSevak.email : newSevak.email}
-            onChange={(e) => editingSevak 
-              ? setEditingSevak({ ...editingSevak, email: e.target.value })
-              : setNewSevak({ ...newSevak, email: e.target.value })}
-            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-          />
-        </div>
-        <div className="grid md:grid-cols-4 gap-4 mb-4">
-          <select
-            value={editingSevak ? editingSevak.state : newSevak.state}
-            onChange={(e) => editingSevak 
-              ? setEditingSevak({ ...editingSevak, state: e.target.value })
-              : setNewSevak({ ...newSevak, state: e.target.value })}
-            required
-            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-          >
-            <option value="">Select State *</option>
-            {Object.keys(STATE_DISTRICTS).map(state => (
-              <option key={state} value={state}>{state}</option>
-            ))}
-          </select>
-          <select
-            value={editingSevak ? editingSevak.district : newSevak.district}
-            onChange={(e) => editingSevak 
-              ? setEditingSevak({ ...editingSevak, district: e.target.value })
-              : setNewSevak({ ...newSevak, district: e.target.value })}
-            required
-            disabled={editingSevak ? !editingSevak.state : !newSevak.state}
-            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
-          >
-            <option value="">Select District *</option>
-            {(editingSevak 
-              ? STATE_DISTRICTS[editingSevak.state] 
-              : STATE_DISTRICTS[newSevak.state] || []
-            ).map(district => (
-              <option key={district} value={district}>{district}</option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Village/Tehsil "
-            value={editingSevak ? editingSevak.village : newSevak.village}
-            onChange={(e) => editingSevak 
-              ? setEditingSevak({ ...editingSevak, village: e.target.value })
-              : setNewSevak({ ...newSevak, village: e.target.value })}
+        {tab === "zone" &&(
+          <>
+            <ZonePrabhariManagement/>
+          </>
         
-            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-          />
-             <input
-            type="text"
-            placeholder="description "
-            value={editingSevak ? editingSevak.description : newSevak.description||""}
-            onChange={(e) => editingSevak 
-              ? setEditingSevak({ ...editingSevak, description: e.target.value })
-              : setNewSevak({ ...newSevak, description: e.target.value })}
-           
-            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-          />
-          <select
-            value={editingSevak ? editingSevak.category : newSevak.category}
-            onChange={(e) => editingSevak 
-              ? setEditingSevak({ ...editingSevak, category: e.target.value })
-              : setNewSevak({ ...newSevak, category: e.target.value })}
-            required
-            className="border-2 border-pink-200 focus:border-pink-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-          >
-            <option value="">Select Category *</option>
-            {SEVAK_CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-        </div>
-        <div className="flex gap-3 justify-end">
-          {editingSevak && (
-            <button
-              type="button"
-              onClick={() => setEditingSevak(null)}
-              className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-            >
-              Cancel
-            </button>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold rounded-xl px-8 py-3 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          >
-            {loading ? <Loader2 size={20} className="animate-spin" /> : editingSevak ? <Edit size={20} /> : <Users size={20} />}
-            {editingSevak ? "Update सेवक" : "Add सेवक"}
-          </button>
-        </div>
-      </form>
-    </div>
-
-    {/* Search & Filter Section */}
-    <div className="space-y-4 mb-6">
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1 flex items-center gap-3">
-          <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border-2 border-gray-200 focus-within:border-pink-500 transition-all shadow-sm">
-            <Search size={22} className="text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by name, email, phone, state, district, village, or category..."
-              value={sevakSearchInput}
-              onChange={(e) => setSevakSearchInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSevakSearch()}
-              className="bg-transparent outline-none w-full text-gray-700 placeholder-gray-400"
-            />
-          </div>
-          <button
-            onClick={handleSevakSearch}
-            disabled={loading}
-            className="flex items-center gap-2 px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 disabled:opacity-50"
-          >
-            <Search size={18} />
-            Search
-          </button>
-        </div>
-        <div className="flex gap-3 flex-wrap">
-          <button
-            onClick={() => setShowSevakFilters(!showSevakFilters)}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 ${
-              showSevakFilters 
-                ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white' 
-                : 'bg-white text-gray-700 border-2 border-gray-300'
-            }`}
-          >
-            <Filter size={18} />
-            Filters
-            <ChevronDown size={18} className={`transition-transform ${showSevakFilters ? 'rotate-180' : ''}`} />
-          </button>
-          <button
-            onClick={fetchSevaks}
-            disabled={loading}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 disabled:opacity-50"
-          >
-            <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
-            Refresh
-          </button>
-        </div>
-      </div>
-
-      {/* Advanced Filters */}
-      {showSevakFilters && (
-        <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-6 rounded-2xl border-2 border-pink-200 shadow-lg animate-slideDown">
-          <div className="flex justify-between items-center mb-4">
-            <h4 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-              <Filter size={20} className="text-pink-600" />
-              Advanced Filters
-            </h4>
-            <button
-              onClick={clearSevakFilters}
-              className="text-sm font-semibold text-pink-600 hover:text-pink-800 px-4 py-2 bg-white rounded-lg hover:bg-pink-100 transition-all shadow-sm"
-            >
-              Clear All
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
-              <select
-                value={sevakFilters.state}
-                onChange={(e) => handleSevakFilterChange('state', e.target.value)}
-                className="w-full p-3 border-2 border-pink-200 rounded-xl outline-none focus:border-pink-500 transition-all bg-white shadow-sm"
-              >
-                <option value="">All States</option>
-                {Object.keys(STATE_DISTRICTS).map(state => (
-                  <option key={state} value={state}>{state}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">District</label>
-              <select
-                value={sevakFilters.district}
-                onChange={(e) => handleSevakFilterChange('district', e.target.value)}
-                disabled={!sevakFilters.state}
-                className="w-full p-3 border-2 border-pink-200 rounded-xl outline-none focus:border-pink-500 transition-all bg-white shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">All Districts</option>
-                {sevakAvailableDistricts.map(district => (
-                  <option key={district} value={district}>{district}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
-              <select
-                value={sevakFilters.category}
-                onChange={(e) => handleSevakFilterChange('category', e.target.value)}
-                className="w-full p-3 border-2 border-pink-200 rounded-xl outline-none focus:border-pink-500 transition-all bg-white shadow-sm"
-              >
-                <option value="">All Categories</option>
-                {SEVAK_CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <button
-              onClick={handleApplySevakFilters}
-              disabled={loading}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50"
-            >
-              <Filter size={18} />
-              Apply Filters
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-
-    {/* Sevak Table */}
-    {loading ? (
-      <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="animate-spin text-pink-600 mb-4" size={56} />
-        <p className="text-gray-600 font-semibold text-lg">Loading सेवक...</p>
-      </div>
-    ) : sevaks.length === 0 ? (
-      <div className="text-center py-20 bg-gray-50 rounded-2xl">
-        <p className="text-gray-500 text-xl font-semibold">No सेवक found</p>
-        {(sevakSearch || Object.values(activeSevakFilters).some(f => f)) && (
-          <button
-            onClick={clearSevakFilters}
-            className="mt-4 px-6 py-2 bg-pink-500 text-white rounded-xl font-semibold hover:bg-pink-600 transition-all"
-          >
-            Clear Filters
-          </button>
-        )}
-      </div>
-    ) : (
-      <div className="overflow-x-auto border-2 border-gray-200 rounded-2xl shadow-lg">
-        <table className="w-full">
-          <thead className="bg-gradient-to-r from-pink-100 via-purple-100 to-indigo-100">
-            <tr>
-              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Name</th>
-              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Phone</th>
-              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Email</th>
-              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">State</th>
-              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">District</th>
-              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Village</th>
-              <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Category</th>
-              <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sevaks.map((s, idx) => (
-              <tr key={s.id} className={`border-t-2 border-gray-100 hover:bg-pink-50 transition-all ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                <td className="p-5 font-semibold text-gray-800">{s.name}</td>
-                <td className="p-5 text-gray-600">{s.phone}</td>
-                <td className="p-5 text-gray-600">{s.email}</td>
-                <td className="p-5 text-gray-600">{s.state}</td>
-                <td className="p-5 text-gray-600">{s.district}</td>
-                <td className="p-5 text-gray-600">{s.village}</td>
-                <td className="p-5 text-gray-600">
-                  <span className="inline-block px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-semibold">
-                    {s.category}
-                  </span>
-                </td>
-                <td className="p-5 text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <button
-                      onClick={() => setSelectedSevak(s)}
-                      className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                      title="View details"
-                    >
-                      <Eye size={20} />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingSevak(s);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="text-green-500 hover:text-white hover:bg-green-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                      title="Edit sevak"
-                    >
-                      <Edit size={20} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteSevak(s.id)}
-                      className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                      title="Delete sevak"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )}
-
-    {/* Pagination */}
-    <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-      <button
-        disabled={sevakPage === 1 || loading}
-        onClick={() => setSevakPage((p) => p - 1)}
-        className="px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-bold disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all hover:shadow-xl transform hover:scale-105 disabled:transform-none shadow-lg w-full sm:w-auto"
-      >
-        ← Previous
-      </button>
-      <span className="text-gray-800 font-bold text-lg px-6 py-3 bg-gray-100 rounded-xl shadow-inner">
-        Page {sevakPage} of {sevakTotal}
-      </span>
-      <button
-        disabled={sevakPage === sevakTotal || loading}
-        onClick={() => setSevakPage((p) => p + 1)}
-        className="px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-bold disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all hover:shadow-xl transform hover:scale-105 disabled:transform-none shadow-lg w-full sm:w-auto"
-      >
-        Next →
-      </button>
-    </div>
-  </>
-)}{tab === "baithak" && (
+        )} 
+        {tab === "baithak" && (
   <>
     {/* Search & Filter Section */}
     <div className="space-y-4 mb-6">
@@ -2754,81 +2196,7 @@ const handleDeleteBaithak = async (id) => {
             </div>
           </div>
         )}
-      </div>
-      {selectedSevak && (
-  <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 backdrop-blur-sm animate-fadeIn" onClick={() => setSelectedSevak(null)}>
-    <div className="bg-white rounded-3xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-pink-200 animate-scaleIn" onClick={(e) => e.stopPropagation()}>
-      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200">
-        <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-3">
-          <div className="bg-gradient-to-r from-pink-500 to-purple-500 p-3 rounded-xl">
-            <Users size={24} className="text-white" />
-          </div>
-          प्रभारी सेवक Details
-        </h3>
-        <button
-          onClick={() => setSelectedSevak(null)}
-          className="text-gray-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-        >
-          <X size={24} />
-        </button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {Object.entries(selectedSevak).map(([key, value]) => {
-          if (key === 'id') return null;
-          return (
-            <div key={key} className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-              <span className="font-bold text-gray-700 capitalize text-sm block mb-2 text-pink-600">
-                {key.replace(/_/g, ' ')}:
-              </span>
-              <p className="text-gray-800 font-medium break-words">
-                {key === 'createdAt' || key === 'updatedAt'
-                  ? new Date(value).toLocaleString('en-IN', { 
-                      day: '2-digit', 
-                      month: 'short', 
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })
-                  : value || 'N/A'
-                }
-              </p>
-            </div>
-          );
-        })}
-      </div>
-      <div className="mt-6 flex justify-end gap-3">
-        <button
-          onClick={() => {
-            setEditingSevak(selectedSevak);
-            setSelectedSevak(null);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105 flex items-center gap-2"
-        >
-          <Edit size={18} />
-          Edit
-        </button>
-        <button
-          onClick={() => {
-            if (confirm("Are you sure you want to delete this sevak?")) {
-              handleDeleteSevak(selectedSevak.id);
-              setSelectedSevak(null);
-            }
-          }}
-          className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-        >
-          Delete
-        </button>
-        <button
-          onClick={() => setSelectedSevak(null)}
-          className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}{selectedBaithak && (
+{selectedBaithak && (
   <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 backdrop-blur-sm animate-fadeIn" onClick={() => setSelectedBaithak(null)}>
     <div className="bg-white rounded-3xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-teal-200 animate-scaleIn" onClick={(e) => e.stopPropagation()}>
       <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200">
