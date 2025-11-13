@@ -183,7 +183,7 @@ model Tehsil {
 model Prabhari {
   id    String @id @default(cuid())
   name  String
-  phone String @unique 
+  phone String  
   email String?
 
   level PrabhariLevel
