@@ -3,10 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { verifyAuth } from '@/lib/Authhelper'; // Import auth helper
 
 export async function GET(request) {
-  const auth = await verifyAuth(request);
-  if (!auth.success) {
-    return NextResponse.json(auth, { status: auth.status });
-  }
+  
 
   try {
     const states = await prisma.state.findMany({
