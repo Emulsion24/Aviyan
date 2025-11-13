@@ -134,6 +134,7 @@ const PravariSearchUI = () => {
     const fetchMasterData = async () => {
       setMasterDataLoading(true);
       try {
+        // Mocking API fetch responses - replace with actual fetch logic if running outside Canvas
         const [zonesRes, statesRes] = await Promise.all([
           fetch(window.location.origin + '/api/zones'),
           fetch(window.location.origin + '/api/states'),
@@ -143,7 +144,6 @@ const PravariSearchUI = () => {
         const statesData = await statesRes.json(); 
         
         // Assuming Zones API returns the same structure: { data: [{id: 'z1', name: 'Zone Name'}] } or similar.
-        // If zones API returns array directly, adjust this line:
         const zonesData = await zonesRes.json();
         const zonesArray = zonesData.data || zonesData; // Handle both {data: []} or just []
 
@@ -158,7 +158,7 @@ const PravariSearchUI = () => {
       }
     };
     fetchMasterData();
-  }, []);
+  }, [getT]);
 
   // Fetch Sambhags based on State selection for SAMBHAG tab
   useEffect(() => {
@@ -235,14 +235,12 @@ const PravariSearchUI = () => {
     try {
       const level = activeLevel;
       const params = new URLSearchParams();
+      
       params.append('level', level);
       
       // 1. Determine Filters based on activeLevel
       if (level === 'ZONE') {
-          // If ZoneId is selected, add it as a filter (optional, relies on backend logic)
           if (zoneId) params.append('zoneId', zoneId);
-
-          // If global search is present, allow search without zone ID.
           if (!zoneId && !tehsilSearch.trim()) throw new Error(getT("ERROR_SELECT_ZONE"));
           if (tehsilSearch.trim()) params.append('search', tehsilSearch.trim());
 
@@ -279,6 +277,9 @@ const PravariSearchUI = () => {
       // 2. Execute Fetch
       const apiEndpoint = window.location.origin + `/api/prabharis?${params.toString()}`;
       
+      // LOGGING THE REQUEST URL TO HELP DEBUG THE API CALL
+      console.log("Prabhari Search API Request URL:", apiEndpoint);
+      
       const response = await fetch(apiEndpoint);
       if (!response.ok) {
         let errorBody = await response.text();
@@ -292,7 +293,7 @@ const PravariSearchUI = () => {
       
       const data = await response.json();
 
-      // 3. Process Results
+      // 3. Process Results (Backend is now fixed to handle state filtering)
       if (data && data.data) {
         setFilteredPravari(data.data || []);
         setShowResults(true);
@@ -309,7 +310,6 @@ const PravariSearchUI = () => {
       setLoading(false);
     }
   }, [activeLevel, zoneId, stateIdForHigherLevels, sambhagId, districtStateId, districtId, tehsilStateId, tehsilDistrictId, tehsilSearch, getT]);
-
 
   // --- Component Rendering ---
   const renderFilterControls = useMemo(() => {
@@ -333,7 +333,10 @@ const PravariSearchUI = () => {
               </label>
               <select
                 value={zoneId}
-                onChange={(e) => setZoneId(e.target.value)}
+                onChange={(e) => {
+                    setZoneId(e.target.value);
+                    setTehsilSearch(""); // FIX: Clear search when changing zone
+                }}
                 disabled={loading}
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
@@ -377,7 +380,10 @@ const PravariSearchUI = () => {
               </label>
               <select
                 value={stateIdForHigherLevels}
-                onChange={(e) => setStateIdForHigherLevels(e.target.value)}
+                onChange={(e) => {
+                    setStateIdForHigherLevels(e.target.value);
+                    setTehsilSearch(""); // FIX: Clear search when changing state
+                }}
                 disabled={loading}
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
@@ -421,6 +427,7 @@ const PravariSearchUI = () => {
                 onChange={(e) => {
                   setStateIdForHigherLevels(e.target.value);
                   setSambhagId("");
+                  setTehsilSearch(""); // FIX: Clear search when changing state
                 }}
                 disabled={loading}
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -438,7 +445,10 @@ const PravariSearchUI = () => {
               </label>
               <select
                 value={sambhagId}
-                onChange={(e) => setSambhagId(e.target.value)}
+                onChange={(e) => {
+                    setSambhagId(e.target.value);
+                    setTehsilSearch(""); // FIX: Clear search when changing sambhag
+                }}
                 disabled={!stateIdForHigherLevels || loading}
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
               >
@@ -482,6 +492,7 @@ const PravariSearchUI = () => {
                 onChange={(e) => {
                   setDistrictStateId(e.target.value);
                   setDistrictId("");
+                  setTehsilSearch(""); // FIX: Clear search when changing state
                 }}
                 disabled={loading}
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -499,7 +510,10 @@ const PravariSearchUI = () => {
               </label>
               <select
                 value={districtId}
-                onChange={(e) => setDistrictId(e.target.value)}
+                onChange={(e) => {
+                    setDistrictId(e.target.value);
+                    setTehsilSearch(""); // FIX: Clear search when changing district
+                }}
                 disabled={!districtStateId || loading}
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
               >

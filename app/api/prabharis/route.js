@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyAuth } from '@/lib/Authhelper';
 
-
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const level = searchParams.get('level');
@@ -17,6 +16,7 @@ export async function GET(request) {
   const stateId = searchParams.get('stateId');
   const districtId = searchParams.get('districtId');
   const sambhagId = searchParams.get('sambhagId');
+  const zoneId = searchParams.get('zoneId');
   // --- End New Params ---
 
   if (!level) {
@@ -30,27 +30,55 @@ export async function GET(request) {
   // 1. Add Search (applies to all levels)
   if (search) {
     wherePrabhari.OR = [
-      { name: { contains: search, } },
-      { email: { contains: search, } },
-      { phone: { contains: search } }
+      { name: { contains: search, mode: 'insensitive' } }, // Use insensitive mode for robustness
+      { email: { contains: search, mode: 'insensitive' } },
+      { phone: { contains: search, mode: 'insensitive' } }
     ];
   }
 
   // 2. Add Relational Filters (based on level)
-  if (level === 'TEHSIL') {
+  if (level === 'ZONE') {
+      // Apply zoneId filter
+      if (zoneId) {
+          wherePrabhari.zoneId = zoneId;
+      }
+  } else if (level === 'STATE') {
+      // Apply stateId filter
+      if (stateId) {
+          wherePrabhari.stateId = stateId;
+      }
+  } else if (level === 'TEHSIL') {
+    // FIX: Apply the specific ID filter directly, or fallback to state/non-null check
     if (districtId) {
-      whereRelated.districtId = districtId;
-    } else if (stateId) {
-      // Nested filter: where tehsil's district has this stateId
-      whereRelated.district = { stateId: stateId };
+      wherePrabhari.tehsil = { districtId: districtId }; // Filter tehsil by specific district
+    } else {
+      wherePrabhari.tehsilId = { not: null };
+      if (stateId) {
+        whereRelated.district = { stateId: stateId };
+      }
     }
+
   } else if (level === 'DISTRICT') {
-    if (stateId) {
-      whereRelated.stateId = stateId;
+    // FIX: Apply the specific District ID filter directly to the Prabhari model
+    if (districtId) {
+      wherePrabhari.districtId = districtId; 
+    } else {
+        // Fallback for filtering all districts in a state (if districtId is missing)
+        wherePrabhari.districtId = { not: null };
+        if (stateId) {
+          whereRelated.stateId = stateId;
+        }
     }
   } else if (level === 'SAMBHAG') {
-    if (stateId) {
-      whereRelated.stateId = stateId;
+    // FIX 1: Apply the specific Sambhag ID filter directly to the Prabhari model
+    if (sambhagId) {
+      wherePrabhari.sambhagId = sambhagId; 
+    } else {
+        // Fallback for filtering all sambhags in a state
+        wherePrabhari.sambhagId = { not: null };
+        if (stateId) {
+          whereRelated.stateId = stateId;
+        }
     }
   }
   // --- End Where Clause ---
@@ -58,13 +86,18 @@ export async function GET(request) {
   try {
     let prabharis;
     let total;
-    let flattenedPrabharis; // Declared here
+    let flattenedPrabharis; 
 
-    // --- Handle Each Level with Pagination, Search, and Filters ---
+    // Log the final where clause before query (helpful for debugging)
+    console.log(`[API] Querying Prabhari with where: ${JSON.stringify(wherePrabhari)}`);
+
 
     if (level === 'TEHSIL') {
-      wherePrabhari.tehsil = whereRelated; // Add the relational filter
-
+      // Only set wherePrabhari.tehsil if whereRelated (which includes nested district filter) was set
+      if (Object.keys(whereRelated).length > 0) {
+        wherePrabhari.tehsil = whereRelated; 
+      }
+      
       [prabharis, total] = await prisma.$transaction([
         prisma.prabhari.findMany({
           where: wherePrabhari,
@@ -86,13 +119,17 @@ export async function GET(request) {
 
       flattenedPrabharis = prabharis.map((p) => ({
         ...p,
+        stateId: p.tehsil?.district?.stateId, 
         tehsilName: p.tehsil?.name,
         districtName: p.tehsil?.district?.name,
         stateName: p.tehsil?.district?.state?.name,
       }));
 
     } else if (level === 'DISTRICT') {
-      wherePrabhari.district = whereRelated;
+      // Only set wherePrabhari.district if whereRelated was set (i.e., we are only filtering by state)
+      if (Object.keys(whereRelated).length > 0) {
+        wherePrabhari.district = whereRelated;
+      }
 
       [prabharis, total] = await prisma.$transaction([
         prisma.prabhari.findMany({
@@ -111,12 +148,16 @@ export async function GET(request) {
       
       flattenedPrabharis = prabharis.map((p) => ({
         ...p,
+        stateId: p.district?.stateId, 
         districtName: p.district?.name,
         stateName: p.district?.state?.name,
       }));
 
     } else if (level === 'SAMBHAG') {
-      wherePrabhari.sambhag = whereRelated;
+      // Only set wherePrabhari.sambhag if whereRelated was set
+      if (Object.keys(whereRelated).length > 0) {
+        wherePrabhari.sambhag = whereRelated;
+      }
 
       [prabharis, total] = await prisma.$transaction([
         prisma.prabhari.findMany({
@@ -135,32 +176,35 @@ export async function GET(request) {
 
       flattenedPrabharis = prabharis.map((p) => ({
         ...p,
+        stateId: p.sambhag?.stateId, 
         sambhagName: p.sambhag?.name,
         stateName: p.sambhag?.state?.name,
       }));
 
     } else if (level === 'STATE' || level === 'ZONE') {
-      const includeClause = level === 'STATE' ? { state: true } : { zone: true };
-      
-      [prabharis, total] = await prisma.$transaction([
-           prisma.prabhari.findMany({
-              where: wherePrabhari,
-              include: includeClause,
-              skip: skip,
-              take: limit,
-              orderBy: { name: 'asc' },
-          }),
-          prisma.prabhari.count({ where: wherePrabhari })
-      ]);
+        // NOTE: Filters (stateId or zoneId) are applied in the 'wherePrabhari' object above.
+        const includeClause = level === 'STATE' ? { state: true } : { zone: true };
+        
+        [prabharis, total] = await prisma.$transaction([
+             prisma.prabhari.findMany({
+                where: wherePrabhari,
+                include: includeClause,
+                skip: skip,
+                take: limit,
+                orderBy: { name: 'asc' },
+            }),
+            prisma.prabhari.count({ where: wherePrabhari })
+        ]);
 
-      if (level === 'STATE') {
-          flattenedPrabharis = prabharis.map((p) => ({ ...p, stateName: p.state?.name }));
-      } else { // ZONE
-          // --- THIS IS THE FIX ---
-          // Changed `flattenedPrabhari` to `flattenedPrabharis`
-          flattenedPrabharis = prabharis.map((p) => ({ ...p, zoneName: p.zone?.name }));
-          // --- END OF FIX ---
-      }
+        if (level === 'STATE') {
+            flattenedPrabharis = prabharis.map((p) => ({ 
+                ...p, 
+                stateName: p.state?.name,
+                stateId: p.stateId 
+            }));
+        } else { // ZONE
+            flattenedPrabharis = prabharis.map((p) => ({ ...p, zoneName: p.zone?.name }));
+        }
 
     } else {
       // Fallback for any other level
