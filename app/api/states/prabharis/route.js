@@ -7,10 +7,7 @@ import { verifyAuth } from '@/lib/Authhelper'; // Import auth helper
  * Fetches all states assigned to a specific zone (Protected)
  */
 export async function GET(request) {
-  const auth = await verifyAuth(request);
-  if (!auth.success) {
-    return NextResponse.json(auth, { status: auth.status });
-  }
+  
 
   const { searchParams } = new URL(request.url);
   const zoneId = searchParams.get('zoneId');

@@ -1,5 +1,5 @@
 "use client";
-import { Download, FileText, Printer, ImageIcon } from "lucide-react";
+import { Download, FileText, Printer, ImageIcon, Music2Icon } from "lucide-react";
 import Image from "next/image";
 
 export default function DownloadsSection() {
@@ -33,6 +33,16 @@ export default function DownloadsSection() {
       filename: "Gau-Samman-Logo.jpg",
       color: "from-green-500 to-emerald-600",
       bgPattern: "from-green-50 to-emerald-50"
+    },
+ {
+      id: 4,
+      title: "अभियान गीत (MP3)",
+      description: "गौ सम्मान आह्वान अभियान का आधिकारिक गीत डाउनलोड करें।",
+      icon:Music2Icon,
+      file: "/aviyan-song.mp3", // Placeholder for actual music file URL
+      filename: "Gau-Samman-Geet.mp3",
+      color: "from-cyan-500 to-teal-600",
+      bgPattern: "from-cyan-50 to-teal-50"
     }
   ];
 
@@ -80,7 +90,7 @@ export default function DownloadsSection() {
         </div>
 
         {/* Download Cards Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-4 gap-8 mb-12">
           {downloads.map((item, index) => (
             <div
               key={item.id}
