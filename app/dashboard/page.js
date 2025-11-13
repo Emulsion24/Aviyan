@@ -285,7 +285,7 @@ export default function DashboardPage() {
   const [pravariSearchInput, setPravariSearchInput] = useState("");
   const [selectedPravari, setSelectedPravari] = useState(null);
   const [editingPravari, setEditingPravari] = useState(null);
-  const [showPravariFilters, setShowPravariFilters] = useState(false);
+
   const [pravariFilters, setPravariFilters] = useState({
     state: "",
     district: ""
@@ -350,14 +350,22 @@ const [baithakAvailableDistricts, setBaithakAvailableDistricts] = useState([]);
 
   // Stats
 const [stats, setStats] = useState({
-  totalUsers: 0,
-  totalSubmissions: 0,
-  filteredSubmissions: 0,
-  totalPravaris: 0,
-  filteredPravaris: 0,
-
-  totalBaithaks: 0,
-  filteredBaithaks: 0
+  totalUsers: 0,
+  totalSubmissions: 0,
+  filteredSubmissions: 0,
+  // --- MODIFICATION ---
+  // 'totalPravaris' will now hold the GRAND total
+  totalPravaris: 0, 
+  // Add new states for each level's count
+  totalZonePravaris: 0,
+  totalStatePravaris: 0,
+  totalSambhagPravaris: 0,
+  totalDistrictPravaris: 0,
+  totalTehsilPravaris: 0,
+  // ---
+  filteredPravaris: 0,
+  totalBaithaks: 0,
+  filteredBaithaks: 0
 });
 
   // Check authentication
@@ -375,6 +383,48 @@ const [stats, setStats] = useState({
     };
     verifyAuth();
   }, []);
+useEffect(() => {
+    
+    const fetchTotalPrabhariCount = async () => {
+      try {
+        // This is the API route we just created
+        const res = await fetch('/api/prabharis/total-count', { 
+          credentials: 'include' 
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch total prabhari count');
+        }
+
+        const data = await res.json();
+        
+        // --- MODIFICATION ---
+        // Now, set ALL the stats from the API response
+        setStats(prevStats => ({
+          ...prevStats,
+          totalPravaris: data.total || 0, // Set the grand total
+          totalZonePravaris: data.byLevel.zone || 0,
+          totalStatePravaris: data.byLevel.state || 0,
+          totalSambhagPravaris: data.byLevel.sambhag || 0,
+          totalDistrictPravaris: data.byLevel.district || 0,
+          totalTehsilPravaris: data.byLevel.tehsil || 0,
+        }));
+
+      } catch (err) {
+        console.error(err.message);
+        // setError("Could not load total prabhari count.");
+      }
+    };
+
+    fetchTotalPrabhariCount();
+    console.log("Fetched total prabhari count");
+  }, []);
+
+
+
+
+
+
 
   // Update available districts when state filter changes
   useEffect(() => {
@@ -954,7 +1004,7 @@ const handleDeleteBaithak = async (id) => {
             : "bg-gray-200 text-gray-700"
         }`}
       >
-        {0}
+       {stats.totalZonePravaris.toLocaleString()}
       </span>
     </button>
 
@@ -978,7 +1028,7 @@ const handleDeleteBaithak = async (id) => {
             : "bg-gray-200 text-gray-700"
         }`}
       >
-        {0}
+       {stats.totalStatePravaris.toLocaleString()}
       </span>
     </button>
 
@@ -1002,7 +1052,7 @@ const handleDeleteBaithak = async (id) => {
             : "bg-gray-200 text-gray-700"
         }`}
       >
-        {0}
+       {stats.totalSambhagPravaris.toLocaleString()}
       </span>
     </button>
 
@@ -1026,7 +1076,7 @@ const handleDeleteBaithak = async (id) => {
             : "bg-gray-200 text-gray-700"
         }`}
       >
-        {stats.totalPravaris.toLocaleString()}
+        {stats.totalDistrictPravaris.toLocaleString()}
       </span>
     </button>
     {/* Pravari */}
@@ -1049,7 +1099,7 @@ const handleDeleteBaithak = async (id) => {
             : "bg-gray-200 text-gray-700"
         }`}
       >
-        {0}
+      {stats.totalTehsilPravaris.toLocaleString()}
       </span>
     </button>
 
