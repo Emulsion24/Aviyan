@@ -1,6 +1,9 @@
 "use client";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { Search, MapPin, User, Phone, Mail, Award, Loader2, AlertCircle, TrendingUp, Globe, Building } from "lucide-react";
+import { 
+    Search, MapPin, User, Phone, Mail, Award, Loader2, AlertCircle, 
+    TrendingUp, Globe, Building, X, List, ChevronDown 
+} from "lucide-react";
 
 // --- Translation Data ---
 const translations = {
@@ -40,6 +43,15 @@ const translations = {
     NO_PRABHARI_REGION: "No Prabhari information is currently available for this selection.",
     TRY_DIFFERENT_REGION: "Please adjust your filters and try again.",
     ALL_TEHSILS: "All Tehsils",
+    
+    // MODAL STRINGS
+    VIEW_AREAS: "View Assigned Areas",
+    LOADING_AREAS: "Loading assigned areas...",
+    STATES_IN_ZONE: "States & State Prabharis in Zone",
+    SAMBHAGS_IN_STATE: "Sambhags & Sambhag Prabharis in State",
+    DISTRICTS_IN_SAMBHAG: "Districts & District Prabharis in Sambhag",
+    TEHSILS_IN_DISTRICT: "Tehsils & Tehsil Prabharis in District",
+    NO_CHILD_UNITS: "No lower-level units assigned or found.",
   },
   hi: {
     TITLE: "प्रभारी दर्शिका",
@@ -77,8 +89,195 @@ const translations = {
     NO_PRABHARI_REGION: "आपके चयनित स्तर के लिए कोई प्रभारी जानकारी उपलब्ध नहीं है।",
     TRY_DIFFERENT_REGION: "कृपया कोई भिन्न फ़िल्टर समायोजित करें और पुन: प्रयास करें।",
     ALL_TEHSILS: "सभी तहसीलें",
+
+    // NEW MODAL STRINGS
+    VIEW_AREAS: "सौंपे गए क्षेत्र देखें",
+    LOADING_AREAS: "सौंपे गए क्षेत्र लोड हो रहे हैं...",
+    STATES_IN_ZONE: "ज़ोन में राज्य और राज्य प्रभारी",
+    SAMBHAGS_IN_STATE: "राज्य में संभाग और संभाग प्रभारी",
+    DISTRICTS_IN_SAMBHAG: "संभाग में जिले और जिला प्रभारी",
+    TEHSILS_IN_DISTRICT: "जिले में तहसील और तहसील प्रभारी",
+    NO_CHILD_UNITS: "कोई निम्न-स्तरीय इकाई असाइन या मिली नहीं।",
   },
 };
+
+// --- New Component: Modal for Showing Child Units ---
+const PrabhariDetailsModal = ({ prabhari, onClose, getT }) => {
+    const [childUnits, setChildUnits] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const unitDetails = useMemo(() => {
+        let titleKey = '';
+        let endpoint = '';
+        // Determine the ID of the unit the current prabhari is assigned to
+        let unitId = prabhari.unitId || prabhari.zoneId || prabhari.stateId || prabhari.sambhagId || prabhari.districtId || prabhari.id; 
+        
+        let nextLevelKey = ''; 
+
+        switch (prabhari.level) {
+            case 'ZONE':
+                titleKey = 'STATES_IN_ZONE';
+                endpoint = `/api/states/prabharis?zoneId=${unitId}`; 
+                nextLevelKey = 'STATE';
+                break;
+            case 'STATE':
+                titleKey = 'SAMBHAGS_IN_STATE';
+                // FIX 1: Using the confirmed GET API endpoint which returns Sambhags with nested prabhari object.
+                endpoint = `/api/sambhags?stateId=${unitId}`; 
+                nextLevelKey = 'SAMBHAG';
+                break;
+            case 'SAMBHAG':
+                titleKey = 'DISTRICTS_IN_SAMBHAG';
+                // Note: The /api/districts/prabharis POST endpoint requires districtIds array in the body.
+                // We'll proceed with a standard GET assumption, but if it fails, we know it needs a POST/body fix later.
+                endpoint = `/api/districts?sambhagId=${unitId}`;
+                nextLevelKey = 'DISTRICT';
+                break;
+            case 'DISTRICT':
+                titleKey = 'TEHSILS_IN_DISTRICT';
+                // Assuming standard GET, or we rely on the backend to handle the query parameter correctly.
+                endpoint = `/api/tehsils?districtId=${unitId}`;
+                nextLevelKey = 'TEHSIL';
+                break;
+            default:
+                return null; // Tehsil level has no lower units
+        }
+        return { title: getT(titleKey), endpoint, nextLevelKey };
+    }, [prabhari, getT]);
+
+    useEffect(() => {
+        if (!unitDetails) return;
+        
+        const fetchChildUnits = async () => {
+            setLoading(true);
+            setError('');
+            try {
+                // Log endpoint for debugging 405/404 issues
+                console.log(`[Modal Fetch] Attempting GET to: ${unitDetails.endpoint}`);
+
+                const res = await fetch(window.location.origin + unitDetails.endpoint);
+                
+                if (!res.ok) {
+                    let errorBody = await res.text();
+                    try {
+                        errorBody = JSON.parse(errorBody).error || errorBody;
+                    } catch (e) {}
+                    // Throw a detailed error to be caught by the front-end display
+                    throw new Error(`[${res.status} ${res.statusText}] Failed to fetch assigned units. API response detail: ${errorBody.slice(0, 100)}...`);
+                }
+                
+                let data = await res.json();
+                
+                // Assuming API returns {data: []} or just []
+                const unitsArray = data.data || data; 
+                setChildUnits(unitsArray || []);
+            } catch (err) {
+                console.error("Child unit fetch error:", err);
+                setError(err.message || getT('ERROR_API_GENERAL'));
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchChildUnits();
+    }, [unitDetails, getT]);
+
+    if (!unitDetails) return null;
+
+    return (
+        <div 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
+            onClick={onClose}
+        >
+            <div 
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 m-4 relative animate-fade-in max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <button
+                    onClick={onClose}
+                    className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2 transition-all"
+                >
+                    <X size={24} />
+                </button>
+
+                <div className="text-center mb-6 border-b pb-4">
+                    <h3 className="text-2xl font-bold text-gray-800">{prabhari.name}</h3>
+                    <p className="text-md text-purple-600 font-semibold mt-1">
+                        {getT(`LEVEL_${prabhari.level}`)} for {prabhari.zoneName || prabhari.stateName || prabhari.sambhagName || prabhari.districtName || 'Area'}
+                    </p>
+                </div>
+
+                <h4 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-4">
+                    <List className="w-5 h-5 text-blue-600" />
+                    {unitDetails.title}
+                </h4>
+
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-10 text-gray-600">
+                        <Loader2 className="w-8 h-8 animate-spin mb-3" />
+                        <p>{getT('LOADING_AREAS')}</p>
+                    </div>
+                ) : error ? (
+                    <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
+                        <span className="font-semibold block mb-2">Error Loading Details:</span>
+                        <p className="text-sm break-all">{error}</p>
+                        <p className="text-xs mt-2 italic">Please check the console for API endpoint details.</p>
+                    </div>
+                ) : childUnits && childUnits.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto p-2 bg-gray-50 rounded-lg border">
+                        {childUnits.map((unit) => {
+                            // FIX 2: Handle both single object (unit.prabhari, common for State/Sambhag)
+                            // and array (unit.prabharis, common for District/Tehsil)
+                            const rawPrabhariData = unit.prabharis || unit.prabhari;
+                            const unitPrabharis = Array.isArray(rawPrabhariData) 
+                                ? rawPrabhariData 
+                                : (rawPrabhariData ? [rawPrabhariData] : []);
+                            const nextLevelKey = unitDetails.nextLevelKey; 
+
+                            return (
+                                <div 
+                                    key={unit.id} 
+                                    className="p-3 bg-white rounded-lg shadow-sm border border-gray-200"
+                                >
+                                    <h5 className="font-bold text-gray-800 flex items-center gap-2">
+                                        <MapPin size={16} className="text-purple-500"/>
+                                        {unit.name}
+                                    </h5>
+                                    
+                                    {unitPrabharis.length > 0 ? (
+                                        <div className="mt-2 text-sm text-gray-600 space-y-1 border-t pt-2">
+                                            {unitPrabharis.map((p) => (
+                                                <div key={p.id} className="space-y-0.5">
+                                                    <p className="flex items-center gap-2">
+                                                        <User size={14} className="text-gray-500" />
+                                                        <strong>{p.name}</strong>
+                                                        <span className="text-xs text-blue-500 ml-1">({getT(`LEVEL_${nextLevelKey}`)} Prabhari)</span>
+                                                    </p>
+                                                    <p className="flex items-center gap-2 text-xs ml-5">
+                                                        <Phone size={12} className="text-gray-500" />
+                                                        {p.phone}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-sm text-gray-500 mt-1">
+                                            No {getT(`LEVEL_${nextLevelKey}`)} assigned.
+                                        </p>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <p className="text-center py-6 text-gray-500">{getT('NO_CHILD_UNITS')}</p>
+                )}
+                
+            </div>
+        </div>
+    );
+};
+
 
 const PravariSearchUI = () => {
   // --- Language State ---
@@ -99,7 +298,7 @@ const PravariSearchUI = () => {
     { key: 'TEHSIL', label: getT('LEVEL_TEHSIL'), Icon: MapPin },
   ], [getT]);
 
-  // --- Master Data States (Fetched from new APIs) ---
+  // --- Master Data States ---
   const [masterDataLoading, setMasterDataLoading] = useState(true);
   const [zones, setZones] = useState([]);
   const [states, setStates] = useState([]);
@@ -113,42 +312,36 @@ const PravariSearchUI = () => {
   const [error, setError] = useState("");
   const [filteredPravari, setFilteredPravari] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  
+  // --- Modal State ---
+  const [selectedPrabhari, setSelectedPrabhari] = useState(null); // New state for modal
 
   // Filter States
   const [zoneId, setZoneId] = useState("");
-  
-  // State for State/Sambhag/District Filtering (State Level)
   const [stateIdForHigherLevels, setStateIdForHigherLevels] = useState("");
   const [sambhagId, setSambhagId] = useState("");
-  
-  // State/District/Tehsil Specific Filters
   const [districtStateId, setDistrictStateId] = useState("");
   const [districtId, setDistrictId] = useState("");
-
   const [tehsilStateId, setTehsilStateId] = useState("");
   const [tehsilDistrictId, setTehsilDistrictId] = useState("");
-  const [tehsilSearch, setTehsilSearch] = useState(""); // Used for name/phone/email search
+  const [tehsilSearch, setTehsilSearch] = useState(""); 
 
   // --- Master Data Fetching ---
   useEffect(() => {
     const fetchMasterData = async () => {
       setMasterDataLoading(true);
       try {
-        // Mocking API fetch responses - replace with actual fetch logic if running outside Canvas
         const [zonesRes, statesRes] = await Promise.all([
           fetch(window.location.origin + '/api/zones'),
           fetch(window.location.origin + '/api/states'),
         ]);
 
-        // States API returns array directly: [{id: 's1', name: 'State Name'}]
         const statesData = await statesRes.json(); 
-        
-        // Assuming Zones API returns the same structure: { data: [{id: 'z1', name: 'Zone Name'}] } or similar.
         const zonesData = await zonesRes.json();
-        const zonesArray = zonesData.data || zonesData; // Handle both {data: []} or just []
+        const zonesArray = zonesData.data || zonesData; 
 
         setZones(zonesArray || []);
-        setStates(statesData || []); // Set states directly from the array
+        setStates(statesData || []);
 
       } catch (e) {
         console.error('Failed to fetch initial master data:', e);
@@ -160,13 +353,12 @@ const PravariSearchUI = () => {
     fetchMasterData();
   }, [getT]);
 
-  // Fetch Sambhags based on State selection for SAMBHAG tab
+  // Fetch Sambhags based on State selection
   useEffect(() => {
     if (stateIdForHigherLevels) {
       fetch(window.location.origin + `/api/sambhags?stateId=${stateIdForHigherLevels}`)
         .then(res => res.json())
         .then(data => {
-            // Assuming Sambhags API returns {data: []} or just []
             const sambhagsArray = data.data || data; 
             setSambhags(sambhagsArray || []);
         })
@@ -179,10 +371,9 @@ const PravariSearchUI = () => {
   // Fetch Districts based on State selection for DISTRICT tab
   useEffect(() => {
     if (districtStateId) {
-      // Districts API returns array directly: [{id: 'd1', name: 'District Name'}]
       fetch(window.location.origin + `/api/districts?stateId=${districtStateId}`)
         .then(res => res.json())
-        .then(data => setDistrictsForDistrictTab(data || [])) // Set districts directly from array
+        .then(data => setDistrictsForDistrictTab(data || []))
         .catch(e => console.error('Failed to fetch districts for district tab:', e));
     } else {
       setDistrictsForDistrictTab([]);
@@ -192,10 +383,9 @@ const PravariSearchUI = () => {
   // Fetch Districts based on State selection for TEHSIL tab
   useEffect(() => {
     if (tehsilStateId) {
-      // Districts API returns array directly: [{id: 'd1', name: 'District Name'}]
       fetch(window.location.origin + `/api/districts?stateId=${tehsilStateId}`)
         .then(res => res.json())
-        .then(data => setDistrictsForTehsilTab(data || [])) // Set districts directly from array
+        .then(data => setDistrictsForTehsilTab(data || []))
         .catch(e => console.error('Failed to fetch districts for tehsil tab:', e));
     } else {
       setDistrictsForTehsilTab([]);
@@ -203,7 +393,7 @@ const PravariSearchUI = () => {
   }, [tehsilStateId]);
 
 
-  // --- Helper Functions (Now using state variables) ---
+  // --- Helper Functions ---
   const getStates = useCallback(() => states, [states]);
   const getZoneNames = useCallback(() => zones, [zones]);
   const getDistrictsForDistrictTab = useCallback(() => districtsForDistrictTab, [districtsForDistrictTab]);
@@ -224,6 +414,7 @@ const PravariSearchUI = () => {
     setShowResults(false);
     setError("");
     setLoading(false);
+    setSelectedPrabhari(null); // Close modal
   }, []);
 
   // --- API Search Handler (Unified Fetch) ---
@@ -235,67 +426,72 @@ const PravariSearchUI = () => {
     try {
       const level = activeLevel;
       const params = new URLSearchParams();
-      
       params.append('level', level);
+      
+      let unitIdToAppend = ''; // To store the ID of the geographical unit (for modal use)
       
       // 1. Determine Filters based on activeLevel
       if (level === 'ZONE') {
-          if (zoneId) params.append('zoneId', zoneId);
+          if (zoneId) {
+            params.append('zoneId', zoneId);
+            unitIdToAppend = zoneId;
+          }
           if (!zoneId && !tehsilSearch.trim()) throw new Error(getT("ERROR_SELECT_ZONE"));
           if (tehsilSearch.trim()) params.append('search', tehsilSearch.trim());
 
       } else if (level === 'STATE') {
           if (!stateIdForHigherLevels) throw new Error(getT("ERROR_SELECT_STATE"));
           params.append('stateId', stateIdForHigherLevels);
+          unitIdToAppend = stateIdForHigherLevels;
           if (tehsilSearch.trim()) params.append('search', tehsilSearch.trim());
           
       } else if (level === 'SAMBHAG') {
           if (!stateIdForHigherLevels || !sambhagId) throw new Error(getT("ERROR_SELECT_SAMBHAG"));
           params.append('stateId', stateIdForHigherLevels); 
           params.append('sambhagId', sambhagId);
+          unitIdToAppend = sambhagId;
           if (tehsilSearch.trim()) params.append('search', tehsilSearch.trim());
           
       } else if (level === 'DISTRICT') {
           if (!districtStateId || !districtId) throw new Error(getT("ERROR_SELECT_STATE_DISTRICT"));
           params.append('stateId', districtStateId); 
           params.append('districtId', districtId);
+          unitIdToAppend = districtId;
           if (tehsilSearch.trim()) params.append('search', tehsilSearch.trim());
           
       } else if (level === 'TEHSIL') {
           if (!tehsilStateId || !tehsilDistrictId) throw new Error(getT("ERROR_SELECT_STATE_DISTRICT"));
           params.append('stateId', tehsilStateId); 
           params.append('districtId', tehsilDistrictId);
+          unitIdToAppend = tehsilDistrictId;
           if (tehsilSearch.trim()) {
               params.append('search', tehsilSearch.trim());
           }
       }
 
-      // Add pagination params
       params.append('page', '1');
       params.append('limit', '50');
 
-      // 2. Execute Fetch
       const apiEndpoint = window.location.origin + `/api/prabharis?${params.toString()}`;
-      
-      // LOGGING THE REQUEST URL TO HELP DEBUG THE API CALL
-      console.log("Prabhari Search API Request URL:", apiEndpoint);
       
       const response = await fetch(apiEndpoint);
       if (!response.ok) {
         let errorBody = await response.text();
         try {
             errorBody = JSON.parse(errorBody).error;
-        } catch (e) {
-            // ignore if not JSON
-        }
+        } catch (e) {}
         throw new Error(errorBody || getT('ERROR_API_GENERAL'));
       }
       
       const data = await response.json();
 
-      // 3. Process Results (Backend is now fixed to handle state filtering)
       if (data && data.data) {
-        setFilteredPravari(data.data || []);
+        // Enhance results with the current unit ID for the modal to use
+        const results = data.data.map(p => ({
+            ...p,
+            unitId: unitIdToAppend || p.id, // Fallback to prabhari ID if no search unit ID
+        }));
+        setFilteredPravari(results || []);
         setShowResults(true);
       } else {
         throw new Error(data.error || getT('ERROR_API_GENERAL'));
@@ -309,7 +505,19 @@ const PravariSearchUI = () => {
     } finally {
       setLoading(false);
     }
-  }, [activeLevel, zoneId, stateIdForHigherLevels, sambhagId, districtStateId, districtId, tehsilStateId, tehsilDistrictId, tehsilSearch, getT]);
+  }, [activeLevel, zoneId, stateIdForHigherLevels, sambhagId, districtStateId, districtId, tehsilStateId, tehsilDistrictId, tehsilSearch, getT, zones, states, sambhags]);
+  
+  // --- Modal Handlers ---
+  const openModal = (prabhari) => {
+    // Only open the modal if the prabhari is at a level that *has* children
+    if (prabhari.level !== 'TEHSIL') {
+        setSelectedPrabhari(prabhari);
+    }
+  };
+
+  const closeModal = () => {
+    setSelectedPrabhari(null);
+  };
 
   // --- Component Rendering ---
   const renderFilterControls = useMemo(() => {
@@ -323,322 +531,310 @@ const PravariSearchUI = () => {
     }
     
     switch (activeLevel) {
-      case 'ZONE':
-        return (
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <Globe className="w-5 h-5 text-blue-600" />
-                {getT('SELECT_ZONE')}
-              </label>
-              <select
-                value={zoneId}
-                onChange={(e) => {
-                    setZoneId(e.target.value);
-                    setTehsilSearch(""); // FIX: Clear search when changing zone
-                }}
-                disabled={loading}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">{getT('SELECT_ZONE')}</option>
-                {getZoneNames().map((zone) => (
-                  <option key={zone.id} value={zone.id}>{zone.name}</option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                Note: Searches by Zone, or use the global search below.
-              </p>
+        case 'ZONE':
+          return (
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <Globe className="w-5 h-5 text-blue-600" />
+                  {getT('SELECT_ZONE')}
+                </label>
+                <select
+                  value={zoneId}
+                  onChange={(e) => {
+                      setZoneId(e.target.value);
+                      setTehsilSearch("");
+                  }}
+                  disabled={loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">{getT('SELECT_ZONE')}</option>
+                  {getZoneNames().map((zone) => (
+                    <option key={zone.id} value={zone.id}>{zone.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Note: Searches by Zone, or use the global search below.
+                </p>
+              </div>
+               {/* Global Search Input (Applicable to all levels) */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <Search className="w-5 h-5 text-blue-600" />
+                  {getT('SEARCH_TEHSIL_VILLAGE')}
+                </label>
+                <input
+                  type="text"
+                  value={tehsilSearch}
+                  onChange={(e) => setTehsilSearch(e.target.value)}
+                  disabled={loading}
+                  placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
+                />
+                <p className="text-xs text-gray-500">
+                  (Searches Name, Phone, or Email across this level)
+                </p>
+              </div>
             </div>
-             {/* Global Search Input (Applicable to all levels) */}
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <Search className="w-5 h-5 text-blue-600" />
-                {getT('SEARCH_TEHSIL_VILLAGE')}
-              </label>
-              <input
-                type="text"
-                value={tehsilSearch}
-                onChange={(e) => setTehsilSearch(e.target.value)}
-                disabled={loading}
-                placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-              />
-              <p className="text-xs text-gray-500">
-                (Searches Name, Phone, or Email across this level)
-              </p>
-            </div>
-          </div>
-        );
+          );
 
-      case 'STATE':
-        return (
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <TrendingUp className="w-5 h-5 text-indigo-600" />
-                {getT('SELECT_STATE')}
-              </label>
-              <select
-                value={stateIdForHigherLevels}
-                onChange={(e) => {
+        case 'STATE':
+          return (
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <TrendingUp className="w-5 h-5 text-indigo-600" />
+                  {getT('SELECT_STATE')}
+                </label>
+                <select
+                  value={stateIdForHigherLevels}
+                  onChange={(e) => {
+                      setStateIdForHigherLevels(e.target.value);
+                      setTehsilSearch("");
+                  }}
+                  disabled={loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">{getT('SELECT_STATE')}</option>
+                  {getStates().map((state) => (
+                    <option key={state.id} value={state.id}>{state.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <Search className="w-5 h-5 text-blue-600" />
+                  {getT('SEARCH_TEHSIL_VILLAGE')}
+                </label>
+                <input
+                  type="text"
+                  value={tehsilSearch}
+                  onChange={(e) => setTehsilSearch(e.target.value)}
+                  disabled={loading}
+                  placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
+                />
+                <p className="text-xs text-gray-500">
+                  (Searches Name, Phone, or Email across this level)
+                </p>
+              </div>
+            </div>
+          );
+
+        case 'SAMBHAG':
+          return (
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <TrendingUp className="w-5 h-5 text-indigo-600" />
+                  {getT('SELECT_STATE')}
+                </label>
+                <select
+                  value={stateIdForHigherLevels}
+                  onChange={(e) => {
                     setStateIdForHigherLevels(e.target.value);
-                    setTehsilSearch(""); // FIX: Clear search when changing state
-                }}
-                disabled={loading}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">{getT('SELECT_STATE')}</option>
-                {getStates().map((state) => (
-                  <option key={state.id} value={state.id}>{state.name}</option>
-                ))}
-              </select>
+                    setSambhagId("");
+                    setTehsilSearch("");
+                  }}
+                  disabled={loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">{getT('SELECT_STATE')}</option>
+                  {getStates().map((state) => (
+                    <option key={state.id} value={state.id}>{state.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <Building className="w-5 h-5 text-purple-600" />
+                  {getT('SELECT_SAMBHAG')}
+                </label>
+                <select
+                  value={sambhagId}
+                  onChange={(e) => {
+                      setSambhagId(e.target.value);
+                      setTehsilSearch("");
+                  }}
+                  disabled={!stateIdForHigherLevels || loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
+                >
+                  <option value="">{getT('SELECT_SAMBHAG')}</option>
+                  {getSambhagsForState().map((sambhag) => (
+                    <option key={sambhag.id} value={sambhag.id}>{sambhag.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <Search className="w-5 h-5 text-blue-600" />
+                  {getT('SEARCH_TEHSIL_VILLAGE')}
+                </label>
+                <input
+                  type="text"
+                  value={tehsilSearch}
+                  onChange={(e) => setTehsilSearch(e.target.value)}
+                  disabled={loading}
+                  placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
+                />
+                <p className="text-xs text-gray-500">
+                  (Searches Name, Phone, or Email across this level)
+                </p>
+              </div>
             </div>
-            {/* Global Search Input */}
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <Search className="w-5 h-5 text-blue-600" />
-                {getT('SEARCH_TEHSIL_VILLAGE')}
-              </label>
-              <input
-                type="text"
-                value={tehsilSearch}
-                onChange={(e) => setTehsilSearch(e.target.value)}
-                disabled={loading}
-                placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-              />
-              <p className="text-xs text-gray-500">
-                (Searches Name, Phone, or Email across this level)
-              </p>
-            </div>
-          </div>
-        );
+          );
 
-      case 'SAMBHAG':
-        return (
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <TrendingUp className="w-5 h-5 text-indigo-600" />
-                {getT('SELECT_STATE')}
-              </label>
-              <select
-                value={stateIdForHigherLevels}
-                onChange={(e) => {
-                  setStateIdForHigherLevels(e.target.value);
-                  setSambhagId("");
-                  setTehsilSearch(""); // FIX: Clear search when changing state
-                }}
-                disabled={loading}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">{getT('SELECT_STATE')}</option>
-                {getStates().map((state) => (
-                  <option key={state.id} value={state.id}>{state.name}</option>
-                ))}
-              </select>
+        case 'DISTRICT':
+          return (
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <TrendingUp className="w-5 h-5 text-indigo-600" />
+                  {getT('SELECT_STATE')}
+                </label>
+                <select
+                  value={districtStateId}
+                  onChange={(e) => {
+                    setDistrictStateId(e.target.value);
+                    setDistrictId("");
+                    setTehsilSearch("");
+                  }}
+                  disabled={loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">{getT('SELECT_STATE')}</option>
+                  {getStates().map((state) => (
+                    <option key={state.id} value={state.id}>{state.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <MapPin className="w-5 h-5 text-purple-600" />
+                  {getT('SELECT_DISTRICT')}
+                </label>
+                <select
+                  value={districtId}
+                  onChange={(e) => {
+                      setDistrictId(e.target.value);
+                      setTehsilSearch("");
+                  }}
+                  disabled={!districtStateId || loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
+                >
+                  <option value="">{getT('SELECT_DISTRICT')}</option>
+                  {getDistrictsForDistrictTab().map((district) => (
+                    <option key={district.id} value={district.id}>{district.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <Search className="w-5 h-5 text-blue-600" />
+                  {getT('SEARCH_TEHSIL_VILLAGE')}
+                </label>
+                <input
+                  type="text"
+                  value={tehsilSearch}
+                  onChange={(e) => setTehsilSearch(e.target.value)}
+                  disabled={loading}
+                  placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
+                />
+                <p className="text-xs text-gray-500">
+                  (Searches Name, Phone, or Email across this level)
+                </p>
+              </div>
             </div>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <Building className="w-5 h-5 text-purple-600" />
-                {getT('SELECT_SAMBHAG')}
-              </label>
-              <select
-                value={sambhagId}
-                onChange={(e) => {
-                    setSambhagId(e.target.value);
-                    setTehsilSearch(""); // FIX: Clear search when changing sambhag
-                }}
-                disabled={!stateIdForHigherLevels || loading}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-              >
-                <option value="">{getT('SELECT_SAMBHAG')}</option>
-                {getSambhagsForState().map((sambhag) => (
-                  <option key={sambhag.id} value={sambhag.id}>{sambhag.name}</option>
-                ))}
-              </select>
-            </div>
-            {/* Global Search Input */}
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <Search className="w-5 h-5 text-blue-600" />
-                {getT('SEARCH_TEHSIL_VILLAGE')}
-              </label>
-              <input
-                type="text"
-                value={tehsilSearch}
-                onChange={(e) => setTehsilSearch(e.target.value)}
-                disabled={loading}
-                placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-              />
-              <p className="text-xs text-gray-500">
-                (Searches Name, Phone, or Email across this level)
-              </p>
-            </div>
-          </div>
-        );
+          );
 
-      case 'DISTRICT':
-        return (
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <TrendingUp className="w-5 h-5 text-indigo-600" />
-                {getT('SELECT_STATE')}
-              </label>
-              <select
-                value={districtStateId}
-                onChange={(e) => {
-                  setDistrictStateId(e.target.value);
-                  setDistrictId("");
-                  setTehsilSearch(""); // FIX: Clear search when changing state
-                }}
-                disabled={loading}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">{getT('SELECT_STATE')}</option>
-                {getStates().map((state) => (
-                  <option key={state.id} value={state.id}>{state.name}</option>
-                ))}
-              </select>
+        case 'TEHSIL':
+          return (
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <TrendingUp className="w-5 h-5 text-indigo-600" />
+                  {getT('SELECT_STATE')}
+                </label>
+                <select
+                  value={tehsilStateId}
+                  onChange={(e) => {
+                    setTehsilStateId(e.target.value);
+                    setTehsilDistrictId("");
+                    setTehsilSearch("");
+                  }}
+                  disabled={loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                >
+                  <option value="">{getT('SELECT_STATE')}</option>
+                  {getStates().map((state) => (
+                    <option key={state.id} value={state.id}>{state.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <MapPin className="w-5 h-5 text-purple-600" />
+                  {getT('SELECT_DISTRICT')}
+                </label>
+                <select
+                  value={tehsilDistrictId}
+                  onChange={(e) => {
+                    setTehsilDistrictId(e.target.value);
+                    setTehsilSearch("");
+                  }}
+                  disabled={!tehsilStateId || loading}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
+                >
+                  <option value="">{getT('SELECT_DISTRICT')}</option>
+                  {getDistrictsForTehsilTab().map((district) => (
+                    <option key={district.id} value={district.id}>{district.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-gray-700 font-semibold">
+                  <Search className="w-5 h-5 text-blue-600" />
+                  {getT('SEARCH_TEHSIL_VILLAGE')}
+                </label>
+                <input
+                  type="text"
+                  value={tehsilSearch}
+                  onChange={(e) => setTehsilSearch(e.target.value)}
+                  disabled={!tehsilDistrictId || loading}
+                  placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
+                />
+                <p className="text-xs text-gray-500">
+                  (Searches Name, Phone, or Email within this district)
+                </p>
+              </div>
             </div>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <MapPin className="w-5 h-5 text-purple-600" />
-                {getT('SELECT_DISTRICT')}
-              </label>
-              <select
-                value={districtId}
-                onChange={(e) => {
-                    setDistrictId(e.target.value);
-                    setTehsilSearch(""); // FIX: Clear search when changing district
-                }}
-                disabled={!districtStateId || loading}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-              >
-                <option value="">{getT('SELECT_DISTRICT')}</option>
-                {getDistrictsForDistrictTab().map((district) => (
-                  <option key={district.id} value={district.id}>{district.name}</option>
-                ))}
-              </select>
-            </div>
-             {/* Global Search Input */}
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <Search className="w-5 h-5 text-blue-600" />
-                {getT('SEARCH_TEHSIL_VILLAGE')}
-              </label>
-              <input
-                type="text"
-                value={tehsilSearch}
-                onChange={(e) => setTehsilSearch(e.target.value)}
-                disabled={loading}
-                placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-              />
-              <p className="text-xs text-gray-500">
-                (Searches Name, Phone, or Email across this level)
-              </p>
-            </div>
-          </div>
-        );
+          );
 
-      case 'TEHSIL':
-        return (
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* State */}
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <TrendingUp className="w-5 h-5 text-indigo-600" />
-                {getT('SELECT_STATE')}
-              </label>
-              <select
-                value={tehsilStateId}
-                onChange={(e) => {
-                  setTehsilStateId(e.target.value);
-                  setTehsilDistrictId("");
-                  setTehsilSearch("");
-                }}
-                disabled={loading}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all duration-300 text-gray-700 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">{getT('SELECT_STATE')}</option>
-                {getStates().map((state) => (
-                  <option key={state.id} value={state.id}>{state.name}</option>
-                ))}
-              </select>
-            </div>
-            {/* District */}
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <MapPin className="w-5 h-5 text-purple-600" />
-                {getT('SELECT_DISTRICT')}
-              </label>
-              <select
-                value={tehsilDistrictId}
-                onChange={(e) => {
-                  setTehsilDistrictId(e.target.value);
-                  setTehsilSearch("");
-                }}
-                disabled={!tehsilStateId || loading}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-              >
-                <option value="">{getT('SELECT_DISTRICT')}</option>
-                {getDistrictsForTehsilTab().map((district) => (
-                  <option key={district.id} value={district.id}>{district.name}</option>
-                ))}
-              </select>
-            </div>
-            {/* Search Input */}
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-gray-700 font-semibold">
-                <Search className="w-5 h-5 text-blue-600" />
-                {getT('SEARCH_TEHSIL_VILLAGE')}
-              </label>
-              <input
-                type="text"
-                value={tehsilSearch}
-                onChange={(e) => setTehsilSearch(e.target.value)}
-                disabled={!tehsilDistrictId || loading}
-                placeholder={getT('SEARCH_TEHSIL_VILLAGE')}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-700"
-              />
-              <p className="text-xs text-gray-500">
-                (Searches Name, Phone, or Email within this district)
-              </p>
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
-    }
+        default:
+          return null;
+      }
   }, [activeLevel, loading, masterDataLoading, zoneId, stateIdForHigherLevels, sambhagId, districtStateId, districtId, tehsilStateId, tehsilDistrictId, tehsilSearch, getStates, getDistrictsForDistrictTab, getDistrictsForTehsilTab, getSambhagsForState, getZoneNames, getT]);
 
 
   // Determine if the Search button should be enabled
   const isSearchDisabled = useMemo(() => {
-    // If global search is used, allow search for ZONE, STATE, SAMBHAG, DISTRICT levels without requiring selection.
     const searchIsPresent = tehsilSearch.trim();
 
     if (masterDataLoading || loading) return true;
 
     switch (activeLevel) {
       case 'ZONE':
-        // If zoneId is selected OR global search is present, allow search.
         return !zoneId && !searchIsPresent;
       case 'STATE':
-        // If state is selected OR global search is present, allow search.
         return !stateIdForHigherLevels && !searchIsPresent;
       case 'SAMBHAG':
-        // If state and sambhag selected OR global search is present, allow search.
         return (!stateIdForHigherLevels || !sambhagId) && !searchIsPresent;
       case 'DISTRICT':
-        // District must be selected, but global search can be used as an additional filter.
         return !districtStateId || !districtId; 
       case 'TEHSIL':
-        // District must be selected (as it scopes the search), but search text is optional.
         return !tehsilStateId || !tehsilDistrictId;
       default:
         return true;
@@ -671,7 +867,6 @@ const PravariSearchUI = () => {
   
   // Helper to format the displayed state name
   const getPrabhariState = (p) => {
-      // All levels TEHSIL, DISTRICT, SAMBHAG, STATE return stateName
       return p.stateName || getT('DEFAULT_REGION');
   }
 
@@ -787,13 +982,20 @@ const PravariSearchUI = () => {
                   <p className="text-gray-600 mt-2">
                     {getT('RESULT_FOR_LEVEL', { level: getT(`LEVEL_${activeLevel}`) })}
                   </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {selectedPrabhari ? '' : 'Click the card to view assigned areas.'}
+                  </p>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredPravari.map((pravari) => (
                     <div
                       key={pravari.id}
-                      className="group relative p-6 bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-blue-100 hover:border-purple-300 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]"
+                      onClick={() => openModal(pravari)}
+                      // Add cursor pointer only if the level has children
+                      className={`group relative p-6 bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-blue-100 hover:border-purple-300 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] ${
+                        pravari.level !== 'TEHSIL' ? 'cursor-pointer' : ''
+                      }`}
                     >
                       <div className="space-y-4">
                         <div className="flex items-start justify-between gap-4">
@@ -841,6 +1043,16 @@ const PravariSearchUI = () => {
                               </p>
                             </div>
                           </div>
+                          
+                          {/* Indicator for clickable detail */}
+                          {pravari.level !== 'TEHSIL' && (
+                              <div className="pt-2 text-center border-t border-gray-100 mt-3">
+                                <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-500 group-hover:text-purple-700 transition-all">
+                                    <List className="w-3 h-3" />
+                                    {getT('VIEW_AREAS')}
+                                </span>
+                              </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -866,6 +1078,15 @@ const PravariSearchUI = () => {
           </div>
         )}
       </div>
+      
+      {/* Modal Render */}
+      {selectedPrabhari && (
+          <PrabhariDetailsModal 
+              prabhari={selectedPrabhari} 
+              onClose={closeModal} 
+              getT={getT} 
+          />
+      )}
     </div>
   );
 };

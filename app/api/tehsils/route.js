@@ -7,7 +7,9 @@ import { verifyAuth } from '@/lib/Authhelper';
  * Fetches all tehsils for a specific district. (Protected)
  */
 export async function GET(request) {
- 
+  // Authentication check is usually done here, but since the original was commented out, 
+  // we'll proceed with public read access based on the previous files' context.
+  
   const { searchParams } = new URL(request.url);
   const districtId = searchParams.get('districtId');
 
@@ -16,14 +18,58 @@ export async function GET(request) {
   }
 
   try {
+    // Step 1: Fetch all Tehsils belonging to the district
     const tehsils = await prisma.tehsil.findMany({
       where: { districtId: districtId },
+      select: { 
+        id: true, 
+        name: true,
+      },
       orderBy: { name: 'asc' },
     });
-    return NextResponse.json(tehsils);
+
+    // Step 2: Fetch all TEHSIL Prabharis for these Tehsils
+    const tehsilIds = tehsils.map(t => t.id);
+    
+    const tehsilPrabharis = await prisma.prabhari.findMany({
+        where: {
+            level: 'TEHSIL',
+            tehsilId: {
+                in: tehsilIds,
+            },
+        },
+        select: {
+            id: true,
+            name: true,
+            phone: true,
+            email: true,
+            tehsilId: true, // Needed for grouping
+        },
+        orderBy: { name: 'asc' },
+    });
+
+    // Step 3: Group the prabharis by tehsil ID
+    const prabharisByTehsil = tehsilPrabharis.reduce((acc, prabhari) => {
+        if (!acc[prabhari.tehsilId]) {
+            acc[prabhari.tehsilId] = [];
+        }
+        acc[prabhari.tehsilId].push(prabhari);
+        return acc;
+    }, {});
+
+    // Step 4: Create the final output structure (Tehsils containing their prabharis)
+    const finalOutput = tehsils.map(tehsil => ({
+        id: tehsil.id,
+        name: tehsil.name,
+        // Attach the list of TEHSIL prabharis to the parent tehsil
+        prabharis: prabharisByTehsil[tehsil.id] || [] 
+    }));
+
+
+    return NextResponse.json(finalOutput);
   } catch (error) {
-    console.error('[API] Failed to fetch tehsils:', error);
-    return NextResponse.json({ error: 'Failed to fetch tehsils' }, { status: 500 });
+    console.error('[API] Failed to fetch tehsils and prabharis:', error);
+    return NextResponse.json({ error: 'Failed to fetch tehsils and prabharis' }, { status: 500 });
   }
 }
 
