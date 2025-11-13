@@ -3,122 +3,41 @@ import {
   Loader2,
   Trash2,
   UserPlus,
-  RefreshCw,
-  Eye,
   X,
   MapPin,
   Users,
   Edit,
-  Award,
   Plus,
   Mail,
   Phone,
   Building,
+  User,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const STATE_DISTRICTS = {
-  "Andhra Pradesh": ["Anantapuramu", "Chittoor", "East Godavari", "Guntur"],
-  "Arunachal Pradesh": ["Anjaw", "Capital Complex ( Itanagar )", "Changlang"],
-  Assam: ["Bajali", "Baksa", "Barpeta", "Biswanath"],
-  Bihar: ["Araria", "Arwal", "Aurangabad", "Banka"],
-  Chhattisgarh: ["Balod", "Baloda Bazar", "Balrampur", "Bastar"],
-  Goa: ["North Goa", "South Goa"],
-  Gujarat: ["Ahmedabad", "Amreli", "Anand", "Aravalli"],
-  Haryana: ["Ambala", "Charkhi Dadri", "Fatehabad", "Gurugram"],
-  "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamipur", "Kangra"],
-  Jharkhand: ["Bokaro", "Chatra", "Deoghar", "Dhanbad"],
-  Karnataka: ["Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Hubli-Dharwad"],
-  Kerala: ["Alappuzha", "Ernakulam", "Idukki", "Kannur"],
-  "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar"],
-  Maharashtra: ["Ahmednagar", "Akola", "Amravati", "Aurangabad"],
-  Manipur: ["Bishnupur", "Chandel", "Churachandpur", "Imphal East"],
-  Meghalaya: ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills"],
-  Mizoram: ["Aizawl", "Champhai", "Hnahthial", "Khawzawl"],
-  Nagaland: ["Chümoukedima", "Dimapur", "Kiphire", "Kohima"],
-  Odisha: ["Angul", "Balangir", "Balasore", "Bargarh"],
-  Punjab: ["Amritsar", "Barnala", "Bathinda", "Faridkot"],
-  Rajasthan: ["Ajmer", "Alwar", "Banswara", "Baran"],
-  Sikkim: ["Gangtok", "Mangan (North Sikkim)", "Namchi (South Sikkim)"],
-  "Tamil Nadu": ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore"],
-  Telangana: ["Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad"],
-  Tripura: ["Dhalai", "Gomati", "Khowai", "North Tripura"],
-  Uttarakhand: ["Almora", "Bageshwar", "Chamoli", "Champawat"],
-  "Uttar Pradesh": ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi"],
-  "West Bengal": ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar"],
-  "Delhi (National Capital Territory)": [
-    "Central Delhi",
-    "East Delhi",
-    "New Delhi",
-  ],
-  "Jammu and Kashmir": ["Anantnag", "Bandipora", "Baramulla", "Budgam"],
+// Helper function to show alerts
+const showConfirmation = (message) => {
+  return window.confirm(message);
 };
 
-// Mock data for State Prabharis (as this data was not in the original component)
-const mockStatePrabharis = {
-  Punjab: {
-    name: "Gurpreet Singh",
-    email: "gurpreet@example.com",
-    phone: "1111111111",
-  },
-  Haryana: {
-    name: "Deepak Kumar",
-    email: "deepak@example.com",
-    phone: "2222222222",
-  },
-  "Delhi (National Capital Territory)": {
-    name: "Priya Sharma",
-    email: "priya@example.com",
-    phone: "3333333333",
-  },
-  Karnataka: {
-    name: "Anand Reddy",
-    email: "anand@example.com",
-    phone: "4444444444",
-  },
-  Kerala: {
-    name: "Maria George",
-    email: "maria@example.com",
-    phone: "5555555555",
-  },
-  "Tamil Nadu": {
-    name: "Suresh Murugan",
-    email: "suresh@example.com",
-    phone: "6666666666",
-  },
-  "West Bengal": {
-    name: "Bipasha Basu",
-    email: "bipasha@example.com",
-    phone: "7777777777",
-  },
-  Odisha: {
-    name: "Chirag Mohanty",
-    email: "chirag@example.com",
-    phone: "8888888888",
-  },
-  Bihar: {
-    name: "Lalita Yadav",
-    email: "lalita@example.com",
-    phone: "9999999999",
-  },
-};
-
-const ZonePrabhariManagement = () => {
+export default function ZonePrabhariManagement() {
   const [loading, setLoading] = useState(false);
+  const [prabhariLoading, setPrabhariLoading] = useState(false); // Separate loading for prabharis
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
   // Zones State
-  const [zones, setZones] = useState([]);
+  const [zones, setZones] = useState([]); // Real data for zones
+  const [allStates, setAllStates] = useState([]); // Real data for all states
   const [showZoneForm, setShowZoneForm] = useState(false);
   const [editingZone, setEditingZone] = useState(null);
   const [newZone, setNewZone] = useState({
     name: "",
-    states: [],
+    states: [], // This will hold state IDs
   });
 
   // Zone Prabharis State
-  const [zonePrabharis, setZonePrabharis] = useState([]);
+  const [zonePrabharis, setZonePrabharis] = useState([]); // Real data for prabharis
   const [showZonePrabhariForm, setShowZonePrabhariForm] = useState(false);
   const [editingZonePrabhari, setEditingZonePrabhari] = useState(null);
   const [newZonePrabhari, setNewZonePrabhari] = useState({
@@ -130,110 +49,134 @@ const ZonePrabhariManagement = () => {
 
   // Modal State
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
+  const [modalStatePrabharis, setModalStatePrabharis] = useState([]);
+  const [isModalLoading, setIsModalLoading] = useState(false);
 
   useEffect(() => {
+    // Load all initial data
     fetchZones();
     fetchZonePrabharis();
+    fetchAllStates();
   }, []);
+
+  // --- Helper Functions for UI State ---
+  const clearMessages = () => {
+    setError("");
+    setSuccessMsg("");
+  };
+
+  const showSuccess = (message) => {
+    clearMessages();
+    setSuccessMsg(message);
+    setTimeout(() => setSuccessMsg(""), 3000);
+  };
+
+  const showError = (message) => {
+    clearMessages();
+    setError(message);
+  };
+
+  // --- API: Fetching Data ---
+
+  const fetchAllStates = async () => {
+    try {
+      const response = await fetch('/api/states');
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch states');
+      }
+      const data = await response.json();
+      setAllStates(data);
+    } catch (err) {
+      showError(err.message);
+    }
+  };
 
   const fetchZones = async () => {
     setLoading(true);
+    clearMessages();
     try {
-      // Simulated API call - replace with your actual API
-      const mockZones = [
-        {
-          id: 1,
-          name: "North Zone",
-          states: ["Punjab", "Haryana", "Delhi (National Capital Territory)"],
-          createdAt: "2024-01-15",
-        },
-        {
-          id: 2,
-          name: "South Zone",
-          states: ["Karnataka", "Kerala", "Tamil Nadu"],
-          createdAt: "2024-01-20",
-        },
-        {
-          id: 3,
-          name: "East Zone",
-          states: ["West Bengal", "Odisha", "Bihar"],
-          createdAt: "2024-02-01",
-        },
-      ];
-      setZones(mockZones);
+      const response = await fetch('/api/zones');
+      if (!response.ok) {
+         const data = await response.json();
+         throw new Error(data.error || 'Failed to fetch zones');
+      }
+      const data = await response.json();
+      // Map API data to frontend state
+      const mappedZones = data.map((zone) => ({
+        ...zone,
+        // The frontend expects a list of state IDs in `states`
+        states: zone.states.map((state) => state.id),
+      }));
+      setZones(mappedZones);
     } catch (err) {
-      setError("Failed to fetch zones");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
   const fetchZonePrabharis = async () => {
-    setLoading(true);
+    setPrabhariLoading(true); // Use separate loading state
+    clearMessages();
     try {
-      // Simulated API call - replace with your actual API
-      const mockPrabharis = [
-        {
-          id: 1,
-          name: "Rajesh Kumar",
-          email: "rajesh@example.com",
-          phone: "9876543210",
-          zoneId: 1,
-          zoneName: "North Zone",
-        },
-        {
-          id: 2,
-          name: "Sunita Sharma",
-          email: "sunita@example.com",
-          phone: "9876543211",
-          zoneId: 2,
-          zoneName: "South Zone",
-        },
-        {
-          id: 3,
-          name: "Amit Patel",
-          email: "amit@example.com",
-          phone: "9876543212",
-          zoneId: 3,
-          zoneName: "East Zone",
-        },
-      ];
+      // Fetch from the new paginated API
+      const response = await fetch('/api/prabharis?level=ZONE&page=1&limit=500'); // Fetch all for now
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch zone prabharis');
+      }
+      const data = await response.json();
+      
+      // ** THIS IS THE FIX **
+      // The API now returns { data: [...], pagination: {...} }
+      setZonePrabharis(data.data);
 
-      setZonePrabharis(mockPrabharis);
     } catch (err) {
-      setError("Failed to fetch zone prabharis");
+      showError(err.message);
     } finally {
-      setLoading(false);
+      setPrabhariLoading(false); // Use separate loading state
     }
   };
+
+  // --- API: Zone Management ---
 
   const handleAddZone = async (e) => {
     e.preventDefault();
     if (newZone.states.length === 0) {
-      setError("Please select at least one state");
+      showError("Please select at least one state");
       return;
     }
-
     setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    clearMessages();
 
     try {
-      // Simulated API call - replace with your actual API
-      const newZoneData = {
-        id: zones.length + 1,
-        name: newZone.name,
-        states: newZone.states,
-        createdAt: new Date().toISOString().split("T")[0],
-      };
+      // 1. Create the zone
+      const zoneResponse = await fetch('/api/zones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newZone.name }),
+      });
+      const newZoneData = await zoneResponse.json();
+      if (!zoneResponse.ok) throw new Error(newZoneData.error || 'Failed to create zone');
 
-      setZones([...zones, newZoneData]);
-      setSuccessMsg("Zone created successfully! ✓");
+      // 2. Assign states to the new zone
+      const assignResponse = await fetch(`/api/zones/${newZoneData.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stateIds: newZone.states }),
+      });
+      const updatedZoneData = await assignResponse.json();
+      if (!assignResponse.ok) throw new Error(updatedZoneData.error || 'Failed to assign states');
+
+      // 3. Update UI
+      // We manually add the 'states' array of IDs back, as the PUT response doesn't nest it
+      setZones([...zones, { ...updatedZoneData, states: newZone.states }]);
+      showSuccess("Zone created successfully! ✓");
       setNewZone({ name: "", states: [] });
       setShowZoneForm(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to create zone");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
@@ -242,24 +185,35 @@ const ZonePrabhariManagement = () => {
   const handleUpdateZone = async (e) => {
     e.preventDefault();
     if (editingZone.states.length === 0) {
-      setError("Please select at least one state");
+      showError("Please select at least one state");
       return;
     }
-
     setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    clearMessages();
 
     try {
+      const response = await fetch(`/api/zones/${editingZone.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editingZone.name,
+          stateIds: editingZone.states, // Pass the array of state IDs
+        }),
+      });
+      const updatedZone = await response.json();
+      if (!response.ok) throw new Error(updatedZone.error || 'Failed to update zone');
+      
+      // Manually add the state IDs back for UI consistency
+      const updatedZoneWithStates = { ...updatedZone, states: editingZone.states };
+
       const updatedZones = zones.map((z) =>
-        z.id === editingZone.id ? editingZone : z
+        z.id === editingZone.id ? updatedZoneWithStates : z
       );
       setZones(updatedZones);
-      setSuccessMsg("Zone updated successfully! ✓");
+      showSuccess("Zone updated successfully! ✓");
       setEditingZone(null);
-      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to update zone");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
@@ -267,133 +221,171 @@ const ZonePrabhariManagement = () => {
 
   const handleDeleteZone = async (id) => {
     if (
-      !confirm(
+      !showConfirmation(
         "Are you sure you want to delete this zone? This will affect all zone prabharis."
       )
-    )
-      return;
+    ) return;
 
     setLoading(true);
+    clearMessages();
     try {
+      const response = await fetch(`/api/zones/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to delete zone');
+
       setZones(zones.filter((z) => z.id !== id));
-      setSuccessMsg("Zone deleted successfully");
-      setTimeout(() => setSuccessMsg(""), 3000);
+      // Also remove any prabharis assigned to this zone from the list
+      setZonePrabharis(zonePrabharis.filter((p) => p.zoneId !== id));
+      showSuccess("Zone deleted successfully");
     } catch (err) {
-      setError("Failed to delete zone");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
+  // --- API: Zone Prabhari Management ---
+
   const handleAddZonePrabhari = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    setPrabhariLoading(true);
+    clearMessages();
 
     try {
-      const zone = zones.find(
-        (z) => z.id === parseInt(newZonePrabhari.zoneId)
-      );
-      const newPrabhariData = {
-        id: zonePrabharis.length + 1,
-        ...newZonePrabhari,
-        zoneId: parseInt(newZonePrabhari.zoneId),
-        zoneName: zone?.name || "",
-      };
+      const response = await fetch('/api/prabharis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...newZonePrabhari,
+          level: 'ZONE',
+          unitId: newZonePrabhari.zoneId,
+        }),
+      });
+      
+      const newPrabhariData = await response.json();
+      if (!response.ok) throw new Error(newPrabhariData.error || 'Failed to add prabhari');
 
+      // The POST API returns the full object with 'zoneName'
       setZonePrabharis([...zonePrabharis, newPrabhariData]);
-      setSuccessMsg("Zone Prabhari added successfully! ✓");
+      showSuccess("Zone Prabhari added successfully! ✓");
       setNewZonePrabhari({ name: "", email: "", phone: "", zoneId: "" });
       setShowZonePrabhariForm(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to add zone prabhari");
+      showError(err.message);
     } finally {
-      setLoading(false);
+      setPrabhariLoading(false);
     }
   };
 
   const handleUpdateZonePrabhari = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    setPrabhariLoading(true);
+    clearMessages();
 
     try {
-      const zone = zones.find(
-        (z) => z.id === parseInt(editingZonePrabhari.zoneId)
-      );
+       const response = await fetch(`/api/prabharis/${editingZonePrabhari.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ // Send only the data that can be updated
+          name: editingZonePrabhari.name,
+          email: editingZonePrabhari.email,
+          phone: editingZonePrabhari.phone,
+          zoneId: editingZonePrabhari.zoneId,
+        }),
+      });
+
+      const updatedPrabhariData = await response.json();
+      if (!response.ok) throw new Error(updatedPrabhariData.error || 'Failed to update prabhari');
+
+      // The PUT API returns the full object with 'zoneName'
       const updatedPrabharis = zonePrabharis.map((p) =>
-        p.id === editingZonePrabhari.id
-          ? {
-              ...editingZonePrabhari,
-              zoneId: parseInt(editingZonePrabhari.zoneId),
-              zoneName: zone?.name || "",
-            }
-          : p
+        p.id === editingZonePrabhari.id ? updatedPrabhariData : p
       );
       setZonePrabharis(updatedPrabharis);
-      setSuccessMsg("Zone Prabhari updated successfully! ✓");
+      showSuccess("Zone Prabhari updated successfully! ✓");
       setEditingZonePrabhari(null);
-      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to update zone prabhari");
+      showError(err.message);
     } finally {
-      setLoading(false);
+      setPrabhariLoading(false);
     }
   };
 
   const handleDeleteZonePrabhari = async (id) => {
-    if (!confirm("Are you sure you want to delete this zone prabhari?")) return;
+    if (!showConfirmation("Are you sure you want to delete this zone prabhari?")) return;
 
-    setLoading(true);
+    setPrabhariLoading(true);
+    clearMessages();
     try {
+      const response = await fetch(`/api/prabharis/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to delete prabhari');
+
       setZonePrabharis(zonePrabharis.filter((p) => p.id !== id));
-      setSuccessMsg("Zone Prabhari deleted successfully");
-      setTimeout(() => setSuccessMsg(""), 3000);
+      showSuccess("Zone Prabhari deleted successfully");
     } catch (err) {
-      setError("Failed to delete zone prabhari");
+      showError(err.message);
     } finally {
-      setLoading(false);
+      setPrabhariLoading(false);
     }
   };
 
-  const toggleStateSelection = (state) => {
+  // --- Form Helpers ---
+
+  const toggleStateSelection = (stateId) => {
     if (editingZone) {
-      const states = editingZone.states.includes(state)
-        ? editingZone.states.filter((s) => s !== state)
-        : [...editingZone.states, state];
+      const states = editingZone.states.includes(stateId)
+        ? editingZone.states.filter((id) => id !== stateId)
+        : [...editingZone.states, stateId];
       setEditingZone({ ...editingZone, states });
     } else {
-      const states = newZone.states.includes(state)
-        ? newZone.states.filter((s) => s !== state)
-        : [...newZone.states, state];
+      const states = newZone.states.includes(stateId)
+        ? newZone.states.filter((id) => id !== stateId)
+        : [...newZone.states, stateId];
       setNewZone({ ...newZone, states });
     }
   };
 
   // Get available states (not assigned to any other zone)
   const getAvailableStates = () => {
-    const allStates = Object.keys(STATE_DISTRICTS);
     const assignedStates = new Set();
 
-    // Collect all states that are already assigned to zones
     zones.forEach((zone) => {
-      // If editing, exclude the current zone's states from the assigned list
+      // If editing, exclude the current zone's states
       if (editingZone && zone.id === editingZone.id) {
         return;
       }
-      zone.states.forEach((state) => assignedStates.add(state));
+      zone.states.forEach((stateId) => assignedStates.add(stateId));
     });
 
-    // Return only states that are not assigned
-    return allStates.filter((state) => !assignedStates.has(state));
+    return allStates.filter((state) => !assignedStates.has(state.id));
   };
 
-  const findZoneForPrabhari = (prabhari) => {
-    if (!prabhari) return null;
-    return zones.find((z) => z.id === prabhari.zoneId);
+  // --- Modal Logic ---
+
+  const openModal = async (prabhari) => {
+    setSelectedPrabhari(prabhari);
+    setIsModalLoading(true);
+    setModalStatePrabharis([]); // Clear old data
+    
+    try {
+      // Call the new API to get states and their prabharis for this zone
+      const response = await fetch(`/api/states/prabharis?zoneId=${prabhari.zoneId}`);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch modal details');
+      }
+      const data = await response.json();
+      setModalStatePrabharis(data);
+    } catch (err) {
+      showError(`Modal error: ${err.message}`);
+    } finally {
+      setIsModalLoading(false);
+    }
   };
 
   return (
@@ -430,7 +422,10 @@ const ZonePrabhariManagement = () => {
               Zones
             </h2>
             <button
-              onClick={() => setShowZoneForm(!showZoneForm)}
+              onClick={() => {
+                setShowZoneForm(!showZoneForm);
+                setEditingZone(null); // Close edit form if open
+              }}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-bold hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               <Plus size={20} />
@@ -485,27 +480,29 @@ const ZonePrabhariManagement = () => {
                         {(editingZone
                           ? editingZone.states
                           : newZone.states
-                        ).map((state) => (
+                        ).map((stateId) => {
+                          const state = allStates.find(s => s.id === stateId);
+                          return (
                           <span
-                            key={state}
+                            key={stateId}
                             className="inline-flex items-center gap-2 bg-orange-500 text-white px-3 py-1.5 rounded-full text-sm font-semibold"
                           >
-                            {state}
+                            {state?.name || '...'}
                             <button
                               type="button"
-                              onClick={() => toggleStateSelection(state)}
+                              onClick={() => toggleStateSelection(stateId)}
                               className="hover:bg-orange-600 rounded-full p-0.5 transition-all"
                             >
                               <X size={14} />
                             </button>
                           </span>
-                        ))}
+                        )})}
                       </div>
                     </div>
                   )}
 
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-64 overflow-y-auto p-4 bg-white rounded-xl border-2 border-orange-200">
-                    {getAvailableStates().length === 0 ? (
+                    {getAvailableStates().length === 0 && (!editingZone || editingZone.states.length === 0) ? (
                       <div className="col-span-full text-center py-8 text-gray-500">
                         <p className="font-semibold">No states available</p>
                         <p className="text-sm mt-2">
@@ -513,13 +510,20 @@ const ZonePrabhariManagement = () => {
                         </p>
                       </div>
                     ) : (
-                      getAvailableStates().map((state) => {
+                      allStates.map((state) => {
+                        const isAssignedToOther = getAvailableStates().find(s => s.id === state.id) === undefined;
                         const isSelected = (
                           editingZone ? editingZone.states : newZone.states
-                        ).includes(state);
+                        ).includes(state.id);
+                        
+                        // Show if: 1. It's selected OR 2. It's not assigned to another zone
+                        if (!isSelected && isAssignedToOther) {
+                          return null;
+                        }
+
                         return (
                           <label
-                            key={state}
+                            key={state.id}
                             className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-all border-2 ${
                               isSelected
                                 ? "bg-orange-100 border-orange-500"
@@ -529,11 +533,11 @@ const ZonePrabhariManagement = () => {
                             <input
                               type="checkbox"
                               checked={isSelected}
-                              onChange={() => toggleStateSelection(state)}
+                              onChange={() => toggleStateSelection(state.id)}
                               className="w-4 h-4 text-orange-600 rounded"
                             />
                             <span className="text-sm font-medium text-gray-700">
-                              {state}
+                              {state.name}
                             </span>
                           </label>
                         );
@@ -584,7 +588,11 @@ const ZonePrabhariManagement = () => {
                   </h3>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => setEditingZone(zone)}
+                      onClick={() => {
+                        setEditingZone(zone);
+                        setShowZoneForm(false); // Close create form
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
                       className="text-blue-500 hover:bg-blue-500 hover:text-white p-2 rounded-lg transition-all"
                     >
                       <Edit size={18} />
@@ -602,14 +610,16 @@ const ZonePrabhariManagement = () => {
                     States ({zone.states.length}):
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {zone.states.slice(0, 3).map((state) => (
+                    {zone.states.slice(0, 3).map((stateId) => {
+                      const state = allStates.find(s => s.id === stateId);
+                      return (
                       <span
-                        key={state}
+                        key={stateId}
                         className="text-xs bg-orange-200 text-orange-800 px-3 py-1 rounded-full font-semibold"
                       >
-                        {state}
+                        {state?.name || '...'}
                       </span>
-                    ))}
+                    )})}
                     {zone.states.length > 3 && (
                       <span className="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold">
                         +{zone.states.length - 3} more
@@ -618,7 +628,7 @@ const ZonePrabhariManagement = () => {
                   </div>
                 </div>
                 <p className="text-xs text-gray-500">
-                  Created: {zone.createdAt}
+                  ID: {zone.id}
                 </p>
               </div>
             ))}
@@ -633,7 +643,10 @@ const ZonePrabhariManagement = () => {
               Zone Prabharis
             </h2>
             <button
-              onClick={() => setShowZonePrabhariForm(!showZonePrabhariForm)}
+              onClick={() => {
+                setShowZonePrabhariForm(!showZonePrabhariForm);
+                setEditingZonePrabhari(null); // Close edit form if open
+              }}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-bold hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               <UserPlus size={20} />
@@ -720,7 +733,7 @@ const ZonePrabhariManagement = () => {
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email *
+                      Email (Optional)
                     </label>
                     <input
                       type="email"
@@ -741,7 +754,6 @@ const ZonePrabhariManagement = () => {
                               email: e.target.value,
                             })
                       }
-                      required
                       className="w-full border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     />
                   </div>
@@ -785,10 +797,10 @@ const ZonePrabhariManagement = () => {
                   )}
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={prabhariLoading}
                     className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-xl hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50"
                   >
-                    {loading ? (
+                    {prabhariLoading ? (
                       <Loader2 size={20} className="animate-spin" />
                     ) : editingZonePrabhari ? (
                       <Edit size={20} />
@@ -803,7 +815,7 @@ const ZonePrabhariManagement = () => {
           )}
 
           {/* Zone Prabharis Table */}
-          {loading ? (
+          {prabhariLoading && zonePrabharis.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="animate-spin text-orange-600 mb-4" size={56} />
               <p className="text-gray-600 font-semibold text-lg">
@@ -843,7 +855,7 @@ const ZonePrabhariManagement = () => {
                   {zonePrabharis.map((p, idx) => (
                     <tr
                       key={p.id}
-                      onClick={() => setSelectedPrabhari(p)}
+                      onClick={() => openModal(p)}
                       className={`border-t-2 border-gray-100 hover:bg-orange-100 transition-all cursor-pointer ${
                         idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                       }`}
@@ -851,12 +863,12 @@ const ZonePrabhariManagement = () => {
                       <td className="p-5 font-semibold text-gray-800">
                         {p.name}
                       </td>
-                      <td className="p-5 text-gray-600">{p.email}</td>
+                      <td className="p-5 text-gray-600">{p.email || 'N/A'}</td>
                       <td className="p-5 text-gray-600">{p.phone}</td>
                       <td className="p-5">
                         <span className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-full font-semibold text-sm">
                           <MapPin size={16} />
-                          {p.zoneName}
+                          {p.zoneName || '...'}
                         </span>
                       </td>
                       <td className="p-5 text-center">
@@ -865,6 +877,7 @@ const ZonePrabhariManagement = () => {
                             onClick={(e) => {
                               e.stopPropagation(); // Prevent row click
                               setEditingZonePrabhari(p);
+                              setShowZonePrabhariForm(true); // Show form
                               window.scrollTo({ top: 0, behavior: "smooth" });
                             }}
                             className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
@@ -930,7 +943,7 @@ const ZonePrabhariManagement = () => {
                     Email
                   </p>
                   <p className="text-gray-800 font-medium">
-                    {selectedPrabhari.email}
+                    {selectedPrabhari.email || 'N/A'}
                   </p>
                 </div>
               </div>
@@ -966,59 +979,64 @@ const ZonePrabhariManagement = () => {
                   <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
                     States & State Prabharis in Zone
                   </p>
-                  <div className="space-y-3">
-                    {findZoneForPrabhari(selectedPrabhari)?.states.length >
-                    0 ? (
-                      findZoneForPrabhari(selectedPrabhari).states.map(
-                        (state) => {
-                          const statePrabhari = mockStatePrabharis[state]; // Get the prabhari for this state
-                          return (
-                            <div
-                              key={state}
-                              className="p-3 bg-white border-2 border-orange-100 rounded-lg"
-                            >
-                              <h4 className="font-bold text-gray-800">
-                                {state}
-                              </h4>
-                              {statePrabhari ? (
-                                <div className="mt-2 text-sm text-gray-600 space-y-1">
-                                  <p className="flex items-center gap-2">
-                                    <Users
-                                      size={14}
-                                      className="text-gray-500"
-                                    />
-                                    <strong>{statePrabhari.name}</strong>
+                  {isModalLoading ? (
+                     <div className="flex items-center gap-2 text-gray-600">
+                      <Loader2 size={16} className="animate-spin" />
+                      <span>Loading state prabharis...</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {modalStatePrabharis.length > 0 ? (
+                        modalStatePrabharis.map((state) => {
+                            const statePrabhari = state.prabhari; // Get prabhari from API
+                            return (
+                              <div
+                                key={state.id}
+                                className="p-3 bg-white border-2 border-orange-100 rounded-lg"
+                              >
+                                <h4 className="font-bold text-gray-800">
+                                  {state.name}
+                                </h4>
+                                {statePrabhari ? (
+                                  <div className="mt-2 text-sm text-gray-600 space-y-1">
+                                    <p className="flex items-center gap-2">
+                                      <Users
+                                        size={14}
+                                        className="text-gray-500"
+                                      />
+                                      <strong>{statePrabhari.name}</strong>
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <Mail
+                                        size={14}
+                                        className="text-gray-500"
+                                      />
+                                      {statePrabhari.email || 'N/A'}
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <Phone
+                                        size={14}
+                                        className="text-gray-500"
+                                      />
+                                      {statePrabhari.phone}
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <p className="text-sm text-gray-500 mt-1">
+                                    No State Prabhari assigned.
                                   </p>
-                                  <p className="flex items-center gap-2">
-                                    <Mail
-                                      size={14}
-                                      className="text-gray-500"
-                                    />
-                                    {statePrabhari.email}
-                                  </p>
-                                  <p className="flex items-center gap-2">
-                                    <Phone
-                                      size={14}
-                                      className="text-gray-500"
-                                    />
-                                    {statePrabhari.phone}
-                                  </p>
-                                </div>
-                              ) : (
-                                <p className="text-sm text-gray-500 mt-1">
-                                  No State Prabhari assigned.
-                                </p>
-                              )}
-                            </div>
-                          );
-                        }
-                      )
-                    ) : (
-                      <p className="text-gray-600">
-                        No states assigned to this zone.
-                      </p>
-                    )}
-                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                        )
+                      ) : (
+                        <p className="text-gray-600">
+                          No states assigned to this zone.
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               {/* END OF MODIFIED SECTION */}
@@ -1028,6 +1046,4 @@ const ZonePrabhariManagement = () => {
       )}
     </div>
   );
-};
-
-export default ZonePrabhariManagement;
+}

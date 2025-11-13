@@ -7,6 +7,7 @@ import ZonePrabhariManagement from "../../component/ZonePrabhariManagement";
 import StatePrabhariManagement from "../../component/StatePrabhariManagement";
 import SambhagManagement from "../../component/SambhagManagement";
 import DistrictPrabhariManagement from "../../component/DistrictPrabhariManagement";
+import TeshilPrabhariManagement from "../../component/TeshilPrabhariManagement";
 
 
 
@@ -324,48 +325,13 @@ const [activeBaithakFilters, setActiveBaithakFilters] = useState({
 const [baithakAvailableDistricts, setBaithakAvailableDistricts] = useState([]);
   //sevak
 
-  // 1. Add state variables (after the existing state declarations)
-const [sevaks, setSevaks] = useState([]);
-const [sevakPage, setSevakPage] = useState(1);
-const [sevakTotal, setSevakTotal] = useState(1);
-const [sevakSearch, setSevakSearch] = useState("");
-const [sevakSearchInput, setSevakSearchInput] = useState("");
-const [selectedSevak, setSelectedSevak] = useState(null);
-const [editingSevak, setEditingSevak] = useState(null);
-const [showSevakFilters, setShowSevakFilters] = useState(false);
-const [sevakFilters, setSevakFilters] = useState({
-  state: "",
-  district: "",
-  category: ""
-});
-const [activeSevakFilters, setActiveSevakFilters] = useState({
-  state: "",
-  district: "",
-  category: ""
-});
-const [newSevak, setNewSevak] = useState({
-  name: "",
-  phone: "",
-  village: "",
-  email: "",
-  state: "",
-  district: "",
-  category: "",
-  description: ""
-});
-const [sevakAvailableDistricts, setSevakAvailableDistricts] = useState([]);
-
-// 2. Add category options constant
-const SEVAK_CATEGORIES = [
-  "Zone Prabhari",
-  "Rajya Prabhari",
-  "Sambhag Prabhari"
-];
 
 
 
 
-// 4. Add useEffect for sevak districts
+
+
+
 
   // Advanced Filters
   const [showFilters, setShowFilters] = useState(false);
@@ -470,12 +436,7 @@ const [stats, setStats] = useState({
     }
   }, [tab, subPage, subSearch, activeFilters]);
 
-  // Fetch pravaris when tab or page changes
-  useEffect(() => {
-    if (tab === "pravari") {
-      fetchPravaris();
-    }
-  }, [tab, pravariPage, pravariSearch, activePravariFilters]);
+
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -530,37 +491,7 @@ const [stats, setStats] = useState({
     }
   };
 
-  const fetchPravaris = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const params = new URLSearchParams({
-        page: pravariPage.toString(),
-        search: pravariSearch,
-        ...(activePravariFilters.state && { state: activePravariFilters.state }),
-        ...(activePravariFilters.district && { district: activePravariFilters.district })
-      });
-
-      const res = await fetch(`/api/pravari?${params.toString()}`, {
-        credentials: 'include'
-      });
-      
-      if (!res.ok) throw new Error('Failed to fetch pravaris');
-      
-      const data = await res.json();
-      setPravaris(data.data || []);
-      setPravariTotal(data.totalPages || 1);
-      setStats(prev => ({ 
-        ...prev, 
-        totalPravaris: data.total || 0,
-        filteredPravaris: data.filteredTotal || 0
-      }));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const handleUserSearch = () => {
     setUserSearch(userSearchInput);
@@ -572,20 +503,14 @@ const [stats, setStats] = useState({
     setSubPage(1);
   };
 
-  const handlePravariSearch = () => {
-    setPravariSearch(pravariSearchInput);
-    setPravariPage(1);
-  };
+
 
   const handleApplyFilters = () => {
     setActiveFilters({ ...filters });
     setSubPage(1);
   };
 
-  const handleApplyPravariFilters = () => {
-    setActivePravariFilters({ ...pravariFilters });
-    setPravariPage(1);
-  };
+ 
 
   const handleAddUser = async (e) => {
     e.preventDefault();
@@ -619,78 +544,9 @@ const [stats, setStats] = useState({
     }
   };
 
-  const handleAddPravari = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccessMsg("");
+ 
+ 
 
-    try {
-      const res = await fetch("/api/pravari", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: 'include',
-        body: JSON.stringify(newPravari),
-      });
-
-      const result = await res.json();
-      
-      if (result.success) {
-        setSuccessMsg("Pravari added successfully! ✓");
-        setNewPravari({
-          name: "",
-          phone: "",
-          role: "",
-          village: "",
-          address: "",
-          email: "",
-          state: "",
-          district: "",
-          experience: ""
-        });
-        setPravariPage(1);
-        fetchPravaris();
-        setTimeout(() => setSuccessMsg(""), 3000);
-      } else {
-        setError(result.error || "Failed to add pravari");
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUpdatePravari = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccessMsg("");
-
-    try {
-      const res = await fetch(`/api/pravari/${editingPravari.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: 'include',
-        body: JSON.stringify(editingPravari),
-      });
-
-      const result = await res.json();
-      
-      if (result.success) {
-        setSuccessMsg("Pravari updated successfully! ✓");
-        setEditingPravari(null);
-        fetchPravaris();
-        setTimeout(() => setSuccessMsg(""), 3000);
-      } else {
-        setError(result.error || "Failed to update pravari");
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDeleteUser = async (id) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
@@ -741,30 +597,7 @@ const [stats, setStats] = useState({
     }
   };
 
-  const handleDeletePravari = async (id) => {
-    if (!confirm("Are you sure you want to delete this pravari?")) return;
-    
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/pravari/${id}`, { 
-        method: "DELETE",
-        credentials: 'include'
-      });
-      
-      if (res.ok) {
-        setPravaris(pravaris.filter((p) => p.id !== id));
-        setSuccessMsg("Pravari deleted successfully");
-        setTimeout(() => setSuccessMsg(""), 3000);
-        fetchPravaris();
-      } else {
-        setError("Failed to delete pravari");
-      }
-    } catch (err) {
-      setError("Network error");
-    } finally {
-      setLoading(false);
-    }
-  };
+ 
 
   const handleLogout = async() => {
     setLoading(true);
@@ -803,27 +636,11 @@ const [stats, setStats] = useState({
     setSubPage(1);
   };
 
-  const clearPravariFilters = () => {
-    setPravariFilters({
-      state: "",
-      district: ""
-    });
-    setActivePravariFilters({
-      state: "",
-      district: ""
-    });
-    setPravariSearchInput("");
-    setPravariSearch("");
-    setPravariPage(1);
-  };
-
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  const handlePravariFilterChange = (key, value) => {
-    setPravariFilters(prev => ({ ...prev, [key]: value }));
-  };
+  
   useEffect(() => {
   if (baithakFilters.state) {
     setBaithakAvailableDistricts(STATE_DISTRICTS[baithakFilters.state] || []);
@@ -1614,356 +1431,7 @@ const handleDeleteBaithak = async (id) => {
 
           {/* PRAVARI TAB */}
           {tab === "pravari" && (
-            <>
-              {/* Add/Edit Pravari Form */}
-              <div className="bg-gradient-to-r from-orange-50 via-yellow-50 to-amber-50 p-6 rounded-2xl mb-6 border-2 border-orange-200 shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-800 mb-5 flex items-center gap-3">
-                  <div className="bg-gradient-to-r from-orange-500 to-yellow-500 p-3 rounded-xl shadow-md">
-                    <Award size={24} className="text-white" />
-                  </div>
-                  {editingPravari ? "Edit Prabhari" : "Add New Prabhari"}
-                </h3>
-                <form onSubmit={editingPravari ? handleUpdatePravari : handleAddPravari}>
-                  <div className="grid md:grid-cols-3 gap-4 mb-4">
-                    <input
-                      type="text"
-                      placeholder="Full Name *"
-                      value={editingPravari ? editingPravari.name : newPravari.name}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, name: e.target.value })
-                        : setNewPravari({ ...newPravari, name: e.target.value })}
-                      required
-                      className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Phone Number *"
-                      value={editingPravari ? editingPravari.phone : newPravari.phone}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, phone: e.target.value })
-                        : setNewPravari({ ...newPravari, phone: e.target.value })}
-                      required
-                      className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-                    />
-                    <input
-                      type="email"
-                      placeholder="Email Address "
-                      value={editingPravari ? editingPravari.email : newPravari.email}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, email: e.target.value })
-                        : setNewPravari({ ...newPravari, email: e.target.value })}
-                      
-                      className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 w-full">
-  <select
-    value={editingPravari ? editingPravari.state : newPravari.state}
-    onChange={(e) =>
-      editingPravari
-        ? setEditingPravari({ ...editingPravari, state: e.target.value })
-        : setNewPravari({ ...newPravari, state: e.target.value })
-    }
-    required
-    className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white w-full"
-  >
-    <option value="">Select State *</option>
-    {Object.keys(STATE_DISTRICTS).map((state) => (
-      <option key={state} value={state}>
-        {state}
-      </option>
-    ))}
-  </select>
-
-  <select
-    value={editingPravari ? editingPravari.district : newPravari.district}
-    onChange={(e) =>
-      editingPravari
-        ? setEditingPravari({ ...editingPravari, district: e.target.value })
-        : setNewPravari({ ...newPravari, district: e.target.value })
-    }
-    required
-    disabled={editingPravari ? !editingPravari.state : !newPravari.state}
-    className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white disabled:bg-gray-100 disabled:cursor-not-allowed w-full"
-  >
-    <option value="">Select District *</option>
-    {(editingPravari
-      ? STATE_DISTRICTS[editingPravari.state]
-      : STATE_DISTRICTS[newPravari.state] || []
-    ).map((district) => (
-      <option key={district} value={district}>
-        {district}
-      </option>
-    ))}
-  </select>
-
-  <input
-    type="text"
-    placeholder="Village/Tehsil *"
-    value={editingPravari ? editingPravari.village : newPravari.village}
-    onChange={(e) =>
-      editingPravari
-        ? setEditingPravari({ ...editingPravari, village: e.target.value })
-        : setNewPravari({ ...newPravari, village: e.target.value })
-    }
-    required
-    className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white w-full"
-  />
-</div>
-
-                  <div className="grid md:grid-cols-2 gap-4 mb-4">
-                    <input
-                      type="text"
-                      placeholder="Role/Position "
-                      value={editingPravari ? editingPravari.role : newPravari.role}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, role: e.target.value })
-                        : setNewPravari({ ...newPravari, role: e.target.value })}
-                      
-                      className="border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
-                    />
-                   
-                  </div>
-                  <div className="mb-4">
-                    <textarea
-                      placeholder="Experience (Optional)"
-                      value={editingPravari ? editingPravari.experience || "" : newPravari.experience}
-                      onChange={(e) => editingPravari 
-                        ? setEditingPravari({ ...editingPravari, experience: e.target.value })
-                        : setNewPravari({ ...newPravari, experience: e.target.value })}
-                      rows={3}
-                      className="w-full border-2 border-orange-200 focus:border-orange-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white resize-none"
-                    />
-                  </div>
-                  <div className="flex gap-3 justify-end">
-                    {editingPravari && (
-                      <button
-                        type="button"
-                        onClick={() => setEditingPravari(null)}
-                        className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-                      >
-                        Cancel
-                      </button>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold rounded-xl px-8 py-3 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    >
-                      {loading ? <Loader2 size={20} className="animate-spin" /> : editingPravari ? <Edit size={20} /> : <Award size={20} />}
-                      {editingPravari ? "Update Prabhari" : "Add Prabhari"}
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              {/* Search & Filter Section */}
-              <div className="space-y-4 mb-6">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1 flex items-center gap-3">
-                    <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border-2 border-gray-200 focus-within:border-orange-500 transition-all shadow-sm">
-                      <Search size={22} className="text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Search by name, email, phone, state, district, or village..."
-                        value={pravariSearchInput}
-                        onChange={(e) => setPravariSearchInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handlePravariSearch()}
-                        className="bg-transparent outline-none w-full text-gray-700 placeholder-gray-400"
-                      />
-                    </div>
-                    <button
-                      onClick={handlePravariSearch}
-                      disabled={loading}
-                      className="flex items-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 disabled:opacity-50"
-                    >
-                      <Search size={18} />
-                      Search
-                    </button>
-                  </div>
-                  <div className="flex gap-3 flex-wrap">
-                    <button
-                      onClick={() => setShowPravariFilters(!showPravariFilters)}
-                      className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 ${
-                        showPravariFilters 
-                          ? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white' 
-                          : 'bg-white text-gray-700 border-2 border-gray-300'
-                      }`}
-                    >
-                      <Filter size={18} />
-                      Filters
-                      <ChevronDown size={18} className={`transition-transform ${showPravariFilters ? 'rotate-180' : ''}`} />
-                    </button>
-                    <button
-                      onClick={fetchPravaris}
-                      disabled={loading}
-                      className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg font-semibold transform hover:scale-105 disabled:opacity-50"
-                    >
-                      <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
-                      Refresh
-                    </button>
-                  </div>
-                </div>
-
-                {/* Advanced Filters */}
-                {showPravariFilters && (
-                  <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-6 rounded-2xl border-2 border-orange-200 shadow-lg animate-slideDown">
-                    <div className="flex justify-between items-center mb-4">
-                      <h4 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                        <Filter size={20} className="text-orange-600" />
-                        Advanced Filters
-                      </h4>
-                      <button
-                        onClick={clearPravariFilters}
-                        className="text-sm font-semibold text-orange-600 hover:text-orange-800 px-4 py-2 bg-white rounded-lg hover:bg-orange-100 transition-all shadow-sm"
-                      >
-                        Clear All
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
-                        <select
-                          value={pravariFilters.state}
-                          onChange={(e) => handlePravariFilterChange('state', e.target.value)}
-                          className="w-full p-3 border-2 border-orange-200 rounded-xl outline-none focus:border-orange-500 transition-all bg-white shadow-sm"
-                        >
-                          <option value="">All States</option>
-                          {Object.keys(STATE_DISTRICTS).map(state => (
-                            <option key={state} value={state}>{state}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">District</label>
-                        <select
-                          value={pravariFilters.district}
-                          onChange={(e) => handlePravariFilterChange('district', e.target.value)}
-                          disabled={!pravariFilters.state}
-                          className="w-full p-3 border-2 border-orange-200 rounded-xl outline-none focus:border-orange-500 transition-all bg-white shadow-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
-                        >
-                          <option value="">All Districts</option>
-                          {pravariAvailableDistricts.map(district => (
-                            <option key={district} value={district}>{district}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="flex justify-end">
-                      <button
-                        onClick={handleApplyPravariFilters}
-                        disabled={loading}
-                        className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50"
-                      >
-                        <Filter size={18} />
-                        Apply Filters
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Pravari Table */}
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-20">
-                  <Loader2 className="animate-spin text-orange-600 mb-4" size={56} />
-                  <p className="text-gray-600 font-semibold text-lg">Loading Prabhari...</p>
-                </div>
-              ) : pravaris.length === 0 ? (
-                <div className="text-center py-20 bg-gray-50 rounded-2xl">
-                  <p className="text-gray-500 text-xl font-semibold">No Prabhari found</p>
-                  {(pravariSearch || Object.values(activePravariFilters).some(f => f)) && (
-                    <button
-                      onClick={clearPravariFilters}
-                      className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-all"
-                    >
-                      Clear Filters
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div className="overflow-x-auto border-2 border-gray-200 rounded-2xl shadow-lg">
-                  <table className="w-full">
-                    <thead className="bg-gradient-to-r from-yellow-100 via-orange-100 to-amber-100">
-                      <tr>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Name</th>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Role</th>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Phone</th>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Email</th>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">State</th>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">District</th>
-                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Village</th>
-                        <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pravaris.map((p, idx) => (
-                        <tr key={p.id} className={`border-t-2 border-gray-100 hover:bg-orange-50 transition-all ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                          <td className="p-5 font-semibold text-gray-800">{p.name}</td>
-                          <td className="p-5 text-gray-600">{p.role}</td>
-                          <td className="p-5 text-gray-600">{p.phone}</td>
-                          <td className="p-5 text-gray-600">{p.email}</td>
-                          <td className="p-5 text-gray-600">{p.state}</td>
-                          <td className="p-5 text-gray-600">{p.district}</td>
-                          <td className="p-5 text-gray-600">{p.village}</td>
-                          <td className="p-5 text-center">
-                            <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => setSelectedPravari(p)}
-                                className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                                title="View details"
-                              >
-                                <Eye size={20} />
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setEditingPravari(p);
-                                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
-                                className="text-green-500 hover:text-white hover:bg-green-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                                title="Edit pravari"
-                              >
-                                <Edit size={20} />
-                              </button>
-                              <button
-                                onClick={() => handleDeletePravari(p.id)}
-                                className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                                title="Delete pravari"
-                              >
-                                <Trash2 size={20} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-
-              {/* Pagination */}
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-                <button
-                  disabled={pravariPage === 1 || loading}
-                  onClick={() => setPravariPage((p) => p - 1)}
-                  className="px-8 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-bold disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all hover:shadow-xl transform hover:scale-105 disabled:transform-none shadow-lg w-full sm:w-auto"
-                >
-                  ← Previous
-                </button>
-                <span className="text-gray-800 font-bold text-lg px-6 py-3 bg-gray-100 rounded-xl shadow-inner">
-                  Page {pravariPage} of {pravariTotal}
-                </span>
-                <button
-                  disabled={pravariPage === pravariTotal || loading}
-                  onClick={() => setPravariPage((p) => p + 1)}
-                  className="px-8 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-bold disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all hover:shadow-xl transform hover:scale-105 disabled:transform-none shadow-lg w-full sm:w-auto"
-                >
-                  Next →
-                </button>
-              </div>
-  
-
-            </>
+            <TeshilPrabhariManagement/>
           )}
         </div>
         {tab === "zone" &&(

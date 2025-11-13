@@ -1,4 +1,3 @@
-"use client";
 import {
   Loader2,
   Trash2,
@@ -12,72 +11,39 @@ import {
   Phone,
   Building,
   User,
+  Search,
   Map,
-  Search, // Added Search icon
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 
-const STATE_DISTRICTS = {
-  "Andhra Pradesh": ["Anantapuramu", "Chittoor", "East Godavari", "Guntur"],
-  "Arunachal Pradesh": ["Anjaw", "Capital Complex ( Itanagar )", "Changlang"],
-  Assam: ["Bajali", "Baksa", "Barpeta", "Biswanath"],
-  Bihar: ["Araria", "Arwal", "Aurangabad", "Banka"],
-  Chhattisgarh: ["Balod", "Baloda Bazar", "Balrampur", "Bastar"],
-  Goa: ["North Goa", "South Goa"],
-  Gujarat: ["Ahmedabad", "Amreli", "Anand", "Aravalli"],
-  Haryana: ["Ambala", "Charkhi Dadri", "Fatehabad", "Gurugram"],
-  "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamipur", "Kangra"],
-  Jharkhand: ["Bokaro", "Chatra", "Deoghar", "Dhanbad"],
-  Karnataka: ["Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Hubli-Dharwad"],
-  Kerala: ["Alappuzha", "Ernakulam", "Idukki", "Kannur"],
-  "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar"],
-  Maharashtra: ["Ahmednagar", "Akola", "Amravati", "Aurangabad"],
-  Manipur: ["Bishnupur", "Chandel", "Churachandpur", "Imphal East"],
-  Meghalaya: ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills"],
-  Mizoram: ["Aizawl", "Champhai", "Hnahthial", "Khawzawl"],
-  Nagaland: ["Chümoukedima", "Dimapur", "Kiphire", "Kohima"],
-  Odisha: ["Angul", "Balangir", "Balasore", "Bargarh"],
-  Punjab: ["Amritsar", "Barnala", "Bathinda", "Faridkot"],
-  Rajasthan: ["Ajmer", "Alwar", "Banswara", "Baran"],
-  Sikkim: ["Gangtok", "Mangan (North Sikkim)", "Namchi (South Sikkim)"],
-  "Tamil Nadu": ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore"],
-  Telangana: ["Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad"],
-  Tripura: ["Dhalai", "Gomati", "Khowai", "North Tripura"],
-  Uttarakhand: ["Almora", "Bageshwar", "Chamoli", "Champawat"],
-  "Uttar Pradesh": ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi"],
-  "West Bengal": ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar"],
-  "Delhi (National Capital Territory)": [
-    "Central Delhi",
-    "East Delhi",
-    "New Delhi",
-  ],
-  "Jammu and Kashmir": ["Anantnag", "Bandipora", "Baramulla", "Budgam"],
+// Helper function for confirmation dialog
+const showConfirmation = (message) => {
+  // Using window.confirm as per component's original design
+  return window.confirm(message);
 };
 
-// Mock data for District Prabharis for the popup
-const mockDistrictPrabharis = {
-  Ambala: { name: "Vijay Kumar", phone: "111222333", email: "vijay@b.com" },
-  Gurugram: { name: "Reena Singh", phone: "222333444", email: "reena@b.com" },
-  Mysuru: { name: "Santosh Patil", phone: "333444555", email: "santosh@b.com" },
-  "Bengaluru Urban": { name: "Priya Rao", phone: "444555666", email: "priya@b.com" },
-  Agra: { name: "Alok Sharma", phone: "555666777", email: "alok@b.com" },
-  Aligarh: { name: "Meera Gupta", phone: "666777888", email: "meera@b.com" },
-};
+// Mock __app_id and __firebase_config for standalone environment simulation
+const __app_id = 'sambhag-management-app';
+const __firebase_config = JSON.stringify({ /* Mock config */ }); 
 
-const SambhagManagement = () => {
+// The component is exported directly as a default function
+export default function App() {
   const [loading, setLoading] = useState(false);
+  const [prabhariLoading, setPrabhariLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
   // Sambhags State
-  const [sambhags, setSambhags] = useState([]);
+  const [allSambhags, setAllSambhags] = useState([]);
+  const [sambhagsInState, setSambhagsInState] = useState([]);
   const [showSambhagForm, setShowSambhagForm] = useState(false);
   const [editingSambhag, setEditingSambhag] = useState(null);
   const [newSambhag, setNewSambhag] = useState({
     name: "",
-    state: "",
-    districts: [],
+    stateId: "",
+    districtIds: [],
   });
+  const [selectedStateId, setSelectedStateId] = useState(""); // State selected in the top dropdown
 
   // Sambhag Prabharis State
   const [sambhagPrabharis, setSambhagPrabharis] = useState([]);
@@ -89,175 +55,225 @@ const SambhagManagement = () => {
     phone: "",
     sambhagId: "",
   });
-  
+
+  // Data for forms
+  const [allStates, setAllStates] = useState([]);
+  const [allDistrictsInState, setAllDistrictsInState] = useState([]);
+
   // Search & Filter State
   const [searchInput, setSearchInput] = useState("");
-  const [filteredPrabharis, setFilteredPrabharis] = useState([]);
 
   // Modal State
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
+  const [modalDetails, setModalDetails] = useState(null);
+  const [isModalLoading, setIsModalLoading] = useState(false);
 
-  useEffect(() => {
-    fetchSambhags();
-    fetchSambhagPrabharis();
+  // --- Helper Functions ---
+  const clearMessages = useCallback(() => {
+    setError("");
+    setSuccessMsg("");
   }, []);
 
-  // Effect to filter prabharis based on search input
+  const showSuccess = useCallback((message) => {
+    clearMessages();
+    setSuccessMsg(message);
+    setTimeout(() => setSuccessMsg(""), 3000);
+  }, [clearMessages]);
+
+  const showError = useCallback((message) => {
+    clearMessages();
+    setError(message);
+  }, [clearMessages]);
+  
+  // --- API Functions ---
+
+  const fetchAllStates = useCallback(async () => {
+    try {
+      const response = await fetch('/api/states');
+      if (!response.ok) throw new Error('Failed to fetch states');
+      const data = await response.json();
+      setAllStates(data);
+    } catch (err) {
+      showError(err.message);
+    }
+  }, [showError]);
+
+  const fetchAllDistrictsForState = useCallback(async (stateId) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/districts?stateId=${stateId}`);
+      if (!response.ok) throw new Error('Failed to fetch districts');
+      const data = await response.json();
+      setAllDistrictsInState(data);
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [showError]);
+
+  const fetchSambhagsForState = useCallback(async (stateId) => {
+    if (!stateId) {
+      setSambhagsInState([]);
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/sambhags?stateId=${stateId}`);
+      if (!response.ok) throw new Error('Failed to fetch sambhags');
+      const data = await response.json();
+      setSambhagsInState(data);
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [showError]);
+
+  const fetchAllSambhags = useCallback(async () => {
+    try {
+      const response = await fetch('/api/sambhags');
+      if (!response.ok) throw new Error('Failed to fetch all sambhags');
+      const data = await response.json();
+      setAllSambhags(data);
+    } catch (err) {
+      showError(err.message);
+    }
+  }, [showError]);
+
+  const fetchSambhagPrabharis = useCallback(async () => {
+    setPrabhariLoading(true);
+    try {
+      const response = await fetch('/api/prabharis?level=SAMBHAG&page=1&limit=500');
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch sambhag prabharis');
+      }
+      const data = await response.json();
+      
+      // Assuming API returns { data: [...], ... }
+      setSambhagPrabharis(data.data || data);
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setPrabhariLoading(false);
+    }
+  }, [showError]);
+
+  // --- Initial Data Fetch ---
   useEffect(() => {
-    const lowercasedInput = searchInput.toLowerCase();
-    
-    if (lowercasedInput === "") {
-      setFilteredPrabharis(sambhagPrabharis); // No search, show all
+    fetchAllStates();
+    fetchSambhagPrabharis();
+    fetchAllSambhags();
+  }, [fetchAllStates, fetchSambhagPrabharis, fetchAllSambhags]);
+
+  // --- Sambhag Form State Logic ---
+  const sambhagFormData = editingSambhag || newSambhag;
+  const formStateId = editingSambhag ? editingSambhag.stateId : newSambhag.stateId;
+  const selectedStateForForm = useMemo(() => 
+    allStates.find(s => s.id === formStateId)
+  , [allStates, formStateId]);
+
+  // Effect to fetch districts when state changes in the Sambhag form
+  useEffect(() => {
+    if (formStateId) {
+      fetchAllDistrictsForState(formStateId);
     } else {
-      const filtered = sambhagPrabharis.filter(
+      setAllDistrictsInState([]);
+    }
+  }, [formStateId, fetchAllDistrictsForState]);
+
+  // --- Filtered Prabharis ---
+  const filteredPrabharis = useMemo(() => {
+    const lowercasedInput = searchInput.toLowerCase();
+    if (lowercasedInput === "") {
+      return sambhagPrabharis;
+    } else {
+      return sambhagPrabharis.filter(
         (p) =>
           p.name.toLowerCase().includes(lowercasedInput) ||
-          p.sambhagName.toLowerCase().includes(lowercasedInput)
+          (p.sambhagName && p.sambhagName.toLowerCase().includes(lowercasedInput))
       );
-      setFilteredPrabharis(filtered);
     }
   }, [searchInput, sambhagPrabharis]);
 
-  const fetchSambhags = async () => {
-    setLoading(true);
-    try {
-      // Simulated API call
-      const mockSambhags = [
-        {
-          id: 1,
-          name: "Haryana West",
-          state: "Haryana",
-          districts: ["Ambala", "Gurugram"],
-          createdAt: "2024-03-01",
-        },
-        {
-          id: 2,
-          name: "Karnataka South",
-          state: "Karnataka",
-          districts: ["Mysuru", "Bengaluru Urban"],
-          createdAt: "2024-03-05",
-        },
-        {
-          id: 3,
-          name: "UP West",
-          state: "Uttar Pradesh",
-          districts: ["Agra", "Aligarh"],
-          createdAt: "2024-03-10",
-        }
-      ];
-      setSambhags(mockSambhags);
-    } catch (err) {
-      setError("Failed to fetch sambhags");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchSambhagPrabharis = async () => {
-    setLoading(true);
-    try {
-      // Simulated API call
-      const mockPrabharis = [
-        {
-          id: 101,
-          name: "Arun Mehra",
-          email: "arun@example.com",
-          phone: "9876543210",
-          sambhagId: 1,
-          sambhagName: "Haryana West",
-        },
-        {
-          id: 102,
-          name: "Bina Das",
-          email: "",
-          phone: "9876543211",
-          sambhagId: 2,
-          sambhagName: "Karnataka South",
-        },
-        {
-          id: 103,
-          name: "Chandan Lal",
-          email: "chandan@example.com",
-          phone: "9876543212",
-          sambhagId: 3,
-          sambhagName: "UP West",
-        }
-      ];
-      setSambhagPrabharis(mockPrabharis);
-      setFilteredPrabharis(mockPrabharis); // Initialize filtered list
-    } catch (err) {
-      setError("Failed to fetch sambhag prabharis");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // --- Sambhag CRUD ---
+  // --- Sambhag CRUD Handlers ---
 
   const handleSambhagFormChange = (e) => {
     const { name, value } = e.target;
     const currentData = editingSambhag || newSambhag;
     const setData = editingSambhag ? setEditingSambhag : setNewSambhag;
 
-    if (name === "state") {
-      // If state changes, reset districts
-      setData({ ...currentData, state: value, districts: [] });
+    if (name === "stateId") {
+      // Clear districts when state changes
+      setData({ ...currentData, stateId: value, districtIds: [] });
     } else {
       setData({ ...currentData, [name]: value });
     }
   };
 
-  const toggleDistrictSelection = (district) => {
+  const toggleDistrictSelection = (districtId) => {
     const currentData = editingSambhag || newSambhag;
     const setData = editingSambhag ? setEditingSambhag : setNewSambhag;
-    
-    const districts = currentData.districts.includes(district)
-      ? currentData.districts.filter((d) => d !== district)
-      : [...currentData.districts, district];
-    
-    setData({ ...currentData, districts });
-  };
-  
-  // Get available districts (for the selected state) that aren't in another sambhag
-  const getAvailableDistricts = () => {
-    const state = (editingSambhag || newSambhag).state;
-    if (!state) return [];
 
-    const allDistrictsInState = STATE_DISTRICTS[state] || [];
-    
-    // Find all districts in this state that are already assigned to OTHER sambhags
-    const assignedDistricts = new Set(
-      sambhags
-        .filter(s => s.state === state && s.id !== (editingSambhag?.id || null))
-        .flatMap(s => s.districts)
+    const districtIds = currentData.districtIds.includes(districtId)
+      ? currentData.districtIds.filter((id) => id !== districtId)
+      : [...currentData.districtIds, districtId];
+
+    setData({ ...currentData, districtIds });
+  };
+
+  const getAvailableDistricts = useCallback(() => {
+    if (!formStateId) return [];
+
+    // Find all district IDs in this state already assigned to OTHER sambhags
+    const assignedDistrictIds = new Set(
+      allSambhags
+        .filter(s => s.stateId === formStateId && s.id !== (editingSambhag?.id || null))
+        // NOTE: Districts are often stored as objects { id, name } or just IDs.
+        // Assuming they are objects with an 'id' property in 'allSambhags' structure.
+        .flatMap(s => s.districts.map(d => d.id || d)) 
     );
+    
+    // Return districts from the selected state that are not already assigned
+    return allDistrictsInState.filter(d => !assignedDistrictIds.has(d.id));
+  }, [formStateId, allSambhags, editingSambhag, allDistrictsInState]);
 
-    return allDistrictsInState.filter(d => !assignedDistricts.has(d));
+  const closeSambhagForm = () => {
+    setEditingSambhag(null);
+    setShowSambhagForm(false);
+    setError("");
+    // Preserve the stateId from the top dropdown, if one was selected
+    setNewSambhag(prev => ({ 
+      name: "", 
+      stateId: selectedStateId || prev.stateId, // Use the one from dropdown if available, else preserve previous
+      districtIds: [] 
+    }));
   };
-
 
   const handleAddSambhag = async (e) => {
     e.preventDefault();
-    if (newSambhag.districts.length === 0) {
-      setError("Please select at least one district");
+    if (newSambhag.districtIds.length === 0) {
+      showError("Please select at least one district");
       return;
     }
     setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    clearMessages();
     try {
-      const newSambhagData = {
-        id: Date.now(),
-        ...newSambhag,
-        createdAt: new Date().toISOString().split("T")[0],
-      };
-      setSambhags([...sambhags, newSambhagData]);
-      setSuccessMsg("Sambhag created successfully! ✓");
-      setNewSambhag({ name: "", state: "", districts: [] });
-      setShowSambhagForm(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
+      const response = await fetch('/api/sambhags', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSambhag),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to create sambhag");
+
+      showSuccess("Sambhag created successfully! ✓");
+      fetchSambhagsForState(newSambhag.stateId);
+      fetchAllSambhags();
+      closeSambhagForm();
     } catch (err) {
-      setError("Failed to create sambhag");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
@@ -265,130 +281,198 @@ const SambhagManagement = () => {
 
   const handleUpdateSambhag = async (e) => {
     e.preventDefault();
-    if (editingSambhag.districts.length === 0) {
-      setError("Please select at least one district");
+    if (editingSambhag.districtIds.length === 0) {
+      showError("Please select at least one district");
       return;
     }
     setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    clearMessages();
     try {
-      const updatedSambhags = sambhags.map((s) =>
-        s.id === editingSambhag.id ? editingSambhag : s
-      );
-      setSambhags(updatedSambhags);
-      setSuccessMsg("Sambhag updated successfully! ✓");
-      setEditingSambhag(null);
-      setShowSambhagForm(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
+      const response = await fetch(`/api/sambhags/${editingSambhag.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editingSambhag.name,
+          districtIds: editingSambhag.districtIds,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to update sambhag");
+      
+      showSuccess("Sambhag updated successfully! ✓");
+      fetchSambhagsForState(editingSambhag.stateId);
+      fetchAllSambhags();
+      closeSambhagForm();
     } catch (err) {
-      setError("Failed to update sambhag");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeleteSambhag = async (id) => {
-    if (!confirm("Are you sure you want to delete this sambhag?")) return;
+  const handleDeleteSambhag = async (id, stateId) => {
+    if (!showConfirmation("Are you sure you want to delete this sambhag? This action cannot be undone.")) return;
     setLoading(true);
+    clearMessages();
     try {
-      setSambhags(sambhags.filter((s) => s.id !== id));
-      setSuccessMsg("Sambhag deleted successfully");
-      setTimeout(() => setSuccessMsg(""), 3000);
+      const response = await fetch(`/api/sambhags/${id}`, { method: 'DELETE' });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to delete sambhag");
+
+      showSuccess("Sambhag deleted successfully");
+      fetchSambhagsForState(stateId);
+      fetchAllSambhags();
     } catch (err) {
-      setError("Failed to delete sambhag");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
-  
-  const closeSambhagForm = () => {
-    setEditingSambhag(null);
-    setShowSambhagForm(false);
+
+  // --- Sambhag Prabhari CRUD Handlers (Reusing logic from original component) ---
+
+  const prabhariFormData = editingPrabhari || newPrabhari;
+
+  const handlePrabhariFormChange = (e) => {
+    const { name, value } = e.target;
+    const currentData = editingPrabhari || newPrabhari;
+    const setData = editingPrabhari ? setEditingPrabhari : setNewPrabhari;
+    setData({ ...currentData, [name]: value });
+  }
+
+  const closePrabhariForm = () => {
+    setEditingPrabhari(null);
+    setShowPrabhariForm(false);
+    setNewPrabhari({ name: "", email: "", phone: "", sambhagId: "" });
     setError("");
-    setNewSambhag({ name: "", state: "", districts: [] });
   };
-  
-  // --- Sambhag Prabhari CRUD ---
-  
+
   const handleAddPrabhari = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    setPrabhariLoading(true);
+    clearMessages();
     try {
-      const sambhag = sambhags.find(s => s.id === parseInt(newPrabhari.sambhagId));
-      const newPrabhariData = {
-        id: Date.now(),
-        ...newPrabhari,
-        sambhagId: parseInt(newPrabhari.sambhagId),
-        sambhagName: sambhag?.name || "",
-      };
-      setSambhagPrabharis([...sambhagPrabharis, newPrabhariData]);
-      setSuccessMsg("Sambhag Prabhari added successfully! ✓");
-      setNewPrabhari({ name: "", email: "", phone: "", sambhagId: "" });
-      setShowPrabhariForm(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
+      const response = await fetch('/api/prabharis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newPrabhari.name,
+          email: newPrabhari.email,
+          phone: newPrabhari.phone,
+          level: 'SAMBHAG',
+          unitId: newPrabhari.sambhagId,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to create prabhari");
+
+      // The response data often lacks full context (like sambhagName)
+      // Refetching the whole list is safer for real-time updates
+      fetchSambhagPrabharis(); 
+      showSuccess("Sambhag Prabhari added successfully! ✓");
+      closePrabhariForm();
     } catch (err) {
-      setError("Failed to add sambhag prabhari");
+      showError(err.message);
     } finally {
-      setLoading(false);
+      setPrabhariLoading(false);
     }
   };
 
   const handleUpdatePrabhari = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    setPrabhariLoading(true);
+    clearMessages();
     try {
-      const sambhag = sambhags.find(s => s.id === parseInt(editingPrabhari.sambhagId));
-      const updatedPrabharis = sambhagPrabharis.map(p =>
-        p.id === editingPrabhari.id
-          ? { ...editingPrabhari, sambhagId: parseInt(editingPrabhari.sambhagId), sambhagName: sambhag?.name || "" }
-          : p
-      );
-      setSambhagPrabharis(updatedPrabharis);
-      setSuccessMsg("Sambhag Prabhari updated successfully! ✓");
-      setEditingPrabhari(null);
-      setShowPrabhariForm(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
+      const response = await fetch(`/api/prabharis/${editingPrabhari.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editingPrabhari.name,
+          email: editingPrabhari.email,
+          phone: editingPrabhari.phone,
+          // Assuming unitId update is handled via sambhagId change on the backend
+          unitId: editingPrabhari.sambhagId, 
+          level: 'SAMBHAG'
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to update prabhari");
+
+      // Refetching the whole list is safest for updates
+      fetchSambhagPrabharis(); 
+      showSuccess("Sambhag Prabhari updated successfully! ✓");
+      closePrabhariForm();
     } catch (err) {
-      setError("Failed to update sambhag prabhari");
+      showError(err.message);
     } finally {
-      setLoading(false);
+      setPrabhariLoading(false);
     }
   };
 
   const handleDeletePrabhari = async (id) => {
-    if (!confirm("Are you sure you want to delete this sambhag prabhari?")) return;
-    setLoading(true);
+    if (!showConfirmation("Are you sure you want to delete this sambhag prabhari?")) return;
+    setPrabhariLoading(true);
+    clearMessages();
     try {
+      const response = await fetch(`/api/prabharis/${id}`, { method: 'DELETE' });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to delete prabhari");
+      
+      // Update local state for immediate feedback
       setSambhagPrabharis(sambhagPrabharis.filter(p => p.id !== id));
-      setSuccessMsg("Sambhag Prabhari deleted successfully");
-      setTimeout(() => setSuccessMsg(""), 3000);
+      showSuccess("Sambhag Prabhari deleted successfully");
     } catch (err) {
-      setError("Failed to delete sambhag prabhari");
+      showError(err.message);
     } finally {
-      setLoading(false);
+      setPrabhariLoading(false);
     }
   };
 
-  const closePrabhariForm = () => {
-    setEditingPrabhari(null);
-    setShowPrabhariForm(false);
-    setError("");
+
+  // --- Modal Logic ---
+  const openModal = async (prabhari) => {
+    setSelectedPrabhari(prabhari);
+    setIsModalLoading(true);
+    setModalDetails(null);
+    
+    const sambhag = allSambhags.find(s => s.id === prabhari.sambhagId);
+    
+    if (!sambhag) {
+      showError("Could not find sambhag details.");
+      setIsModalLoading(false);
+      return;
+    }
+
+    const state = allStates.find(s => s.id === sambhag.stateId);
+    // Assuming sambhag.districts is an array of { id: string } objects
+    const districtIds = sambhag.districts.map(d => d.id);
+    
+    try {
+      // API call to get details about the districts and their prabharis
+      const response = await fetch('/api/districts/prabharis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ districtIds }),
+      });
+      const districtDetails = await response.json();
+      if (!response.ok) throw new Error(districtDetails.error || 'Failed to fetch district prabharis');
+
+      setModalDetails({
+        sambhagName: sambhag.name,
+        stateName: state?.name || '',
+        // districtDetails should be an array of detailed district objects
+        districts: districtDetails, 
+      });
+
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setIsModalLoading(false);
+    }
   };
-  
-  const findSambhagForPrabhari = (prabhari) => {
-    if (!prabhari) return null;
-    return sambhags.find(s => s.id === prabhari.sambhagId);
-  };
-  
-  const formData = editingSambhag || newSambhag;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 p-6 font-inter">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -397,155 +481,182 @@ const SambhagManagement = () => {
             Sambhag Management
           </h1>
           <p className="text-gray-600">
-            Manage sambhags and prabharis for state districts
+            Manage organizational sambhags and assign their respective prabharis.
           </p>
         </div>
 
         {/* Success/Error Messages */}
         {successMsg && (
-          <div className="mb-6 p-4 bg-green-100 border-2 border-green-500 text-green-800 rounded-xl font-semibold animate-slideDown">
+          <div className="mb-6 p-4 bg-green-100 border-2 border-green-500 text-green-800 rounded-xl font-semibold animate-slideDown shadow-lg">
             {successMsg}
           </div>
         )}
         {error && (
-          <div className="mb-6 p-4 bg-red-100 border-2 border-red-500 text-red-800 rounded-xl font-semibold animate-slideDown">
+          <div className="mb-6 p-4 bg-red-100 border-2 border-red-500 text-red-800 rounded-xl font-semibold animate-slideDown shadow-lg">
             {error}
           </div>
         )}
 
         {/* Sambhags Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border-2 border-teal-200">
-          <div className="flex justify-between items-center mb-6">
+        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border-4 border-teal-300/50">
+          <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-              <Building className="text-teal-600" size={28} />
-              Sambhags
+              <Map size={28} className="text-teal-600" />
+              Sambhags (Zonal Groups)
             </h2>
-            <button
-              onClick={() => {
-                editingSambhag ? closeSambhagForm() : setShowSambhagForm(true)
-              }}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white rounded-xl font-bold hover:from-teal-600 hover:to-green-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-            >
-              <Plus size={20} />
-              {showSambhagForm ? "Cancel" : "Create Sambhag"}
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              {/* State Filter Dropdown */}
+              <select
+                onChange={(e) => {
+                  const stateId = e.target.value;
+                  setSelectedStateId(stateId);
+                  fetchSambhagsForState(stateId);
+                  // Set this as the default for the "Create" form
+                  setNewSambhag(prev => ({ ...prev, stateId: stateId, districtIds: [] }));
+                  // Ensure form is closed when state changes unless actively editing
+                  if(!editingSambhag) setShowSambhagForm(false);
+                }}
+                value={selectedStateId}
+                className="w-full md:w-64 border-2 border-teal-400 focus:border-teal-600 p-3 rounded-xl outline-none transition-all shadow-md bg-white text-gray-700 font-medium"
+              >
+                <option value="">Select a State to view Sambhags</option>
+                {allStates.map(state => (
+                  <option key={state.id} value={state.id}>{state.name}</option>
+                ))}
+              </select>
+              
+              {/* Create/Cancel Button */}
+              <button
+                onClick={() => {
+                  if (editingSambhag || showSambhagForm) {
+                    closeSambhagForm();
+                  } else {
+                    if (!selectedStateId && allStates.length > 0) {
+                      showError("Please select a state before creating a new Sambhag.");
+                      return;
+                    }
+                    setShowSambhagForm(true);
+                  }
+                }}
+                className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                  (showSambhagForm || editingSambhag) 
+                    ? 'bg-red-500 text-white hover:bg-red-600'
+                    : 'bg-gradient-to-r from-teal-500 to-green-500 text-white hover:from-teal-600 hover:to-green-600'
+                }`}
+              >
+                {(showSambhagForm || editingSambhag) ? <X size={20} /> : <Plus size={20} />}
+                {(showSambhagForm || editingSambhag) ? "Cancel" : "Create Sambhag"}
+              </button>
+            </div>
           </div>
 
           {/* Sambhag Form */}
           {(showSambhagForm || editingSambhag) && (
-            <div className="bg-gradient-to-r from-teal-50 to-green-50 p-6 rounded-2xl mb-6 border-2 border-teal-200">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
+            <div className="bg-gradient-to-r from-teal-50 to-green-50 p-6 rounded-2xl mb-6 border-2 border-teal-400 shadow-inner">
+              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                {editingSambhag ? <Edit size={24} className="text-blue-500"/> : <Plus size={24} className="text-teal-500"/>}
                 {editingSambhag ? "Edit Sambhag" : "Create New Sambhag"}
               </h3>
               <form onSubmit={editingSambhag ? handleUpdateSambhag : handleAddSambhag}>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
+                  {/* Sambhag Name */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Sambhag Name *</label>
                     <input
                       type="text"
                       name="name"
-                      placeholder="Enter sambhag name"
-                      value={(editingSambhag || newSambhag).name}
+                      placeholder="Enter sambhag name (e.g., North Zone)"
+                      value={sambhagFormData.name}
                       onChange={handleSambhagFormChange}
                       required
                       className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm hover:shadow-md bg-white"
                     />
                   </div>
+                  {/* State (Read-only/Disabled if editing) */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">State *</label>
-                    <select
-                      name="state"
-                      value={(editingSambhag || newSambhag).state}
-                      onChange={handleSambhagFormChange}
-                      required
-                      className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
-                    >
-                      <option value="">Select State</option>
-                      {Object.keys(STATE_DISTRICTS).map(state => (
-                        <option key={state} value={state}>{state}</option>
-                      ))}
-                    </select>
+                    <input
+                      type="text"
+                      value={selectedStateForForm?.name || 'Select a state from the dropdown above'}
+                      disabled
+                      className="w-full border-2 border-teal-200 p-4 rounded-xl outline-none shadow-sm bg-gray-100 text-gray-600 font-medium"
+                    />
+                     <input type="hidden" name="stateId" value={sambhagFormData.stateId} />
                   </div>
                 </div>
                 
+                {/* District Selection */}
                 <div className="mb-4">
                   <label className="block text-sm font-semibold text-gray-700 mb-3">
-                    Select Districts * (Selected: {(editingSambhag || newSambhag).districts.length})
+                    Select Districts * ({sambhagFormData.districtIds.length} Selected)
                   </label>
                   
-                  {/* Selected Districts Display */}
-                  {((editingSambhag || newSambhag).districts.length > 0) && (
-                    <div className="mb-4 p-4 bg-teal-50 rounded-xl border-2 border-teal-200">
-                      <p className="text-sm font-semibold text-gray-700 mb-2">Selected Districts:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {(editingSambhag || newSambhag).districts.map(district => (
-                          <span
-                            key={district}
-                            className="inline-flex items-center gap-2 bg-teal-500 text-white px-3 py-1.5 rounded-full text-sm font-semibold"
-                          >
-                            {district}
-                            <button
-                              type="button"
-                              onClick={() => toggleDistrictSelection(district)}
-                              className="hover:bg-teal-600 rounded-full p-0.5 transition-all"
+                  {/* Districts Container */}
+                  <div className="max-h-64 overflow-y-auto p-4 bg-white rounded-xl border-2 border-teal-200 shadow-inner">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                      {getAvailableDistricts().length === 0 ? (
+                        <div className="col-span-full text-center py-4 text-gray-500">
+                          {sambhagFormData.stateId && loading ? (
+                            <div className="flex items-center justify-center gap-2">
+                              <Loader2 size={18} className="animate-spin" />
+                              <span>Loading available districts...</span>
+                            </div>
+                          ) : sambhagFormData.stateId ? (
+                            "No available districts for this state (they might all be assigned)."
+                          ) : (
+                            "Please select a state first."
+                          )}
+                        </div>
+                      ) : (
+                        getAvailableDistricts().map(district => {
+                          const isSelected = sambhagFormData.districtIds.includes(district.id);
+                          return (
+                            <label
+                              key={district.id}
+                              className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-all border-2 ${
+                                isSelected
+                                  ? 'bg-teal-100 border-teal-500 ring-2 ring-teal-300'
+                                  : 'bg-gray-50 border-gray-200 hover:bg-teal-50'
+                              }`}
                             >
-                              <X size={14} />
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-64 overflow-y-auto p-4 bg-white rounded-xl border-2 border-teal-200">
-                    {getAvailableDistricts().length === 0 ? (
-                      <div className="col-span-full text-center py-8 text-gray-500">
-                        <p className="font-semibold">
-                          {!(editingSambhag || newSambhag).state 
-                            ? "Please select a state first" 
-                            : "No available districts for this state"}
-                        </p>
-                      </div>
-                    ) : (
-                      getAvailableDistricts().map(district => {
-                        const isSelected = (editingSambhag || newSambhag).districts.includes(district);
-                        return (
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggleDistrictSelection(district.id)}
+                                className="w-4 h-4 text-teal-600 rounded focus:ring-teal-500"
+                              />
+                              <span className="text-sm font-medium text-gray-700">{district.name}</span>
+                            </label>
+                          );
+                        })
+                      )}
+                      {/* Show already selected districts that might not be 'available' if editing */}
+                      {editingSambhag && allDistrictsInState
+                        .filter(d => editingSambhag.districtIds.includes(d.id) && !getAvailableDistricts().some(ad => ad.id === d.id))
+                        .map(district => (
                           <label
-                            key={district}
-                            className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-all border-2 ${
-                              isSelected
-                                ? 'bg-teal-100 border-teal-500'
-                                : 'bg-gray-50 border-gray-200 hover:bg-teal-50'
-                            }`}
+                            key={district.id}
+                            className="flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-all border-2 bg-teal-100 border-teal-500 ring-2 ring-teal-300"
                           >
                             <input
                               type="checkbox"
-                              checked={isSelected}
-                              onChange={() => toggleDistrictSelection(district)}
-                              className="w-4 h-4 text-teal-600 rounded"
+                              checked={true}
+                              onChange={() => toggleDistrictSelection(district.id)}
+                              className="w-4 h-4 text-teal-600 rounded focus:ring-teal-500"
                             />
-                            <span className="text-sm font-medium text-gray-700">{district}</span>
+                            <span className="text-sm font-medium text-gray-700">{district.name}</span>
                           </label>
-                        );
-                      })
-                    )}
+                        ))
+                      }
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex gap-3 justify-end">
-                  {editingSambhag && (
-                    <button
-                      type="button"
-                      onClick={closeSambhagForm}
-                      className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all shadow-md"
-                    >
-                      Cancel
-                    </button>
-                  )}
+                <div className="flex gap-3 justify-end pt-4">
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white font-bold rounded-xl hover:from-teal-600 hover:to-green-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50"
+                    disabled={loading || !sambhagFormData.stateId || sambhagFormData.districtIds.length === 0}
+                    className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white font-bold rounded-xl hover:from-teal-600 hover:to-green-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? <Loader2 size={20} className="animate-spin" /> : editingSambhag ? <Edit size={20} /> : <Plus size={20} />}
                     {editingSambhag ? "Update Sambhag" : "Create Sambhag"}
@@ -556,57 +667,90 @@ const SambhagManagement = () => {
           )}
 
           {/* Sambhags List */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {sambhags.map(sambhag => (
-              <div key={sambhag.id} className="bg-gradient-to-br from-teal-50 to-cyan-50 p-5 rounded-xl border-2 border-teal-200 shadow-md hover:shadow-lg transition-all">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-800">{sambhag.name}</h3>
-                    <p className="text-sm font-semibold text-teal-700">{sambhag.state}</p>
+          {!selectedStateId && (
+            <div className="text-center py-16 text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+              <Map size={48} className="mx-auto mb-4 text-teal-400" />
+              <p className="font-semibold text-lg">Please select a state above to view its assigned Sambhags.</p>
+            </div>
+          )}
+          {selectedStateId && (loading && sambhagsInState.length === 0) ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <Loader2 className="animate-spin text-teal-600 mb-4" size={56} />
+              <p className="text-gray-600 font-semibold text-lg">Loading Sambhags...</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sambhagsInState.map(sambhag => {
+                // Districts are likely returned as objects with { id, name } or similar
+                const districtNames = sambhag.districts
+                  .map(d => allDistrictsInState.find(ad => ad.id === d.id)?.name || d.name) // Use allDistrictsInState for names
+                  .filter(Boolean);
+                
+                return (
+                  <div key={sambhag.id} className="bg-gradient-to-br from-teal-50 to-cyan-50 p-6 rounded-2xl border-2 border-teal-300 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <MapPin size={20} className="text-teal-600" />
+                        {sambhag.name}
+                      </h3>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            setEditingSambhag({
+                              ...sambhag,
+                              districtIds: sambhag.districts.map(d => d.id) // Ensure we pass IDs for the form
+                            });
+                            setShowSambhagForm(true);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className="text-blue-500 hover:bg-blue-500 hover:text-white p-2 rounded-lg transition-all shadow-md"
+                          title="Edit Sambhag"
+                        >
+                          <Edit size={18} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSambhag(sambhag.id, sambhag.stateId)}
+                          className="text-red-500 hover:bg-red-500 hover:text-white p-2 rounded-lg transition-all shadow-md"
+                          title="Delete Sambhag"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="text-sm">
+                      <p className="font-semibold text-gray-700 mb-2">Districts ({districtNames.length}):</p>
+                      <div className="flex flex-wrap gap-2">
+                        {districtNames.slice(0, 4).map(districtName => (
+                          <span key={districtName} className="text-xs bg-teal-200 text-teal-900 px-3 py-1 rounded-full font-semibold shadow-inner">
+                            {districtName}
+                          </span>
+                        ))}
+                        {districtNames.length > 4 && (
+                          <span className="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold">
+                            +{districtNames.length - 4} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-4 border-t pt-2">Created: {new Date(sambhag.createdAt).toLocaleDateString()}</p>
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        setEditingSambhag(sambhag);
-                        setShowSambhagForm(true);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="text-blue-500 hover:bg-blue-500 hover:text-white p-2 rounded-lg transition-all"
-                    >
-                      <Edit size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteSambhag(sambhag.id)}
-                      className="text-red-500 hover:bg-red-500 hover:text-white p-2 rounded-lg transition-all"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
+                )
+              })}
+              {selectedStateId && sambhagsInState.length === 0 && !loading && (
+                <div className="md:col-span-full text-center py-16 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                  <Building className="mx-auto mb-4 text-gray-400" size={48} />
+                  <p className="text-gray-500 text-xl font-semibold">No Sambhags Found</p>
+                  <p className="text-gray-400 mt-2">Use the Create Sambhag button to get started.</p>
                 </div>
-                <div className="mb-3">
-                  <p className="text-sm font-semibold text-gray-600 mb-2">Districts ({sambhag.districts.length}):</p>
-                  <div className="flex flex-wrap gap-2">
-                    {sambhag.districts.slice(0, 3).map(district => (
-                      <span key={district} className="text-xs bg-teal-200 text-teal-800 px-3 py-1 rounded-full font-semibold">
-                        {district}
-                      </span>
-                    ))}
-                    {sambhag.districts.length > 3 && (
-                      <span className="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full font-semibold">
-                        +{sambhag.districts.length - 3} more
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500">Created: {sambhag.createdAt}</p>
-              </div>
-            ))}
-          </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Sambhag Prabharis Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-teal-200">
-          <div className="flex justify-between items-center mb-6">
+        <div className="bg-white rounded-2xl shadow-xl p-6 border-4 border-teal-300/50">
+          <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
               <Users className="text-teal-600" size={28} />
               Sambhag Prabharis
@@ -615,94 +759,92 @@ const SambhagManagement = () => {
               onClick={() => {
                 editingPrabhari ? closePrabhariForm() : setShowPrabhariForm(true)
               }}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white rounded-xl font-bold hover:from-teal-600 hover:to-green-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                  (showPrabhariForm || editingPrabhari) 
+                    ? 'bg-red-500 text-white hover:bg-red-600'
+                    : 'bg-gradient-to-r from-teal-500 to-green-500 text-white hover:from-teal-600 hover:to-green-600'
+              }`}
             >
-              {showPrabhariForm ? <X size={20} /> : <UserPlus size={20} />}
-              {showPrabhariForm ? "Cancel" : "Add Sambhag Prabhari"}
+              {(showPrabhariForm || editingPrabhari) ? <X size={20} /> : <UserPlus size={20} />}
+              {(showPrabhariForm || editingPrabhari) ? "Cancel" : "Add Sambhag Prabhari"}
             </button>
           </div>
 
           {/* Sambhag Prabhari Form */}
           {(showPrabhariForm || editingPrabhari) && (
-            <div className="bg-gradient-to-r from-teal-50 to-green-50 p-6 rounded-2xl mb-6 border-2 border-teal-200">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
+            <div className="bg-gradient-to-r from-teal-50 to-green-50 p-6 rounded-2xl mb-6 border-2 border-teal-400 shadow-inner">
+              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                {editingPrabhari ? <Edit size={24} className="text-blue-500"/> : <UserPlus size={24} className="text-teal-500"/>}
                 {editingPrabhari ? "Edit Sambhag Prabhari" : "Add New Sambhag Prabhari"}
               </h3>
               <form onSubmit={editingPrabhari ? handleUpdatePrabhari : handleAddPrabhari}>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
+                  {/* Sambhag Selection */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Sambhag *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Assign Sambhag *</label>
                     <select
-                      value={editingPrabhari ? editingPrabhari.sambhagId : newPrabhari.sambhagId}
-                      onChange={(e) => editingPrabhari 
-                        ? setEditingPrabhari({ ...editingPrabhari, sambhagId: e.target.value })
-                        : setNewPrabhari({ ...newPrabhari, sambhagId: e.target.value })}
+                      name="sambhagId"
+                      value={prabhariFormData.sambhagId}
+                      onChange={handlePrabhariFormChange}
                       required
-                      className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
+                      className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white text-gray-700"
                     >
                       <option value="">Select Sambhag</option>
-                      {sambhags.map(sambhag => (
-                        <option key={sambhag.id} value={sambhag.id}>{sambhag.name} ({sambhag.state})</option>
+                      {allSambhags.map(sambhag => (
+                        <option key={sambhag.id} value={sambhag.id}>
+                          {sambhag.name} ({sambhag.stateName})
+                        </option>
                       ))}
                     </select>
                   </div>
+                  {/* Name */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Name *</label>
                     <input
                       type="text"
+                      name="name"
                       placeholder="Full Name"
-                      value={editingPrabhari ? editingPrabhari.name : newPrabhari.name}
-                      onChange={(e) => editingPrabhari 
-                        ? setEditingPrabhari({ ...editingPrabhari, name: e.target.value })
-                        : setNewPrabhari({ ...newPrabhari, name: e.target.value })}
+                      value={prabhariFormData.name}
+                      onChange={handlePrabhariFormChange}
                       required
                       className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     />
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
+                  {/* Email */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Email (Optional)</label>
                     <input
                       type="email"
+                      name="email"
                       placeholder="Email Address"
-                      value={editingPrabhari ? editingPrabhari.email : newPrabhari.email}
-                      onChange={(e) => editingPrabhari 
-                        ? setEditingPrabhari({ ...editingPrabhari, email: e.target.value })
-                        : setNewPrabhari({ ...newPrabhari, email: e.target.value })}
+                      value={prabhariFormData.email}
+                      onChange={handlePrabhariFormChange}
                       className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     />
                   </div>
+                  {/* Phone */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Phone *</label>
                     <input
                       type="tel"
+                      name="phone"
                       placeholder="Phone Number"
-                      value={editingPrabhari ? editingPrabhari.phone : newPrabhari.phone}
-                      onChange={(e) => editingPrabhari 
-                        ? setEditingPrabhari({ ...editingPrabhari, phone: e.target.value })
-                        : setNewPrabhari({ ...newPrabhari, phone: e.target.value })}
+                      value={prabhariFormData.phone}
+                      onChange={handlePrabhariFormChange}
                       required
                       className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     />
                   </div>
                 </div>
-                <div className="flex gap-3 justify-end">
-                  {editingPrabhari && (
-                    <button
-                      type="button"
-                      onClick={closePrabhariForm}
-                      className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all shadow-md"
-                    >
-                      Cancel
-                    </button>
-                  )}
+                <div className="flex gap-3 justify-end pt-4">
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white font-bold rounded-xl hover:from-teal-600 hover:to-green-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50"
+                    disabled={prabhariLoading || !prabhariFormData.sambhagId}
+                    className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-teal-500 to-green-500 text-white font-bold rounded-xl hover:from-teal-600 hover:to-green-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {loading ? <Loader2 size={20} className="animate-spin" /> : editingPrabhari ? <Edit size={20} /> : <UserPlus size={20} />}
+                    {prabhariLoading ? <Loader2 size={20} className="animate-spin" /> : editingPrabhari ? <Edit size={20} /> : <UserPlus size={20} />}
                     {editingPrabhari ? "Update Prabhari" : "Add Prabhari"}
                   </button>
                 </div>
@@ -710,73 +852,73 @@ const SambhagManagement = () => {
             </div>
           )}
           
-          {/* --- NEW: Search Bar --- */}
+          {/* Prabhari Search */}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border-2 border-gray-200 focus-within:border-teal-500 transition-all">
+            <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border-2 border-gray-200 focus-within:border-teal-500 transition-all shadow-inner">
               <Search size={22} className="text-gray-400" />
               <input
                 type="text"
                 placeholder="Search by Prabhari name or Sambhag name..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="bg-transparent outline-none w-full text-gray-700"
+                className="bg-transparent outline-none w-full text-gray-700 font-medium"
               />
             </div>
           </div>
-          {/* --- END: Search Bar --- */}
-
 
           {/* Sambhag Prabharis Table */}
-          {loading && sambhagPrabharis.length === 0 ? (
+          {prabhariLoading && sambhagPrabharis.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="animate-spin text-teal-600 mb-4" size={56} />
               <p className="text-gray-600 font-semibold text-lg">Loading Sambhag Prabharis...</p>
             </div>
           ) : sambhagPrabharis.length === 0 ? (
-             <div className="text-center py-20 bg-gray-50 rounded-2xl">
+             <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
               <Users className="mx-auto mb-4 text-gray-400" size={64} />
               <p className="text-gray-500 text-xl font-semibold">No Sambhag Prabharis found</p>
               <p className="text-gray-400 mt-2">Get started by adding a prabhari.</p>
             </div>
           ) : filteredPrabharis.length === 0 ? (
-            <div className="text-center py-20 bg-gray-50 rounded-2xl">
-              <Users className="mx-auto mb-4 text-gray-400" size={64} />
+            <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+              <Search className="mx-auto mb-4 text-gray-400" size={64} />
               <p className="text-gray-500 text-xl font-semibold">No Prabharis Found</p>
               <p className="text-gray-400 mt-2">Your search for {searchInput} returned no results.</p>
                <button
                   onClick={() => setSearchInput("")}
-                  className="mt-4 px-6 py-2 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition-all"
+                  className="mt-4 px-6 py-2 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition-all shadow-md"
                 >
                   Clear Search
                 </button>
             </div>
           ) : (
-            <div className="overflow-x-auto border-2 border-gray-200 rounded-2xl shadow-lg">
+            <div className="overflow-x-auto border-2 border-gray-300 rounded-2xl shadow-lg">
               <table className="w-full">
                 <thead className="bg-gradient-to-r from-green-100 via-teal-100 to-cyan-100">
                   <tr>
                     <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Name</th>
-                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Email</th>
+                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide hidden sm:table-cell">Email</th>
                     <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Phone</th>
-                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">Sambhag</th>
+                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide hidden lg:table-cell">Sambhag</th>
                     <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {/* CHANGED: Map over filteredPrabharis */}
                   {filteredPrabharis.map((p, idx) => (
                     <tr 
                       key={p.id} 
-                      onClick={() => setSelectedPrabhari(p)}
-                      className={`border-t-2 border-gray-100 hover:bg-teal-50 transition-all cursor-pointer ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                      onClick={() => openModal(p)}
+                      className={`border-t-2 border-gray-100 hover:bg-teal-50 transition-all duration-150 cursor-pointer ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
                     >
-                      <td className="p-5 font-semibold text-gray-800">{p.name}</td>
-                      <td className="p-5 text-gray-600">{p.email || <span className="text-gray-400">N/A</span>}</td>
+                      <td className="p-5 font-semibold text-gray-800 flex items-center gap-2">
+                        <User size={18} className="text-teal-500 hidden sm:inline" />
+                        {p.name}
+                      </td>
+                      <td className="p-5 text-gray-600 hidden sm:table-cell">{p.email || <span className="text-gray-400 italic">N/A</span>}</td>
                       <td className="p-5 text-gray-600">{p.phone}</td>
-                      <td className="p-5">
-                        <span className="inline-flex items-center gap-2 bg-teal-100 text-teal-800 px-4 py-2 rounded-full font-semibold text-sm">
+                      <td className="p-5 hidden lg:table-cell">
+                        <span className="inline-flex items-center gap-2 bg-teal-100 text-teal-900 px-4 py-2 rounded-full font-semibold text-sm shadow-inner">
                           <Building size={16} />
-                          {p.sambhagName}
+                          {p.sambhagName} ({p.stateName})
                         </span>
                       </td>
                       <td className="p-5 text-center">
@@ -784,11 +926,15 @@ const SambhagManagement = () => {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              setEditingPrabhari(p);
+                              // Prepare data for editing, ensuring all required fields are present
+                              setEditingPrabhari({
+                                ...p, 
+                                sambhagId: p.unitId || p.sambhagId // Ensure unitId or sambhagId is used
+                              });
                               setShowPrabhariForm(true);
                               window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
-                            className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+                            className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-md transform hover:scale-110"
                             title="Edit sambhag prabhari"
                           >
                             <Edit size={20} />
@@ -798,7 +944,7 @@ const SambhagManagement = () => {
                               e.stopPropagation();
                               handleDeletePrabhari(p.id);
                             }}
-                            className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+                            className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-md transform hover:scale-110"
                             title="Delete sambhag prabhari"
                           >
                             <Trash2 size={20} />
@@ -817,97 +963,108 @@ const SambhagManagement = () => {
       {/* Prabhari Details Modal */}
       {selectedPrabhari && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4"
           onClick={() => setSelectedPrabhari(null)}
         >
           <div
-            className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 m-4 relative animate-slideDown max-h-[90vh] overflow-y-auto"
+            className="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-8 relative animate-slideDown max-h-[90vh] overflow-y-auto transform scale-95 md:scale-100"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setSelectedPrabhari(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2 transition-all"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-800 hover:bg-gray-100 rounded-full p-2 transition-all"
             >
               <X size={24} />
             </button>
 
             {/* Modal Header */}
-            <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-gray-800">{selectedPrabhari.name}</h2>
-              <p className="text-lg text-teal-600 font-semibold">Sambhag Prabhari</p>
+            <div className="text-center mb-6 border-b pb-4">
+              <h2 className="text-3xl font-extrabold text-gray-900">{selectedPrabhari.name}</h2>
+              <p className="text-lg text-teal-600 font-semibold flex items-center justify-center mt-1">
+                <User size={20} className="mr-2" /> Sambhag Prabhari
+              </p>
             </div>
 
             {/* Modal Content */}
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                <Mail size={20} className="text-teal-500 shrink-0" />
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">Email</p>
-                  <p className="text-gray-800 font-medium">{selectedPrabhari.email || "N/A"}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex items-center gap-4 p-4 bg-teal-50 rounded-xl border border-teal-200">
+                  <Mail size={20} className="text-teal-600 shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase">Email</p>
+                    <p className="text-gray-800 font-medium break-all">{selectedPrabhari.email || "N/A"}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 p-4 bg-teal-50 rounded-xl border border-teal-200">
+                  <Phone size={20} className="text-teal-600 shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase">Phone</p>
+                    <p className="text-gray-800 font-medium">{selectedPrabhari.phone}</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                <Phone size={20} className="text-teal-500 shrink-0" />
+              <div className="flex items-start gap-4 p-4 bg-teal-50 rounded-xl border border-teal-200">
+                <Building size={20} className="text-teal-600 shrink-0 mt-1" />
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">Phone</p>
-                  <p className="text-gray-800 font-medium">{selectedPrabhari.phone}</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                <Building size={20} className="text-teal-500 shrink-0 mt-1" />
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">Sambhag</p>
-                  <p className="text-gray-800 font-medium">{selectedPrabhari.sambhagName}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">Assigned Sambhag</p>
+                  <p className="text-gray-800 font-bold">{modalDetails?.sambhagName || selectedPrabhari.sambhagName}</p>
                   <p className="text-gray-600 text-sm">
-                    {findSambhagForPrabhari(selectedPrabhari)?.state}
+                    State: {modalDetails?.stateName || selectedPrabhari.stateName}
                   </p>
                 </div>
               </div>
 
               {/* Districts & District Prabharis */}
-              <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                <MapPin size={20} className="text-teal-500 shrink-0 mt-1" />
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
-                    Districts & District Prabharis
-                  </p>
-                  <div className="space-y-3">
-                    {findSambhagForPrabhari(selectedPrabhari)?.districts.length > 0 ? (
-                      findSambhagForPrabhari(selectedPrabhari).districts.map((district) => {
-                        const districtPrabhari = mockDistrictPrabharis[district];
-                        return (
-                          <div key={district} className="p-3 bg-white border-2 border-teal-100 rounded-lg">
-                            <h4 className="font-bold text-gray-800">{district}</h4>
-                            {districtPrabhari ? (
-                              <div className="mt-2 text-sm text-gray-600 space-y-1">
-                                <p className="flex items-center gap-2">
-                                  <User size={14} className="text-gray-500" />
-                                  <strong>{districtPrabhari.name}</strong>
+              <div className="p-4 bg-white rounded-xl border-2 border-teal-300 shadow-inner">
+                <h3 className="text-base font-bold text-gray-700 uppercase mb-3 border-b pb-2 flex items-center gap-2">
+                  <MapPin size={18} className="text-teal-600" />
+                  Associated Districts & Prabharis
+                </h3>
+                {isModalLoading ? (
+                  <div className="flex items-center justify-center py-4 text-gray-600">
+                    <Loader2 size={24} className="animate-spin mr-2" />
+                    <span>Loading district details...</span>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {modalDetails?.districts?.length > 0 ? (
+                      modalDetails.districts.map((district) => (
+                        <div key={district.id} className="p-4 bg-gray-50 border border-teal-100 rounded-lg">
+                          <h4 className="font-bold text-teal-800 flex items-center gap-2 mb-2">
+                            <MapPin size={16} />{district.name}
+                          </h4>
+                          
+                          {district.prabharis && district.prabharis.length > 0 ? (
+                            district.prabharis.map(prabhari => (
+                              <div key={prabhari.id} className="mt-2 text-sm text-gray-700 space-y-1 p-3 border-t border-teal-200 bg-white rounded-md shadow-sm">
+                                <p className="flex items-center gap-2 font-bold text-gray-900">
+                                  <User size={14} className="text-blue-500" />
+                                  {prabhari.name} (District Prabhari)
                                 </p>
                                 <p className="flex items-center gap-2">
                                   <Mail size={14} className="text-gray-500" />
-                                  {districtPrabhari.email || "N/A"}
+                                  {prabhari.email || "N/A"}
                                 </p>
                                 <p className="flex items-center gap-2">
                                   <Phone size={14} className="text-gray-500" />
-                                  {districtPrabhari.phone}
+                                  {prabhari.phone}
                                 </p>
                               </div>
-                            ) : (
-                              <p className="text-sm text-gray-500 mt-1">
-                                No District Prabhari assigned.
-                              </p>
-                            )}
-                          </div>
-                        );
-                      })
+                            ))
+                          ) : (
+                            <p className="text-sm text-gray-500 mt-1 italic">
+                              No District Prabhari assigned for this district.
+                            </p>
+                          )}
+                        </div>
+                      ))
                     ) : (
-                      <p className="text-gray-600">No districts assigned to this sambhag.</p>
+                      <p className="text-gray-600 py-3 text-center">This sambhag currently has no assigned districts.</p>
                     )}
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -916,5 +1073,3 @@ const SambhagManagement = () => {
     </div>
   );
 };
-
-export default SambhagManagement;

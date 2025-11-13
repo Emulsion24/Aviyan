@@ -4,110 +4,23 @@ import {
   Loader2,
   Trash2,
   UserPlus,
-  RefreshCw,
-  Eye,
   X,
   MapPin,
   Users,
   Edit,
-  Award,
-  Plus,
+  Mail,
+  Phone,
+  Building,
   User,
-  Mail,     // Added
-  Phone,    // Added
-  Building, // Added
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const STATE_DISTRICTS = {
-  "Andhra Pradesh": ["Anantapuramu", "Chittoor", "East Godavari", "Guntur"],
-  "Arunachal Pradesh": ["Anjaw", "Capital Complex ( Itanagar )", "Changlang"],
-  Assam: ["Bajali", "Baksa", "Barpeta", "Biswanath"],
-  Bihar: ["Araria", "Arwal", "Aurangabad", "Banka"],
-  Chhattisgarh: ["Balod", "Baloda Bazar", "Balrampur", "Bastar"],
-  Goa: ["North Goa", "South Goa"],
-  Gujarat: ["Ahmedabad", "Amreli", "Anand", "Aravalli"],
-  Haryana: ["Ambala", "Charkhi Dadri", "Fatehabad", "Gurugram"],
-  "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamipur", "Kangra"],
-  Jharkhand: ["Bokaro", "Chatra", "Deoghar", "Dhanbad"],
-  Karnataka: ["Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Hubli-Dharwad"],
-  Kerala: ["Alappuzha", "Ernakulam", "Idukki", "Kannur"],
-  "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar"],
-  Maharashtra: ["Ahmednagar", "Akola", "Amravati", "Aurangabad"],
-  Manipur: ["Bishupur", "Chandel", "Churachandpur", "Imphal East"],
-  Meghalaya: ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills"],
-  Mizoram: ["Aizawl", "Champhai", "Hnahthial", "Khawzawl"],
-  Nagaland: ["Chümoukedima", "Dimapur", "Kiphire", "Kohima"],
-  Odisha: ["Angul", "Balangir", "Balasore", "Bargarh"],
-  Punjab: ["Amritsar", "Barnala", "Bathinda", "Faridkot"],
-  Rajasthan: ["Ajmer", "Alwar", "Banswara", "Baran"],
-  Sikkim: ["Gangtok", "Mangan (North Sikkim)", "Namchi (South Sikkim)"],
-  "Tamil Nadu": ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore"],
-  Telangana: ["Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad"],
-  Tripura: ["Dhalai", "Gomati", "Khowai", "North Tripura"],
-  Uttarakhand: ["Almora", "Bageshwar", "Chamoli", "Champawat"],
-  "Uttar Pradesh": ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi"],
-  "West Bengal": ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar"],
-  "Delhi (National Capital Territory)": [
-    "Central Delhi",
-    "East Delhi",
-    "New Delhi",
-  ],
-  "Jammu and Kashmir": ["Anantnag", "Bandipora", "Baramulla", "Budgam"],
+// Helper function to show alerts
+const showConfirmation = (message) => {
+  return window.confirm(message);
 };
 
-// --- MOCK DATA ADDED FROM OTHER COMPONENTS ---
-
-// Initial mock data for State Prabharis
-const MOCK_STATE_PRABHARIS = [
-  {
-    id: 1,
-    state: "Punjab",
-    name: "Gurpreet Singh",
-    email: "gurpreet@example.com",
-    phone: "1111111111",
-  },
-  {
-    id: 2,
-    state: "Haryana",
-    name: "Deepak Kumar",
-    email: "deepak@example.com",
-    phone: "2222222222",
-  },
-  {
-    id: 3,
-    state: "Karnataka",
-    name: "Anand Reddy",
-    email: "", // Optional email
-    phone: "4444444444",
-  },
-  {
-    id: 4,
-    state: "Uttar Pradesh",
-    name: "Pawan Mishra",
-    email: "pawan@example.com",
-    phone: "5555555555",
-  },
-];
-
-// Mock data for Sambhags
-const MOCK_SAMBHAGS = [
-    { id: 1, name: "Haryana West", state: "Haryana", districts: ["Ambala", "Gurugram"], createdAt: "2024-03-01" },
-    { id: 2, name: "Karnataka South", state: "Karnataka", districts: ["Mysuru", "Bengaluru Urban"], createdAt: "2024-03-05" },
-    { id: 3, name: "UP West", state: "Uttar Pradesh", districts: ["Agra", "Aligarh"], createdAt: "2024-03-10" }
-];
-
-// Mock data for Sambhag Prabharis
-const MOCK_SAMBHAG_PRABHARIS = [
-    { id: 101, name: "Arun Mehra", email: "arun@example.com", phone: "9876543210", sambhagId: 1, sambhagName: "Haryana West" },
-    { id: 102, name: "Bina Das", email: "", phone: "9876543211", sambhagId: 2, sambhagName: "Karnataka South" },
-    { id: 103, name: "Chandan Lal", email: "chandan@example.com", phone: "9876543212", sambhagId: 3, sambhagName: "UP West" }
-];
-
-// --- END OF MOCK DATA ---
-
-
-const StatePrabhariManagement = () => {
+export default function StatePrabhariManagement() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -118,104 +31,184 @@ const StatePrabhariManagement = () => {
   const [showPrabhariForm, setShowPrabhariForm] = useState(false);
   const [editingPrabhari, setEditingPrabhari] = useState(null);
   const [newPrabhari, setNewPrabhari] = useState({
-    state: "",
+    stateId: "", // Matches API field
     name: "",
     email: "",
     phone: "",
   });
 
+  // State for dropdowns
+  const [allStates, setAllStates] = useState([]);
+
   // Search
   const [searchState, setSearchState] = useState(""); // Used for the state-wise filter
-  
+
   // Modal State
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
+  const [modalDetails, setModalDetails] = useState([]);
+  const [isModalLoading, setIsModalLoading] = useState(false);
 
   useEffect(() => {
     fetchStatePrabharis();
+    fetchAllStates();
   }, []);
 
-  // Effect to filter prabharis whenever the main list or searchState changes
+  // Effect to filter prabharis (client-side for now, can be moved to API later)
   useEffect(() => {
     if (searchState === "") {
       setFilteredPrabharis(statePrabharis);
     } else {
+      // Filter by stateName which is returned by the API
       setFilteredPrabharis(
-        statePrabharis.filter((p) => p.state === searchState)
+        statePrabharis.filter((p) => p.stateName === searchState)
       );
     }
   }, [searchState, statePrabharis]);
 
-  const fetchStatePrabharis = () => {
+  // --- Helper Functions ---
+  const clearMessages = () => {
+    setError("");
+    setSuccessMsg("");
+  };
+
+  const showSuccess = (message) => {
+    clearMessages();
+    setSuccessMsg(message);
+    setTimeout(() => setSuccessMsg(""), 3000);
+  };
+
+  const showError = (message) => {
+    clearMessages();
+    setError(message);
+  };
+
+  // --- API Functions ---
+
+  const fetchStatePrabharis = async () => {
     setLoading(true);
+    clearMessages();
     try {
-      // Simulate API call
-      setStatePrabharis(MOCK_STATE_PRABHARIS);
+      // Fetching from the new paginated API
+      const response = await fetch('/api/prabharis?level=STATE&page=1&limit=500'); 
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch state prabharis');
+      }
+      const data = await response.json();
+      // ** FIX: Read from data.data **
+      setStatePrabharis(data.data);
     } catch (err) {
-      setError("Failed to fetch state prabharis");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddPrabhari = (e) => {
+  const fetchAllStates = async () => {
+    try {
+      const response = await fetch('/api/states');
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch states');
+      }
+      const data = await response.json();
+      setAllStates(data);
+    } catch (err) {
+      showError(err.message);
+    }
+  };
+
+  const handleAddPrabhari = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    clearMessages();
 
     try {
-      // Simulate API call
-      const newPrabhariData = {
-        id: Date.now(), // Use timestamp for a unique mock ID
-        ...newPrabhari,
-      };
+      const response = await fetch('/api/prabharis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newPrabhari.name,
+          email: newPrabhari.email,
+          phone: newPrabhari.phone,
+          level: 'STATE',
+          unitId: newPrabhari.stateId,
+        }),
+      });
 
+      const newPrabhariData = await response.json();
+      if (!response.ok) {
+        throw new Error(newPrabhariData.error || 'Failed to add state prabhari');
+      }
+
+      // Add the returned data (which includes stateName) to the list
       setStatePrabharis([...statePrabharis, newPrabhariData]);
-      setSuccessMsg("State Prabhari added successfully! ✓");
-      setNewPrabhari({ state: "", name: "", email: "", phone: "" });
+      showSuccess("State Prabhari added successfully! ✓");
+      setNewPrabhari({ stateId: "", name: "", email: "", phone: "" });
       setShowPrabhariForm(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to add state prabhari");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdatePrabhari = (e) => {
+  const handleUpdatePrabhari = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    clearMessages();
 
     try {
-      // Simulate API call
+      const response = await fetch(`/api/prabharis/${editingPrabhari.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editingPrabhari.name,
+          email: editingPrabhari.email,
+          phone: editingPrabhari.phone,
+          stateId: editingPrabhari.stateId,
+        }),
+      });
+
+      const updatedPrabhariData = await response.json();
+      if (!response.ok) {
+        throw new Error(updatedPrabhariData.error || 'Failed to update state prabhari');
+      }
+      
+      // The API now returns the updated object with stateName already populated.
       const updatedPrabharis = statePrabharis.map((p) =>
-        p.id === editingPrabhari.id ? editingPrabhari : p
+        p.id === editingPrabhari.id ? updatedPrabhariData : p
       );
       setStatePrabharis(updatedPrabharis);
-      setSuccessMsg("State Prabhari updated successfully! ✓");
+      showSuccess("State Prabhari updated successfully! ✓");
       setEditingPrabhari(null);
       setShowPrabhariForm(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to update state prabhari");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeletePrabhari = (id) => {
-    if (!confirm("Are you sure you want to delete this state prabhari?")) return;
+  const handleDeletePrabhari = async (id) => {
+    if (!showConfirmation("Are you sure you want to delete this state prabhari?")) return;
 
     setLoading(true);
+    clearMessages();
     try {
-      // Simulate API call
+      const response = await fetch(`/api/prabharis/${id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete state prabhari');
+      }
+
       setStatePrabharis(statePrabharis.filter((p) => p.id !== id));
-      setSuccessMsg("State Prabhari deleted successfully");
-      setTimeout(() => setSuccessMsg(""), 3000);
+      showSuccess("State Prabhari deleted successfully");
     } catch (err) {
-      setError("Failed to delete state prabhari");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
@@ -223,18 +216,20 @@ const StatePrabhariManagement = () => {
 
   // Gets states that do NOT already have a prabhari assigned
   const getAvailableStates = () => {
-    const allStates = Object.keys(STATE_DISTRICTS);
-    const assignedStates = new Set(statePrabharis.map((p) => p.state));
+    // We filter based on stateId being present in the prabharis list
+    const assignedStateIds = new Set(statePrabharis.map((p) => p.stateId));
     
     // If editing, allow the prabhari's current state to be in the list
     if (editingPrabhari) {
-      assignedStates.delete(editingPrabhari.state);
+      assignedStateIds.delete(editingPrabhari.stateId);
     }
     
-    return allStates.filter((state) => !assignedStates.has(state));
+    // Filter all states that are NOT in the assigned list
+    return allStates.filter((state) => !assignedStateIds.has(state.id));
   };
 
   const openEditForm = (prabhari) => {
+    // Note: The incoming prabhari object already has stateId, so we use it directly.
     setEditingPrabhari(prabhari);
     setShowPrabhariForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -242,7 +237,7 @@ const StatePrabhariManagement = () => {
 
   const openAddForm = () => {
     setEditingPrabhari(null);
-    setNewPrabhari({ state: "", name: "", email: "", phone: "" });
+    setNewPrabhari({ stateId: "", name: "", email: "", phone: "" });
     setShowPrabhariForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -262,29 +257,30 @@ const StatePrabhariManagement = () => {
     }
   };
   
-  // Helper function to get Sambhags and their Prabharis for the modal
-  const getSambhagDetailsForState = (state) => {
-    // 1. Find all sambhags in this state
-    const sambhagsInState = MOCK_SAMBHAGS.filter(s => s.state === state);
-    
-    // 2. For each sambhag, find its prabhari
-    return sambhagsInState.map(sambhag => {
-      const prabhari = MOCK_SAMBHAG_PRABHARIS.find(p => p.sambhagId === sambhag.id);
-      return {
-        sambhagName: sambhag.name,
-        prabhari: prabhari // This will be the prabhari object or undefined
-      };
-    });
+  // --- Modal Logic ---
+  const openModal = async (prabhari) => {
+    setSelectedPrabhari(prabhari);
+    setIsModalLoading(true);
+    setModalDetails([]);
+    try {
+      // API call to get all Sambhags and their Prabharis for this State
+      const response = await fetch(`/api/sambhags/?stateId=${prabhari.stateId}`);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch sambhag details');
+      }
+      const data = await response.json();
+      setModalDetails(data);
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setIsModalLoading(false);
+    }
   };
   
   const formData = editingPrabhari || newPrabhari;
   const availableStatesForDropdown = getAvailableStates();
   
-  // Data for the modal
-  const sambhagDetails = selectedPrabhari 
-    ? getSambhagDetailsForState(selectedPrabhari.state) 
-    : [];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -353,8 +349,8 @@ const StatePrabhariManagement = () => {
                       State *
                     </label>
                     <select
-                      name="state"
-                      value={formData.state}
+                      name="stateId" // Correct name
+                      value={formData.stateId}
                       onChange={handleFormChange}
                       required
                       className="w-full border-2 border-blue-200 focus:border-blue-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
@@ -362,14 +358,14 @@ const StatePrabhariManagement = () => {
                       <option value="">Select State</option>
                       {/* If editing, show their current state first */}
                       {editingPrabhari && (
-                        <option value={editingPrabhari.state}>
-                          {editingPrabhari.state}
+                        <option value={editingPrabhari.stateId}>
+                          {editingPrabhari.stateName}
                         </option>
                       )}
                       {/* Show all other available states */}
                       {availableStatesForDropdown.map((state) => (
-                        <option key={state} value={state}>
-                          {state}
+                        <option key={state.id} value={state.id}>
+                          {state.name}
                         </option>
                       ))}
                     </select>
@@ -448,9 +444,9 @@ const StatePrabhariManagement = () => {
                 className="bg-transparent outline-none w-full text-gray-700"
               >
                 <option value="">Search by State (All States)</option>
-                {Object.keys(STATE_DISTRICTS).map((state) => (
-                  <option key={state} value={state}>
-                    {state}
+                {allStates.map((state) => (
+                  <option key={state.id} value={state.name}>
+                    {state.name}
                   </option>
                 ))}
               </select>
@@ -506,7 +502,7 @@ const StatePrabhariManagement = () => {
                   {filteredPrabharis.map((p, idx) => (
                     <tr
                       key={p.id}
-                      onClick={() => setSelectedPrabhari(p)} // Added onClick
+                      onClick={() => openModal(p)}
                       className={`border-t-2 border-gray-100 hover:bg-blue-100 transition-all cursor-pointer ${
                         idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                       }`}
@@ -514,7 +510,7 @@ const StatePrabhariManagement = () => {
                       <td className="p-5">
                         <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold text-sm">
                           <MapPin size={16} />
-                          {p.state}
+                          {p.stateName}
                         </span>
                       </td>
                       <td className="p-5 font-semibold text-gray-800">
@@ -557,7 +553,7 @@ const StatePrabhariManagement = () => {
         </div>
       </div>
       
-      {/* --- NEW: Prabhari Details Modal --- */}
+      {/* --- Modal with Real Data --- */}
       {selectedPrabhari && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
@@ -602,7 +598,7 @@ const StatePrabhariManagement = () => {
                 <MapPin size={20} className="text-blue-500 shrink-0 mt-1" />
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">State</p>
-                  <p className="text-gray-800 font-medium">{selectedPrabhari.state}</p>
+                  <p className="text-gray-800 font-medium">{selectedPrabhari.stateName}</p>
                 </div>
               </div>
 
@@ -611,39 +607,46 @@ const StatePrabhariManagement = () => {
                 <Building size={20} className="text-blue-500 shrink-0 mt-1" />
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
-                    Sambhags in {selectedPrabhari.state}
+                    Sambhags in {selectedPrabhari.stateName}
                   </p>
-                  <div className="space-y-3">
-                    {sambhagDetails.length > 0 ? (
-                      sambhagDetails.map((item, index) => (
-                        <div key={index} className="p-3 bg-white border-2 border-blue-100 rounded-lg">
-                          <h4 className="font-bold text-gray-800">{item.sambhagName}</h4>
-                          {item.prabhari ? (
-                            <div className="mt-2 text-sm text-gray-600 space-y-1">
-                              <p className="flex items-center gap-2">
-                                <User size={14} className="text-gray-500" />
-                                <strong>{item.prabhari.name}</strong>
+                  {isModalLoading ? (
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <Loader2 size={16} className="animate-spin" />
+                      <span>Loading sambhag details...</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {modalDetails.length > 0 ? (
+                        modalDetails.map((sambhag) => (
+                          <div key={sambhag.id} className="p-3 bg-white border-2 border-blue-100 rounded-lg">
+                            <h4 className="font-bold text-gray-800">{sambhag.name}</h4>
+                            {sambhag.prabhari ? (
+                              <div className="mt-2 text-sm text-gray-600 space-y-1">
+                                <p className="flex items-center gap-2">
+                                  <User size={14} className="text-gray-500" />
+                                  <strong>{sambhag.prabhari.name}</strong>
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <Mail size={14} className="text-gray-500" />
+                                  {sambhag.prabhari.email || "N/A"}
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <Phone size={14} className="text-gray-500" />
+                                  {sambhag.prabhari.phone}
+                                </p>
+                              </div>
+                            ) : (
+                              <p className="text-sm text-gray-500 mt-1">
+                                No Sambhag Prabhari assigned.
                               </p>
-                              <p className="flex items-center gap-2">
-                                <Mail size={14} className="text-gray-500" />
-                                {item.prabhari.email || "N/A"}
-                              </p>
-                              <p className="flex items-center gap-2">
-                                <Phone size={14} className="text-gray-500" />
-                                {item.prabhari.phone}
-                              </p>
-                            </div>
-                          ) : (
-                            <p className="text-sm text-gray-500 mt-1">
-                              No Sambhag Prabhari assigned.
-                            </p>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-600">No sambhags listed for this state.</p>
-                    )}
-                  </div>
+                            )}
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-gray-600">No sambhags listed for this state.</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -653,5 +656,3 @@ const StatePrabhariManagement = () => {
     </div>
   );
 };
-
-export default StatePrabhariManagement;

@@ -53,40 +53,6 @@ model Submission {
   @@map("submissions")
 }
 
-model Pravari {
-  id        Int      @id @default(autoincrement())
-  name      String
-  phone     String?
-  role      String
-  village   String
-  address   String   @db.Text
-  email     String?
-  state     String
-  district  String
-  experience String? @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([state, district])
-  @@index([village])
-  @@index([email])
-  @@index([phone])
-  @@map("pravari")
-}
-
-model Sevak {
-  id        Int      @id @default(autoincrement())
-  name      String
-  phone     String
-  email     String?
-  state     String
-  description String?
-  district  String
-  village   String?
-  category  String   // Zone Prabhari, Rajya Prabhari, Sambhag Prabhari
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
 model Registration {
   id            Int      @id @default(autoincrement())
   name          String
@@ -104,4 +70,141 @@ model Registration {
   @@index([state])
   @@index([district])
   @@map("registrations")
+}
+
+
+
+
+
+
+
+
+// Enum to define what level the Prabhari is at
+enum PrabhariLevel {
+  ZONE
+  STATE
+  SAMBHAG
+  DISTRICT
+  TEHSIL
+}
+
+// ---------------------------------------------
+// ADMINISTRATIVE UNITS
+// ---------------------------------------------
+
+model Zone {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  states State[] // A Zone has many States
+
+  // --- ONE-TO-ONE Relationship ---
+  // A Zone can have only ONE Prabhari.
+  prabhari Prabhari?
+}
+
+model State {
+  id       String  @id @default(cuid())
+  name     String  @unique // State names should be unique
+
+  // --- (MODIFIED) ---
+  // A State can optionally belong to one Zone.
+  // User will assign this in the "Zone Management" UI.
+  zoneId   String?
+  zone     Zone?     @relation(fields: [zoneId], references: [id], onDelete: SetNull)
+  
+  sambhags Sambhag[] // One State has many Sambhags.
+  districts District[] // One State has many Districts.
+
+  // --- ONE-TO-ONE Relationship ---
+  // A State can have only ONE Prabhari.
+  prabhari Prabhari?
+}
+
+model Sambhag {
+  id        String   @id @default(cuid())
+  name      String
+  
+  // A Sambhag must belong to one State.
+  stateId   String
+  state     State    @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  
+  // --- (MODIFIED) ---
+  // A Sambhag can contain many Districts.
+  districts District[] 
+
+  // --- ONE-TO-ONE Relationship ---
+  // A Sambhag can have only ONE Prabhari.
+  prabhari Prabhari?
+
+  @@unique([name, stateId])
+}
+
+model District {
+  id        String   @id @default(cuid())
+  name      String
+  
+  // --- (NEW) ---
+  // A District must belong to one State.
+  // This is pre-seeded.
+  stateId   String
+  state     State    @relation(fields: [stateId], references: [id], onDelete: Cascade)
+
+  // --- (MODIFIED) ---
+  // A District can optionally belong to one Sambhag.
+  // User will assign this in the "Sambhag Management" UI.
+  sambhagId String?
+  sambhag   Sambhag? @relation(fields: [sambhagId], references: [id], onDelete: SetNull)
+
+  // --- ONE-TO-MANY Relationship ---
+  tehsils   Tehsil[]
+  prabharis Prabhari[]
+
+  @@unique([name, stateId]) // District name must be unique within its state
+}
+
+model Tehsil {
+  id         String   @id @default(cuid())
+  name       String
+  
+  // A Tehsil must belong to one District.
+  // This is user-created.
+  districtId String
+  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
+
+  // --- ONE-TO-MANY Relationship ---
+  prabharis  Prabhari[]
+
+  @@unique([name, districtId]) // Tehsil name must be unique within its district
+}
+
+// ---------------------------------------------
+// UNIFIED PRABHARI MODEL (No changes needed)
+// ---------------------------------------------
+model Prabhari {
+  id    String @id @default(cuid())
+  name  String
+  phone String @unique 
+  email String?
+
+  level PrabhariLevel
+
+  // --- ONE-TO-ONE Relationships ---
+  zoneId String? @unique 
+  zone   Zone?   @relation(fields: [zoneId], references: [id], onDelete: SetNull)
+
+  stateId String? @unique 
+  state   State?  @relation(fields: [stateId], references: [id], onDelete: SetNull)
+
+  sambhagId String? @unique
+  sambhag   Sambhag? @relation(fields: [sambhagId], references: [id], onDelete: SetNull)
+
+  // --- ONE-TO-MANY Relationships ---
+  districtId String?
+  district   District? @relation(fields: [districtId], references: [id], onDelete: SetNull)
+
+  tehsilId String?
+  tehsil   Tehsil?   @relation(fields: [tehsilId], references: [id], onDelete: SetNull)
+
+  @@index([districtId])
+  @@index([tehsilId])
 }

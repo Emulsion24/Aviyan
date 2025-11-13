@@ -17,79 +17,12 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const STATE_DISTRICTS = {
-  "Andhra Pradesh": ["Anantapuramu", "Chittoor", "East Godavari", "Guntur"],
-  "Arunachal Pradesh": ["Anjaw", "Capital Complex ( Itanagar )", "Changlang"],
-  Assam: ["Bajali", "Baksa", "Barpeta", "Biswanath"],
-  Bihar: ["Araria", "Arwal", "Aurangabad", "Banka"],
-  Chhattisgarh: ["Balod", "Baloda Bazar", "Balrampur", "Bastar"],
-  Goa: ["North Goa", "South Goa"],
-  Gujarat: ["Ahmedabad", "Amreli", "Anand", "Aravalli"],
-  Haryana: ["Ambala", "Charkhi Dadri", "Fatehabad", "Gurugram"],
-  "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamipur", "Kangra"],
-  Jharkhand: ["Bokaro", "Chatra", "Deoghar", "Dhanbad"],
-  Karnataka: ["Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Hubli-Dharwad"],
-  Kerala: ["Alappuzha", "Ernakulam", "Idukki", "Kannur"],
-  "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar"],
-  Maharashtra: ["Ahmednagar", "Akola", "Amravati", "Aurangabad"],
-  Manipur: ["Bishnupur", "Chandel", "Churachandpur", "Imphal East"],
-  Meghalaya: ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills"],
-  Mizoram: ["Aizawl", "Champhai", "Hnahthial", "Khawzawl"],
-  Nagaland: ["Chümoukedima", "Dimapur", "Kiphire", "Kohima"],
-  Odisha: ["Angul", "Balangir", "Balasore", "Bargarh"],
-  Punjab: ["Amritsar", "Barnala", "Bathinda", "Faridkot"],
-  Rajasthan: ["Ajmer", "Alwar", "Banswara", "Baran"],
-  Sikkim: ["Gangtok", "Mangan (North Sikkim)", "Namchi (South Sikkim)"],
-  "Tamil Nadu": ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore"],
-  Telangana: ["Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad"],
-  Tripura: ["Dhalai", "Gomati", "Khowai", "North Tripura"],
-  Uttarakhand: ["Almora", "Bageshwar", "Chamoli", "Champawat"],
-  "Uttar Pradesh": ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi"],
-  "West Bengal": ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar"],
-  "Delhi (National Capital Territory)": [
-    "Central Delhi",
-    "East Delhi",
-    "New Delhi",
-  ],
-  "Jammu and Kashmir": ["Anantnag", "Bandipora", "Baramulla", "Budgam"],
+// Helper function to show alerts
+const showConfirmation = (message) => {
+  return window.confirm(message);
 };
 
-// New Mock Data: Tehsils within Districts
-const DISTRICT_TEHSILS = {
-  Ambala: ["Ambala Cantt.", "Barara", "Mullana", "Saha"],
-  Gurugram: ["Gurugram", "Manesar", "Pataudi", "Sohna"],
-  Mysuru: ["Hunsur", "Krishnarajanagara", "Mysuru", "Nanjangud"],
-  "Bengaluru Urban": ["Anekal", "Bengaluru East", "Bengaluru North", "Bengaluru South"],
-  Agra: ["Agra", "Bah", "Etmadpur", "Kheragarh"],
-  Aligarh: ["Aligarh", "Atrauli", "Gabhana", "Khair"],
-  Amritsar: ["Ajnala", "Amritsar-I", "Amritsar-II", "Baba Bakala"],
-  Faridkot: ["Faridkot", "Jaitu", "Kotkapura"],
-};
-
-// New Mock Data: Tehsil Prabharis
-const mockTehsilPrabharis = {
-  "Ambala Cantt.": { name: "Ravi Verma", phone: "111-222-333", email: "ravi@t.com" },
-  Barara: { name: "Sunita Jain", phone: "222-333-444", email: "sunita@t.com" },
-  Gurugram: { name: "Anil Kapoor", phone: "333-444-555", email: "anil@t.com" },
-  Manesar: { name: "Pooja Hegde", phone: "444-555-666", email: "pooja@t.com" },
-  Mysuru: { name: "Kiran Kumar", phone: "555-666-777", email: "" },
-  "Bengaluru East": { name: "Deepa S.", phone: "666-777-888", email: "deepa@t.com" },
-  Agra: { name: "Mohit Singh", phone: "777-888-999", email: "mohit@t.com" },
-  Khair: { name: "Zoya Ali", phone: "888-999-000", email: "zoya@t.com" },
-  Faridkot: { name: "Balwinder Singh", phone: "999-000-111", email: "balwinder@t.com" },
-};
-
-// Main Mock Data: District Prabharis
-const MOCK_DISTRICT_PRABHARIS = [
-  { id: 1, state: "Haryana", district: "Ambala", name: "Ramesh Kumar", email: "ramesh@d.com", phone: "1234567890" },
-  { id: 2, state: "Haryana", district: "Gurugram", name: "Sita Sharma", email: "", phone: "0987654321" },
-  { id: 3, state: "Karnataka", district: "Mysuru", name: "Ganesh Patil", email: "ganesh@d.com", phone: "1122334455" },
-  { id: 4, state: "Uttar Pradesh", district: "Agra", name: "Aisha Khan", email: "aisha@d.com", phone: "2233445566" },
-  { id: 5, state: "Punjab", district: "Faridkot", name: "Jaspreet Kaur", email: "", phone: "3344556677" },
-];
-
-
-const DistrictPrabhariManagement = () => {
+export default function DistrictPrabhariManagement() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -99,59 +32,98 @@ const DistrictPrabhariManagement = () => {
   const [showPrabhariForm, setShowPrabhariForm] = useState(false);
   const [editingPrabhari, setEditingPrabhari] = useState(null);
   const [newPrabhari, setNewPrabhari] = useState({
-    state: "",
-    district: "",
+    stateId: "", // Changed from 'state'
+    districtId: "", // Changed from 'district'
     name: "",
     email: "",
     phone: "",
   });
 
   // State for form dropdowns
-  const [selectedState, setSelectedState] = useState("");
+  const [allStates, setAllStates] = useState([]); // Will hold states from API
   const [availableDistricts, setAvailableDistricts] = useState([]);
+  const [isDistrictLoading, setIsDistrictLoading] = useState(false);
   
   // Modal State
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
+  const [modalDetails, setModalDetails] = useState(null); // Will hold tehsil data
+  const [isModalLoading, setIsModalLoading] = useState(false);
   
   useEffect(() => {
     fetchDistrictPrabharis();
+    fetchAllStates(); // Fetch all states on load
   }, []);
 
-  // Effect to update available districts when selectedState changes
+  // Effect to update available districts when stateId changes
+  const formStateId = editingPrabhari ? editingPrabhari.stateId : newPrabhari.stateId;
   useEffect(() => {
-    if (selectedState === "") {
+    if (formStateId) {
+      fetchDistrictsForState(formStateId);
+    } else {
       setAvailableDistricts([]);
-      return;
     }
-    
-    // Get all districts for the selected state
-    const allDistrictsInState = STATE_DISTRICTS[selectedState] || [];
-    
-    // Get districts that are already assigned
-    const assignedDistricts = new Set(
-      districtPrabharis
-        .filter(p => p.state === selectedState)
-        .map(p => p.district)
-    );
-    
-    // If editing, allow the prabhari's current district to be in the list
-    if (editingPrabhari && editingPrabhari.state === selectedState) {
-      assignedDistricts.delete(editingPrabhari.district);
-    }
-    
-    // Filter out assigned districts
-    setAvailableDistricts(allDistrictsInState.filter(d => !assignedDistricts.has(d)));
+  }, [formStateId]); // Correct dependency
 
-  }, [selectedState, districtPrabharis, editingPrabhari]);
+  // --- Helper Functions ---
+  const clearMessages = () => {
+    setError("");
+    setSuccessMsg("");
+  };
 
+  const showSuccess = (message) => {
+    clearMessages();
+    setSuccessMsg(message);
+    setTimeout(() => setSuccessMsg(""), 3000);
+  };
 
-  const fetchDistrictPrabharis = () => {
-    setLoading(true);
+  const showError = (message) => {
+    clearMessages();
+    setError(message);
+  };
+
+  // --- API Functions ---
+
+  const fetchAllStates = async () => {
     try {
-      // Simulate API call
-      setDistrictPrabharis(MOCK_DISTRICT_PRABHARIS);
+      const response = await fetch('/api/states');
+      if (!response.ok) throw new Error('Failed to fetch states');
+      const data = await response.json();
+      setAllStates(data);
     } catch (err) {
-      setError("Failed to fetch district prabharis");
+      showError(err.message);
+    }
+  };
+
+  const fetchDistrictsForState = async (stateId) => {
+    setIsDistrictLoading(true);
+    try {
+      const response = await fetch(`/api/districts?stateId=${stateId}`);
+      if (!response.ok) throw new Error('Failed to fetch districts');
+      const data = await response.json();
+      setAvailableDistricts(data);
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setIsDistrictLoading(false);
+    }
+  };
+
+  const fetchDistrictPrabharis = async () => {
+    setLoading(true);
+    clearMessages();
+    try {
+      // Fetching from the new paginated API
+      const response = await fetch('/api/prabharis?level=DISTRICT&page=1&limit=500'); // Fetch all for now
+      if (!response.ok) {
+         const data = await response.json();
+         throw new Error(data.error || 'Failed to fetch district prabharis');
+      }
+      const data = await response.json();
+      // ** THIS IS THE FIX **
+      // The API now returns { data: [...], pagination: {...} }
+      setDistrictPrabharis(data.data); 
+    } catch (err) {
+      showError(err.message);
     } finally {
       setLoading(false);
     }
@@ -166,79 +138,113 @@ const DistrictPrabhariManagement = () => {
     let updatedData = { ...currentData, [name]: value };
 
     // If state is changed, reset district
-    if (name === "state") {
-      setSelectedState(value);
-      updatedData.district = ""; // Reset district
+    if (name === "stateId") {
+      updatedData.districtId = ""; // Reset district
     }
 
     setData(updatedData);
   };
   
-  const handleAddPrabhari = (e) => {
+  const handleAddPrabhari = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    clearMessages();
 
     try {
-      // Simulate API call
-      const newPrabhariData = {
-        id: Date.now(),
-        ...newPrabhari,
-      };
+      const response = await fetch('/api/prabharis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...newPrabhari,
+          level: 'DISTRICT',
+          unitId: newPrabhari.districtId, // Pass districtId as unitId
+        }),
+      });
 
+      const newPrabhariData = await response.json();
+      if (!response.ok) {
+        throw new Error(newPrabhariData.error || 'Failed to add prabhari');
+      }
+
+      // Add new prabhari to the list (works because POST returns the flattened data)
       setDistrictPrabharis([...districtPrabharis, newPrabhariData]);
-      setSuccessMsg("District Prabhari added successfully! ✓");
+      showSuccess("District Prabhari added successfully! ✓");
       closeForm();
-      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to add district prabhari");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdatePrabhari = (e) => {
+  const handleUpdatePrabhari = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccessMsg("");
+    clearMessages();
 
     try {
-      // Simulate API call
+      const response = await fetch(`/api/prabharis/${editingPrabhari.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editingPrabhari.name,
+          email: editingPrabhari.email,
+          phone: editingPrabhari.phone,
+          districtId: editingPrabhari.districtId, // Send the districtId
+        }),
+      });
+
+      const updatedPrabhariData = await response.json();
+      if (!response.ok) {
+        throw new Error(updatedPrabhariData.error || 'Failed to update prabhari');
+      }
+
+      // Replace the old prabhari with the new data from the API
       const updatedPrabharis = districtPrabharis.map((p) =>
-        p.id === editingPrabhari.id ? editingPrabhari : p
+        p.id === editingPrabhari.id ? updatedPrabhariData : p
       );
       setDistrictPrabharis(updatedPrabharis);
-      setSuccessMsg("District Prabhari updated successfully! ✓");
+      showSuccess("District Prabhari updated successfully! ✓");
       closeForm();
-      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError("Failed to update district prabhari");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeletePrabhari = (id) => {
-    if (!confirm("Are you sure you want to delete this district prabhari?")) return;
+  const handleDeletePrabhari = async (id) => {
+    if (!showConfirmation("Are you sure you want to delete this district prabhari?")) return;
 
     setLoading(true);
+    clearMessages();
     try {
-      // Simulate API call
+      const response = await fetch(`/api/prabharis/${id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete prabhari');
+      }
+
       setDistrictPrabharis(districtPrabharis.filter((p) => p.id !== id));
-      setSuccessMsg("District Prabhari deleted successfully");
-      setTimeout(() => setSuccessMsg(""), 3000);
+      showSuccess("District Prabhari deleted successfully");
     } catch (err) {
-      setError("Failed to delete district prabhari");
+      showError(err.message);
     } finally {
       setLoading(false);
     }
   };
   
   const openEditForm = (prabhari) => {
-    setEditingPrabhari(prabhari);
-    setSelectedState(prabhari.state); // Set selected state to populate district dropdown
+    // Find the stateId from the stateName
+    const state = allStates.find(s => s.name === prabhari.stateName);
+    
+    setEditingPrabhari({
+      ...prabhari,
+      stateId: state ? state.id : "", // Set the stateId for the form
+    });
     setShowPrabhariForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -246,18 +252,40 @@ const DistrictPrabhariManagement = () => {
   const closeForm = () => {
     setEditingPrabhari(null);
     setShowPrabhariForm(false);
-    setSelectedState("");
-    setNewPrabhari({ state: "", district: "", name: "", email: "", phone: "" });
+    setNewPrabhari({ stateId: "", districtId: "", name: "", email: "", phone: "" });
     setError("");
   };
 
   const openAddForm = () => {
     setEditingPrabhari(null);
-    setSelectedState("");
-    setNewPrabhari({ state: "", district: "", name: "", email: "", phone: "" });
+    setNewPrabhari({ stateId: "", districtId: "", name: "", email: "", phone: "" });
     setShowPrabhariForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+  
+  const openModal = async (prabhari) => {
+    setSelectedPrabhari(prabhari);
+    setIsModalLoading(true);
+    setModalDetails(null); // Clear previous details
+    try {
+      const response = await fetch(`/api/districts/${prabhari.districtId}/details`);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch details');
+      }
+      const data = await response.json();
+      setModalDetails(data);
+    } catch (err) {
+      showError(`Modal Error: ${err.message}`);
+    } finally {
+      setIsModalLoading(false);
+    }
+  };
+
+  const closeModal = () => {
+    setSelectedPrabhari(null);
+    setModalDetails(null);
+  }
   
   const formData = editingPrabhari || newPrabhari;
 
@@ -329,16 +357,16 @@ const DistrictPrabhariManagement = () => {
                       State *
                     </label>
                     <select
-                      name="state"
-                      value={formData.state}
+                      name="stateId" // Changed
+                      value={formData.stateId} // Changed
                       onChange={handleFormChange}
                       required
                       className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     >
                       <option value="">Select State</option>
-                      {Object.keys(STATE_DISTRICTS).map((state) => (
-                        <option key={state} value={state}>
-                          {state}
+                      {allStates.map((state) => ( // Changed
+                        <option key={state.id} value={state.id}>
+                          {state.name}
                         </option>
                       ))}
                     </select>
@@ -348,29 +376,23 @@ const DistrictPrabhariManagement = () => {
                       District *
                     </label>
                     <select
-                      name="district"
-                      value={formData.district}
+                      name="districtId" // Changed
+                      value={formData.districtId} // Changed
                       onChange={handleFormChange}
                       required
-                      disabled={!selectedState} // Disabled until a state is selected
+                      disabled={!formStateId || isDistrictLoading} // Changed
                       className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white disabled:bg-gray-100"
                     >
-                      <option value="">Select District</option>
-                      {/* If editing, show their current district first */}
-                      {editingPrabhari && editingPrabhari.state === selectedState && (
-                        <option value={editingPrabhari.district}>
-                          {editingPrabhari.district}
-                        </option>
-                      )}
+                      <option value="">
+                        {isDistrictLoading ? "Loading districts..." : "Select District"}
+                      </option>
                       {availableDistricts.map((district) => (
-                        <option key={district} value={district}>
-                          {district}
+                        <option key={district.id} value={district.id}>
+                          {district.name}
                         </option>
                       ))}
                     </select>
-                     {selectedState && availableDistricts.length === 0 && (!editingPrabhari || editingPrabhari.state !== selectedState) && (
-                      <p className="text-xs text-red-600 mt-1">All districts in this state are already assigned.</p>
-                    )}
+                     {/* Removed the "All districts assigned" logic, as multiple prabharis per district is allowed */}
                   </div>
                 </div>
                 <div className="grid md:grid-cols-3 gap-4 mb-4">
@@ -419,7 +441,7 @@ const DistrictPrabhariManagement = () => {
                 <div className="flex gap-3 justify-end">
                   <button
                     type="submit"
-                    disabled={loading || (availableDistricts.length === 0 && !editingPrabhari)}
+                    disabled={loading || isDistrictLoading}
                     className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
@@ -480,16 +502,16 @@ const DistrictPrabhariManagement = () => {
                   {districtPrabharis.map((p, idx) => (
                     <tr
                       key={p.id}
-                      onClick={() => setSelectedPrabhari(p)}
+                      onClick={() => openModal(p)}
                       className={`border-t-2 border-gray-100 hover:bg-purple-50 transition-all cursor-pointer ${
                         idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                       }`}
                     >
-                      <td className="p-5 font-semibold text-gray-800">{p.state}</td>
+                      <td className="p-5 font-semibold text-gray-800">{p.stateName}</td>
                       <td className="p-5">
                         <span className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-semibold text-sm">
                           <MapPin size={16} />
-                          {p.district}
+                          {p.districtName}
                         </span>
                       </td>
                       <td className="p-5 font-semibold text-gray-800">
@@ -536,14 +558,14 @@ const DistrictPrabhariManagement = () => {
       {selectedPrabhari && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
-          onClick={() => setSelectedPrabhari(null)}
+          onClick={closeModal}
         >
           <div
             className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 m-4 relative animate-slideDown max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              onClick={() => setSelectedPrabhari(null)}
+              onClick={closeModal}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2 transition-all"
             >
               <X size={24} />
@@ -577,8 +599,8 @@ const DistrictPrabhariManagement = () => {
                 <MapPin size={20} className="text-purple-500 shrink-0 mt-1" />
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">Location</p>
-                  <p className="text-gray-800 font-medium">{selectedPrabhari.district}</p>
-                  <p className="text-gray-600 text-sm">{selectedPrabhari.state}</p>
+                  <p className="text-gray-800 font-medium">{selectedPrabhari.districtName}</p>
+                  <p className="text-gray-600 text-sm">{selectedPrabhari.stateName}</p>
                 </div>
               </div>
 
@@ -589,40 +611,47 @@ const DistrictPrabhariManagement = () => {
                   <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
                     Tehsils & Tehsil Prabharis
                   </p>
-                  <div className="space-y-3">
-                    {(DISTRICT_TEHSILS[selectedPrabhari.district] || []).length > 0 ? (
-                      DISTRICT_TEHSILS[selectedPrabhari.district].map((tehsil) => {
-                        const tehsilPrabhari = mockTehsilPrabharis[tehsil];
-                        return (
-                          <div key={tehsil} className="p-3 bg-white border-2 border-purple-100 rounded-lg">
-                            <h4 className="font-bold text-gray-800">{tehsil}</h4>
-                            {tehsilPrabhari ? (
-                              <div className="mt-2 text-sm text-gray-600 space-y-1">
-                                <p className="flex items-center gap-2">
-                                  <User size={14} className="text-gray-500" />
-                                  <strong>{tehsilPrabhari.name}</strong>
-                                </p>
-                                <p className="flex items-center gap-2">
-                                  <Mail size={14} className="text-gray-500" />
-                                  {tehsilPrabhari.email || "N/A"}
-                                </p>
-                                <p className="flex items-center gap-2">
-                                  <Phone size={14} className="text-gray-500" />
-                                  {tehsilPrabhari.phone}
-                                </p>
-                              </div>
+                  {isModalLoading ? (
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <Loader2 size={16} className="animate-spin" />
+                      <span>Loading tehsil data...</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {modalDetails && modalDetails.tehsils.length > 0 ? (
+                        modalDetails.tehsils.map((tehsil) => (
+                          <div key={tehsil.id} className="p-3 bg-white border-2 border-purple-100 rounded-lg">
+                            <h4 className="font-bold text-gray-800">{tehsil.name}</h4>
+                            
+                            {tehsil.prabharis.length > 0 ? (
+                              tehsil.prabharis.map(prabhari => (
+                                <div key={prabhari.id} className="mt-2 text-sm text-gray-600 space-y-1 border-t pt-2">
+                                  <p className="flex items-center gap-2">
+                                    <User size={14} className="text-gray-500" />
+                                    <strong>{prabhari.name}</strong>
+                                  </p>
+                                  <p className="flex items-center gap-2">
+                                    <Mail size={14} className="text-gray-500" />
+                                    {prabhari.email || "N/A"}
+                                  </p>
+                                  <p className="flex items-center gap-2">
+                                    <Phone size={14} className="text-gray-500" />
+                                    {prabhari.phone}
+                                  </p>
+                                </div>
+                              ))
                             ) : (
                               <p className="text-sm text-gray-500 mt-1">
                                 No Tehsil Prabhari assigned.
                               </p>
                             )}
                           </div>
-                        );
-                      })
-                    ) : (
-                      <p className="text-gray-600">No tehsils listed for this district.</p>
-                    )}
-                  </div>
+                        ))
+                      ) : (
+                        <p className="text-gray-600">No tehsils listed for this district.</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -632,5 +661,3 @@ const DistrictPrabhariManagement = () => {
     </div>
   );
 };
-
-export default DistrictPrabhariManagement;
