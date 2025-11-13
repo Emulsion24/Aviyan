@@ -664,7 +664,7 @@ const PravariSearchUI = () => {
 
   return (
     <div
-      id="pravari-search-ui"
+      id="pravari"
       className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-inter min-h-screen"
     >
       <div className="max-w-7xl mx-auto">
