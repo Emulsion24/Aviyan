@@ -14,55 +14,84 @@ import {
   User,
   Map,
   Search,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
+// --- Configuration ---
+const ITEMS_PER_PAGE = 10; // Define items per page
+
 // Helper function to show alerts
 const showConfirmation = (message) => {
-  return window.confirm(message);
+  return typeof window !== 'undefined' && window.confirm(message);
 };
 
 export default function DistrictPrabhariManagement() {
+  // --- Loading/Message States ---
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  // District Prabharis State
+  // --- District Prabharis State ---
   const [districtPrabharis, setDistrictPrabharis] = useState([]);
   const [showPrabhariForm, setShowPrabhariForm] = useState(false);
   const [editingPrabhari, setEditingPrabhari] = useState(null);
   const [newPrabhari, setNewPrabhari] = useState({
-    stateId: "", // Changed from 'state'
-    districtId: "", // Changed from 'district'
+    stateId: "",
+    districtId: "",
     name: "",
     email: "",
     phone: "",
   });
 
-  // State for form dropdowns
-  const [allStates, setAllStates] = useState([]); // Will hold states from API
+  // --- Filter, Search, and Pagination States ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [filterStateId, setFilterStateId] = useState("");
+  const [filterDistrictId, setFilterDistrictId] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // For general search
+
+  // --- Form Dropdown States ---
+  const [allStates, setAllStates] = useState([]);
   const [availableDistricts, setAvailableDistricts] = useState([]);
   const [isDistrictLoading, setIsDistrictLoading] = useState(false);
   
-  // Modal State
+  // --- Modal State ---
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
-  const [modalDetails, setModalDetails] = useState(null); // Will hold tehsil data
+  const [modalDetails, setModalDetails] = useState(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
   
+  // --- Initial Data Load ---
   useEffect(() => {
-    fetchDistrictPrabharis();
-    fetchAllStates(); // Fetch all states on load
+    fetchAllStates();
   }, []);
+  
+  // --- Data Fetch Effect (Triggers on filter/page change) ---
+  useEffect(() => {
+    // Only fetch prabharis if states are loaded (for filter dropdowns)
+    if (allStates.length > 0 || currentPage === 1) { 
+        fetchDistrictPrabharis(currentPage, filterStateId, filterDistrictId, searchTerm);
+    }
+  }, [currentPage, filterStateId, filterDistrictId, searchTerm, allStates.length]);
 
-  // Effect to update available districts when stateId changes
+  // --- District Dropdown Effect for Form ---
   const formStateId = editingPrabhari ? editingPrabhari.stateId : newPrabhari.stateId;
   useEffect(() => {
     if (formStateId) {
-      fetchDistrictsForState(formStateId);
+      fetchDistrictsForState(formStateId, true); // true for form/modal
     } else {
       setAvailableDistricts([]);
     }
-  }, [formStateId]); // Correct dependency
+  }, [formStateId]);
+
+  // --- District Dropdown Effect for Filter ---
+  useEffect(() => {
+    // If the filter state changes, reset the district filter
+    setFilterDistrictId("");
+  }, [filterStateId]);
+
 
   // --- Helper Functions ---
   const clearMessages = () => {
@@ -94,40 +123,63 @@ export default function DistrictPrabhariManagement() {
     }
   };
 
-  const fetchDistrictsForState = async (stateId) => {
-    setIsDistrictLoading(true);
+  const fetchDistrictsForState = async (stateId, isForm=false) => {
+    if (isForm) {
+      setIsDistrictLoading(true);
+    }
     try {
       const response = await fetch(`/api/districts?stateId=${stateId}`);
       if (!response.ok) throw new Error('Failed to fetch districts');
       const data = await response.json();
-      setAvailableDistricts(data);
+      if (isForm) {
+          setAvailableDistricts(data);
+      }
+      return data; // Return data for filter usage
     } catch (err) {
       showError(err.message);
     } finally {
-      setIsDistrictLoading(false);
+      if (isForm) {
+        setIsDistrictLoading(false);
+      }
     }
+    return [];
   };
 
-  const fetchDistrictPrabharis = async () => {
+  const fetchDistrictPrabharis = async (page, stateId, districtId, search) => {
     setLoading(true);
     clearMessages();
+    
+    // Construct the query string for pagination, filtering, and search
+    let url = `/api/prabharis?level=DISTRICT&page=${page}&limit=${ITEMS_PER_PAGE}`;
+    if (stateId) {
+      url += `&stateId=${stateId}`;
+    }
+    if (districtId) {
+      url += `&districtId=${districtId}`;
+    }
+    if (search) {
+      url += `&search=${search}`; // Assuming your API supports a 'search' query parameter
+    }
+
     try {
-      // Fetching from the new paginated API
-      const response = await fetch('/api/prabharis?level=DISTRICT&page=1&limit=500'); // Fetch all for now
+      const response = await fetch(url);
       if (!response.ok) {
          const data = await response.json();
          throw new Error(data.error || 'Failed to fetch district prabharis');
       }
       const data = await response.json();
-      // ** THIS IS THE FIX **
-      // The API now returns { data: [...], pagination: {...} }
-      setDistrictPrabharis(data.data); 
+      
+      setDistrictPrabharis(data.data);
+      setTotalItems(data.pagination.totalItems);
+      setTotalPages(data.pagination.totalPages);
     } catch (err) {
       showError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  // --- Handler Functions ---
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -137,7 +189,6 @@ export default function DistrictPrabhariManagement() {
     
     let updatedData = { ...currentData, [name]: value };
 
-    // If state is changed, reset district
     if (name === "stateId") {
       updatedData.districtId = ""; // Reset district
     }
@@ -145,6 +196,27 @@ export default function DistrictPrabhariManagement() {
     setData(updatedData);
   };
   
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    
+    setCurrentPage(1); // Reset to page 1 on any filter/search change
+    
+    if (name === "filterStateId") {
+      setFilterStateId(value);
+      // We rely on the useEffect for districtId reset
+    } else if (name === "filterDistrictId") {
+      setFilterDistrictId(value);
+    } else if (name === "searchTerm") {
+      setSearchTerm(value);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   const handleAddPrabhari = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -157,7 +229,7 @@ export default function DistrictPrabhariManagement() {
         body: JSON.stringify({
           ...newPrabhari,
           level: 'DISTRICT',
-          unitId: newPrabhari.districtId, // Pass districtId as unitId
+          unitId: newPrabhari.districtId,
         }),
       });
 
@@ -166,10 +238,10 @@ export default function DistrictPrabhariManagement() {
         throw new Error(newPrabhariData.error || 'Failed to add prabhari');
       }
 
-      // Add new prabhari to the list (works because POST returns the flattened data)
-      setDistrictPrabharis([...districtPrabharis, newPrabhariData]);
       showSuccess("District Prabhari added successfully! ✓");
       closeForm();
+      // Re-fetch data to show the newly added prabhari, maintaining current filters/page
+      fetchDistrictPrabharis(currentPage, filterStateId, filterDistrictId, searchTerm);
     } catch (err) {
       showError(err.message);
     } finally {
@@ -190,7 +262,7 @@ export default function DistrictPrabhariManagement() {
           name: editingPrabhari.name,
           email: editingPrabhari.email,
           phone: editingPrabhari.phone,
-          districtId: editingPrabhari.districtId, // Send the districtId
+          districtId: editingPrabhari.districtId,
         }),
       });
 
@@ -199,13 +271,10 @@ export default function DistrictPrabhariManagement() {
         throw new Error(updatedPrabhariData.error || 'Failed to update prabhari');
       }
 
-      // Replace the old prabhari with the new data from the API
-      const updatedPrabharis = districtPrabharis.map((p) =>
-        p.id === editingPrabhari.id ? updatedPrabhariData : p
-      );
-      setDistrictPrabharis(updatedPrabharis);
       showSuccess("District Prabhari updated successfully! ✓");
       closeForm();
+      // Re-fetch data to update the list item on the current page
+      fetchDistrictPrabharis(currentPage, filterStateId, filterDistrictId, searchTerm);
     } catch (err) {
       showError(err.message);
     } finally {
@@ -228,8 +297,9 @@ export default function DistrictPrabhariManagement() {
         throw new Error(data.error || 'Failed to delete prabhari');
       }
 
-      setDistrictPrabharis(districtPrabharis.filter((p) => p.id !== id));
       showSuccess("District Prabhari deleted successfully");
+      // Re-fetch data to reflect the deletion and potentially correct pagination
+      fetchDistrictPrabharis(currentPage, filterStateId, filterDistrictId, searchTerm);
     } catch (err) {
       showError(err.message);
     } finally {
@@ -243,7 +313,7 @@ export default function DistrictPrabhariManagement() {
     
     setEditingPrabhari({
       ...prabhari,
-      stateId: state ? state.id : "", // Set the stateId for the form
+      stateId: state ? state.id : "",
     });
     setShowPrabhariForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -263,10 +333,11 @@ export default function DistrictPrabhariManagement() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
+  // --- Modal Logic remains the same ---
   const openModal = async (prabhari) => {
     setSelectedPrabhari(prabhari);
     setIsModalLoading(true);
-    setModalDetails(null); // Clear previous details
+    setModalDetails(null);
     try {
       const response = await fetch(`/api/districts/${prabhari.districtId}/details`);
       if (!response.ok) {
@@ -288,6 +359,63 @@ export default function DistrictPrabhariManagement() {
   }
   
   const formData = editingPrabhari || newPrabhari;
+  
+  // Get districts for the filter dropdown
+  const [filterDistricts, setFilterDistricts] = useState([]);
+  const [isFilterDistrictLoading, setIsFilterDistrictLoading] = useState(false);
+  
+  useEffect(() => {
+      if (filterStateId) {
+          setIsFilterDistrictLoading(true);
+          fetchDistrictsForState(filterStateId).then(data => {
+              setFilterDistricts(data);
+          }).finally(() => {
+              setIsFilterDistrictLoading(false);
+          });
+      } else {
+          setFilterDistricts([]);
+      }
+  }, [filterStateId]);
+
+
+  // --- Render Components ---
+
+  const renderPagination = () => {
+      if (totalPages <= 1) return null;
+      
+      const startRange = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+      const endRange = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
+
+      return (
+          <div className="flex items-center justify-between mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <div className="text-sm text-gray-700 font-medium">
+                  Showing <span className="font-bold">{startRange}</span> to <span className="font-bold">{endRange}</span> of <span className="font-bold">{totalItems}</span> results
+              </div>
+              <div className="flex items-center gap-2">
+                  <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="p-2 border border-gray-300 rounded-full text-gray-600 hover:bg-purple-100 disabled:opacity-50 transition-all"
+                      title="Previous Page"
+                  >
+                      <ChevronLeft size={20} />
+                  </button>
+                  <span className="text-gray-700 font-semibold">
+                      Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="p-2 border border-gray-300 rounded-full text-gray-600 hover:bg-purple-100 disabled:opacity-50 transition-all"
+                      title="Next Page"
+                  >
+                      <ChevronRight size={20} />
+                  </button>
+              </div>
+          </div>
+      );
+  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-red-50 p-6">
@@ -336,7 +464,7 @@ export default function DistrictPrabhariManagement() {
             </button>
           </div>
 
-          {/* Add/Edit Prabhari Form */}
+          {/* Add/Edit Prabhari Form (Stays the same, except for new state usage) */}
           {showPrabhariForm && (
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl mb-6 border-2 border-purple-200">
               <h3 className="text-xl font-bold text-gray-800 mb-4">
@@ -357,14 +485,14 @@ export default function DistrictPrabhariManagement() {
                       State *
                     </label>
                     <select
-                      name="stateId" // Changed
-                      value={formData.stateId} // Changed
+                      name="stateId"
+                      value={formData.stateId}
                       onChange={handleFormChange}
                       required
                       className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     >
                       <option value="">Select State</option>
-                      {allStates.map((state) => ( // Changed
+                      {allStates.map((state) => (
                         <option key={state.id} value={state.id}>
                           {state.name}
                         </option>
@@ -376,11 +504,11 @@ export default function DistrictPrabhariManagement() {
                       District *
                     </label>
                     <select
-                      name="districtId" // Changed
-                      value={formData.districtId} // Changed
+                      name="districtId"
+                      value={formData.districtId}
                       onChange={handleFormChange}
                       required
-                      disabled={!formStateId || isDistrictLoading} // Changed
+                      disabled={!formStateId || isDistrictLoading}
                       className="w-full border-2 border-purple-200 focus:border-purple-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white disabled:bg-gray-100"
                     >
                       <option value="">
@@ -392,7 +520,6 @@ export default function DistrictPrabhariManagement() {
                         </option>
                       ))}
                     </select>
-                     {/* Removed the "All districts assigned" logic, as multiple prabharis per district is allowed */}
                   </div>
                 </div>
                 <div className="grid md:grid-cols-3 gap-4 mb-4">
@@ -457,6 +584,83 @@ export default function DistrictPrabhariManagement() {
               </form>
             </div>
           )}
+          
+          {/* --- Filtering and Search Controls --- */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <h3 className="text-lg font-bold text-gray-800 mb-3">Filter & Search</h3>
+              <div className="grid md:grid-cols-4 gap-4">
+                  {/* State Filter */}
+                  <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Filter by State
+                      </label>
+                      <select
+                          name="filterStateId"
+                          value={filterStateId}
+                          onChange={handleFilterChange}
+                          className="w-full border-2 border-gray-200 focus:border-purple-500 p-3 rounded-xl outline-none transition-all bg-white"
+                      >
+                          <option value="">All States</option>
+                          {allStates.map((state) => (
+                              <option key={state.id} value={state.id}>
+                                  {state.name}
+                              </option>
+                          ))}
+                      </select>
+                  </div>
+                  
+                  {/* District Filter */}
+                  <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Filter by District
+                      </label>
+                      <select
+                          name="filterDistrictId"
+                          value={filterDistrictId}
+                          onChange={handleFilterChange}
+                          disabled={!filterStateId || isFilterDistrictLoading}
+                          className="w-full border-2 border-gray-200 focus:border-purple-500 p-3 rounded-xl outline-none transition-all bg-white disabled:bg-gray-100"
+                      >
+                          <option value="">
+                              {isFilterDistrictLoading ? "Loading..." : "All Districts"}
+                          </option>
+                          {filterDistricts.map((district) => (
+                              <option key={district.id} value={district.id}>
+                                  {district.name}
+                              </option>
+                          ))}
+                      </select>
+                  </div>
+                  
+                  {/* Search Box */}
+                  <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Search (Name, Email, Phone)
+                      </label>
+                      <div className="relative">
+                          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                          <input
+                              type="text"
+                              name="searchTerm"
+                              placeholder="Search prabharis..."
+                              value={searchTerm}
+                              onChange={handleFilterChange}
+                              className="w-full border-2 border-gray-200 focus:border-purple-500 p-3 pl-12 rounded-xl outline-none transition-all bg-white"
+                          />
+                          {searchTerm && (
+                              <button
+                                  type="button"
+                                  onClick={() => handleFilterChange({target: {name: 'searchTerm', value: ''}})}
+                                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500"
+                              >
+                                  <X size={20} />
+                              </button>
+                          )}
+                      </div>
+                  </div>
+              </div>
+          </div>
+
 
           {/* District Prabharis Table */}
           {loading && districtPrabharis.length === 0 ? (
@@ -470,91 +674,95 @@ export default function DistrictPrabhariManagement() {
             <div className="text-center py-20 bg-gray-50 rounded-2xl">
               <Users className="mx-auto mb-4 text-gray-400" size={64} />
               <p className="text-gray-500 text-xl font-semibold">
-                No District Prabharis found
+                No District Prabharis found matching the criteria
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto border-2 border-gray-200 rounded-2xl shadow-lg">
-              <table className="w-full">
-                <thead className="bg-gradient-to-r from-purple-100 via-pink-100 to-red-100">
-                  <tr>
-                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
-                      State
-                    </th>
-                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
-                      District
-                    </th>
-                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
-                      Name
-                    </th>
-                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
-                      Email
-                    </th>
-                    <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
-                      Phone
-                    </th>
-                    <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {districtPrabharis.map((p, idx) => (
-                    <tr
-                      key={p.id}
-                      onClick={() => openModal(p)}
-                      className={`border-t-2 border-gray-100 hover:bg-purple-50 transition-all cursor-pointer ${
-                        idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      }`}
-                    >
-                      <td className="p-5 font-semibold text-gray-800">{p.stateName}</td>
-                      <td className="p-5">
-                        <span className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-semibold text-sm">
-                          <MapPin size={16} />
-                          {p.districtName}
-                        </span>
-                      </td>
-                      <td className="p-5 font-semibold text-gray-800">
-                        {p.name}
-                      </td>
-                      <td className="p-5 text-gray-600">
-                        {p.email || <span className="text-gray-400">N/A</span>}
-                      </td>
-                      <td className="p-5 text-gray-600">{p.phone}</td>
-                      <td className="p-5 text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                openEditForm(p);
-                            }}
-                            className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                            title="Edit district prabhari"
-                          >
-                            <Edit size={20} />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeletePrabhari(p.id);
-                            }}
-                            className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
-                            title="Delete district prabhari"
-                          >
-                            <Trash2 size={20} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <>
+                <div className="overflow-x-auto border-2 border-gray-200 rounded-2xl shadow-lg">
+                  <table className="w-full">
+                    <thead className="bg-gradient-to-r from-purple-100 via-pink-100 to-red-100">
+                      <tr>
+                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
+                          State
+                        </th>
+                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
+                          District
+                        </th>
+                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
+                          Name
+                        </th>
+                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
+                          Email
+                        </th>
+                        <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
+                          Phone
+                        </th>
+                        <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {districtPrabharis.map((p, idx) => (
+                        <tr
+                          key={p.id}
+                          onClick={() => openModal(p)}
+                          className={`border-t-2 border-gray-100 hover:bg-purple-50 transition-all cursor-pointer ${
+                            idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          }`}
+                        >
+                          <td className="p-5 font-semibold text-gray-800">{p.stateName}</td>
+                          <td className="p-5">
+                            <span className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-semibold text-sm">
+                              <MapPin size={16} />
+                              {p.districtName}
+                            </span>
+                          </td>
+                          <td className="p-5 font-semibold text-gray-800">
+                            {p.name}
+                          </td>
+                          <td className="p-5 text-gray-600">
+                            {p.email || <span className="text-gray-400">N/A</span>}
+                          </td>
+                          <td className="p-5 text-gray-600">{p.phone}</td>
+                          <td className="p-5 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    openEditForm(p);
+                                }}
+                                className="text-blue-500 hover:text-white hover:bg-blue-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+                                title="Edit district prabhari"
+                              >
+                                <Edit size={20} />
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeletePrabhari(p.id);
+                                }}
+                                className="text-red-500 hover:text-white hover:bg-red-500 p-3 rounded-xl transition-all shadow-sm hover:shadow-md transform hover:scale-110"
+                                title="Delete district prabhari"
+                              >
+                                <Trash2 size={20} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Pagination */}
+                {renderPagination()}
+            </>
           )}
         </div>
       </div>
       
-      {/* Prabhari Details Modal */}
+      {/* Prabhari Details Modal (Remains the same) */}
       {selectedPrabhari && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"

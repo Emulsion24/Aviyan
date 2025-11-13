@@ -30,9 +30,9 @@ export async function GET(request) {
   // 1. Add Search (applies to all levels)
   if (search) {
     wherePrabhari.OR = [
-      { name: { contains: search, mode: 'insensitive' } }, // Use insensitive mode for robustness
-      { email: { contains: search, mode: 'insensitive' } },
-      { phone: { contains: search, mode: 'insensitive' } }
+      { name: { contains: search,} }, // Use insensitive mode for robustness
+      { email: { contains: search,  } },
+      { phone: { contains: search,  } }
     ];
   }
 
