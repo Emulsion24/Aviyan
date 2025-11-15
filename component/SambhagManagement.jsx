@@ -22,10 +22,6 @@ const showConfirmation = (message) => {
   return window.confirm(message);
 };
 
-// Mock __app_id and __firebase_config for standalone environment simulation
-const __app_id = 'sambhag-management-app';
-const __firebase_config = JSON.stringify({ /* Mock config */ }); 
-
 // The component is exported directly as a default function
 export default function App() {
   const [loading, setLoading] = useState(false);
@@ -55,6 +51,8 @@ export default function App() {
     phone: "",
     sambhagId: "",
   });
+  // NEW: State for the prabhari form's state selection
+  const [prabhariFormStateId, setPrabhariFormStateId] = useState("");
 
   // Data for forms
   const [allStates, setAllStates] = useState([]);
@@ -62,6 +60,8 @@ export default function App() {
 
   // Search & Filter State
   const [searchInput, setSearchInput] = useState("");
+  // NEW: State for the prabhari list's state filter
+  const [prabhariListStateFilter, setPrabhariListStateFilter] = useState("");
 
   // Modal State
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
@@ -84,7 +84,7 @@ export default function App() {
     clearMessages();
     setError(message);
   }, [clearMessages]);
-  
+
   // --- API Functions ---
 
   const fetchAllStates = useCallback(async () => {
@@ -135,7 +135,7 @@ export default function App() {
       const response = await fetch('/api/sambhags');
       if (!response.ok) throw new Error('Failed to fetch all sambhags');
       const data = await response.json();
-      setAllSambhags(data);
+      setAllSambhags(data); // This now includes stateId
     } catch (err) {
       showError(err.message);
     }
@@ -183,19 +183,51 @@ export default function App() {
     }
   }, [formStateId, fetchAllDistrictsForState]);
 
-  // --- Filtered Prabharis ---
+  // --- NEW: Filtered Sambhags for Prabhari Form ---
+  const sambhagsForPrabhariForm = useMemo(() => {
+    if (!prabhariFormStateId) {
+      return []; // No state selected, so no sambhags to show
+    }
+    return allSambhags.filter(s => s.stateId === prabhariFormStateId);
+  }, [prabhariFormStateId, allSambhags]);
+
+
+  // --- MODIFIED: Filtered Prabharis (List) ---
   const filteredPrabharis = useMemo(() => {
     const lowercasedInput = searchInput.toLowerCase();
+    
+    // 1. Filter by State
+    const stateFiltered = () => {
+      if (prabhariListStateFilter === "") {
+        return sambhagPrabharis; // No state filter applied
+      }
+      
+      // Create a Set of sambhag IDs that are in the selected state
+      const sambhagIdsInState = new Set(
+        allSambhags
+          .filter(s => s.stateId === prabhariListStateFilter)
+          .map(s => s.id)
+      );
+      
+      // Filter prabharis whose unitId (sambhagId) is in the Set
+      return sambhagPrabharis.filter(p => 
+        sambhagIdsInState.has(p.unitId) || sambhagIdsInState.has(p.sambhagId)
+      );
+    };
+
+    const byState = stateFiltered();
+
+    // 2. Filter by Search Input
     if (lowercasedInput === "") {
-      return sambhagPrabharis;
+      return byState; // Only state filter applied
     } else {
-      return sambhagPrabharis.filter(
+      return byState.filter( // Filter the *already state-filtered* list
         (p) =>
           p.name.toLowerCase().includes(lowercasedInput) ||
           (p.sambhagName && p.sambhagName.toLowerCase().includes(lowercasedInput))
       );
     }
-  }, [searchInput, sambhagPrabharis]);
+  }, [searchInput, sambhagPrabharis, prabhariListStateFilter, allSambhags]); // Added dependencies
 
   // --- Sambhag CRUD Handlers ---
 
@@ -230,8 +262,6 @@ export default function App() {
     const assignedDistrictIds = new Set(
       allSambhags
         .filter(s => s.stateId === formStateId && s.id !== (editingSambhag?.id || null))
-        // NOTE: Districts are often stored as objects { id, name } or just IDs.
-        // Assuming they are objects with an 'id' property in 'allSambhags' structure.
         .flatMap(s => s.districts.map(d => d.id || d)) 
     );
     
@@ -329,7 +359,7 @@ export default function App() {
     }
   };
 
-  // --- Sambhag Prabhari CRUD Handlers (Reusing logic from original component) ---
+  // --- Sambhag Prabhari CRUD Handlers ---
 
   const prabhariFormData = editingPrabhari || newPrabhari;
 
@@ -340,11 +370,13 @@ export default function App() {
     setData({ ...currentData, [name]: value });
   }
 
+  // MODIFIED: closePrabhariForm
   const closePrabhariForm = () => {
     setEditingPrabhari(null);
     setShowPrabhariForm(false);
     setNewPrabhari({ name: "", email: "", phone: "", sambhagId: "" });
     setError("");
+    setPrabhariFormStateId(""); // Reset the state filter for the form
   };
 
   const handleAddPrabhari = async (e) => {
@@ -366,8 +398,6 @@ export default function App() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to create prabhari");
 
-      // The response data often lacks full context (like sambhagName)
-      // Refetching the whole list is safer for real-time updates
       fetchSambhagPrabharis(); 
       showSuccess("Sambhag Prabhari added successfully! ✓");
       closePrabhariForm();
@@ -390,7 +420,6 @@ export default function App() {
           name: editingPrabhari.name,
           email: editingPrabhari.email,
           phone: editingPrabhari.phone,
-          // Assuming unitId update is handled via sambhagId change on the backend
           unitId: editingPrabhari.sambhagId, 
           level: 'SAMBHAG'
         }),
@@ -398,7 +427,6 @@ export default function App() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to update prabhari");
 
-      // Refetching the whole list is safest for updates
       fetchSambhagPrabharis(); 
       showSuccess("Sambhag Prabhari updated successfully! ✓");
       closePrabhariForm();
@@ -418,7 +446,6 @@ export default function App() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to delete prabhari");
       
-      // Update local state for immediate feedback
       setSambhagPrabharis(sambhagPrabharis.filter(p => p.id !== id));
       showSuccess("Sambhag Prabhari deleted successfully");
     } catch (err) {
@@ -435,20 +462,46 @@ export default function App() {
     setIsModalLoading(true);
     setModalDetails(null);
     
-    const sambhag = allSambhags.find(s => s.id === prabhari.sambhagId);
+    const sambhag = allSambhags.find(s => s.id === (prabhari.sambhagId || prabhari.unitId));
     
     if (!sambhag) {
-      showError("Could not find sambhag details.");
-      setIsModalLoading(false);
+      // Try to find from state if allSambhags is stale (less likely)
+      const stateSambhag = sambhagsInState.find(s => s.id === (prabhari.sambhagId || prabhari.unitId));
+      if (!stateSambhag) {
+         showError("Could not find sambhag details. Data might be syncing.");
+         setIsModalLoading(false);
+         return;
+      }
+      
+      // Use stateSambhag if found
+      const state = allStates.find(s => s.id === stateSambhag.stateId);
+      const districtIds = stateSambhag.districts.map(d => d.id);
+      
+      try {
+        const response = await fetch('/api/districts/prabharis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ districtIds }),
+        });
+        const districtDetails = await response.json();
+        if (!response.ok) throw new Error(districtDetails.error || 'Failed to fetch district prabharis');
+        setModalDetails({
+          sambhagName: stateSambhag.name,
+          stateName: state?.name || '',
+          districts: districtDetails, 
+        });
+      } catch(err) {
+        showError(err.message);
+      } finally {
+        setIsModalLoading(false);
+      }
       return;
     }
 
     const state = allStates.find(s => s.id === sambhag.stateId);
-    // Assuming sambhag.districts is an array of { id: string } objects
     const districtIds = sambhag.districts.map(d => d.id);
     
     try {
-      // API call to get details about the districts and their prabharis
       const response = await fetch('/api/districts/prabharis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -460,7 +513,6 @@ export default function App() {
       setModalDetails({
         sambhagName: sambhag.name,
         stateName: state?.name || '',
-        // districtDetails should be an array of detailed district objects
         districts: districtDetails, 
       });
 
@@ -681,7 +733,6 @@ export default function App() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sambhagsInState.map(sambhag => {
-                // Districts are likely returned as objects with { id, name } or similar
                 const districtNames = sambhag.districts
                   .map(d => allDistrictsInState.find(ad => ad.id === d.id)?.name || d.name) // Use allDistrictsInState for names
                   .filter(Boolean);
@@ -755,9 +806,11 @@ export default function App() {
               <Users className="text-teal-600" size={28} />
               Sambhag Prabharis
             </h2>
+            {/* --- BUTTON ONCLICK FIX --- */}
             <button
               onClick={() => {
-                editingPrabhari ? closePrabhariForm() : setShowPrabhariForm(true)
+                // MODIFIED: This now correctly closes the form
+                (showPrabhariForm || editingPrabhari) ? closePrabhariForm() : setShowPrabhariForm(true)
               }}
               className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
                   (showPrabhariForm || editingPrabhari) 
@@ -770,7 +823,7 @@ export default function App() {
             </button>
           </div>
 
-          {/* Sambhag Prabhari Form */}
+          {/* --- MODIFIED: Sambhag Prabhari Form --- */}
           {(showPrabhariForm || editingPrabhari) && (
             <div className="bg-gradient-to-r from-teal-50 to-green-50 p-6 rounded-2xl mb-6 border-2 border-teal-400 shadow-inner">
               <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -779,7 +832,30 @@ export default function App() {
               </h3>
               <form onSubmit={editingPrabhari ? handleUpdatePrabhari : handleAddPrabhari}>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
-                  {/* Sambhag Selection */}
+                  {/* NEW: State Selection */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Select State *</label>
+                    <select
+                      name="stateId"
+                      value={prabhariFormStateId}
+                      onChange={(e) => {
+                        const newStateId = e.target.value;
+                        setPrabhariFormStateId(newStateId);
+                        // Reset sambhag selection when state changes
+                        const setData = editingPrabhari ? setEditingPrabhari : setNewPrabhari;
+                        setData(prev => ({ ...prev, sambhagId: "" }));
+                      }}
+                      required
+                      className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white text-gray-700"
+                    >
+                      <option value="">Select State</option>
+                      {allStates.map(state => (
+                        <option key={state.id} value={state.id}>{state.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* MODIFIED: Sambhag Selection */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Assign Sambhag *</label>
                     <select
@@ -787,16 +863,21 @@ export default function App() {
                       value={prabhariFormData.sambhagId}
                       onChange={handlePrabhariFormChange}
                       required
-                      className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white text-gray-700"
+                      disabled={!prabhariFormStateId} // Disable if no state is selected
+                      className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white text-gray-700 disabled:bg-gray-100"
                     >
                       <option value="">Select Sambhag</option>
-                      {allSambhags.map(sambhag => (
+                      {/* Use the new filtered list */}
+                      {sambhagsForPrabhariForm.map(sambhag => (
                         <option key={sambhag.id} value={sambhag.id}>
-                          {sambhag.name} ({sambhag.stateName})
+                          {sambhag.name}
                         </option>
                       ))}
                     </select>
                   </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4 mb-4">
                   {/* Name */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Name *</label>
@@ -810,21 +891,7 @@ export default function App() {
                       className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
                     />
                   </div>
-                </div>
-                <div className="grid md:grid-cols-2 gap-4 mb-4">
-                  {/* Email */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email (Optional)</label>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email Address"
-                      value={prabhariFormData.email}
-                      onChange={handlePrabhariFormChange}
-                      className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
-                    />
-                  </div>
-                  {/* Phone */}
+                   {/* Phone */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Phone *</label>
                     <input
@@ -838,6 +905,22 @@ export default function App() {
                     />
                   </div>
                 </div>
+
+                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email (Optional)</label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email Address"
+                      value={prabhariFormData.email}
+                      onChange={handlePrabhariFormChange}
+                      className="w-full border-2 border-teal-200 focus:border-teal-500 p-4 rounded-xl outline-none transition-all shadow-sm bg-white"
+                    />
+                  </div>
+                </div>
+                
                 <div className="flex gap-3 justify-end pt-4">
                   <button
                     type="submit"
@@ -852,8 +935,18 @@ export default function App() {
             </div>
           )}
           
-          {/* Prabhari Search */}
+          {/* --- MODIFIED: Prabhari Search & Filter --- */}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
+                  <select
+              value={prabhariListStateFilter}
+              onChange={(e) => setPrabhariListStateFilter(e.target.value)}
+              className="md:w-64 border-2 border-gray-300 focus:border-teal-500 p-3 rounded-xl outline-none transition-all shadow-md bg-white text-gray-700 font-medium"
+            >
+              <option value="">Filter by State (All)</option>
+              {allStates.map(state => (
+                <option key={state.id} value={state.id}>{state.name}</option>
+              ))}
+            </select>
             <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border-2 border-gray-200 focus-within:border-teal-500 transition-all shadow-inner">
               <Search size={22} className="text-gray-400" />
               <input
@@ -864,6 +957,9 @@ export default function App() {
                 className="bg-transparent outline-none w-full text-gray-700 font-medium"
               />
             </div>
+            
+            {/* NEW: State Filter Dropdown */}
+      
           </div>
 
           {/* Sambhag Prabharis Table */}
@@ -878,16 +974,21 @@ export default function App() {
               <p className="text-gray-500 text-xl font-semibold">No Sambhag Prabharis found</p>
               <p className="text-gray-400 mt-2">Get started by adding a prabhari.</p>
             </div>
-          ) : filteredPrabharis.length === 0 ? (
+          ) : filteredPrabharis.length === 0 ? ( // Use the new filteredPrabharis
             <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
               <Search className="mx-auto mb-4 text-gray-400" size={64} />
               <p className="text-gray-500 text-xl font-semibold">No Prabharis Found</p>
-              <p className="text-gray-400 mt-2">Your search for {searchInput} returned no results.</p>
+              <p className="text-gray-400 mt-2">
+                Your search or filter combination returned no results.
+              </p>
                <button
-                  onClick={() => setSearchInput("")}
+                  onClick={() => {
+                    setSearchInput("");
+                    setPrabhariListStateFilter("");
+                  }}
                   className="mt-4 px-6 py-2 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition-all shadow-md"
                 >
-                  Clear Search
+                  Clear Filters
                 </button>
             </div>
           ) : (
@@ -903,6 +1004,7 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody>
+                  {/* Use the new filteredPrabharis */}
                   {filteredPrabharis.map((p, idx) => (
                     <tr 
                       key={p.id} 
@@ -923,10 +1025,19 @@ export default function App() {
                       </td>
                       <td className="p-5 text-center">
                         <div className="flex items-center justify-center gap-2">
+                          {/* MODIFIED: Edit button onClick */}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              // Prepare data for editing, ensuring all required fields are present
+                              
+                              // Find the sambhag to get its stateId
+                              const sambhag = allSambhags.find(s => s.id === (p.unitId || p.sambhagId));
+                              const stateId = sambhag ? sambhag.stateId : "";
+                              
+                              // Set the state for the form
+                              setPrabhariFormStateId(stateId); 
+                              
+                              // Prepare data for editing
                               setEditingPrabhari({
                                 ...p, 
                                 sambhagId: p.unitId || p.sambhagId // Ensure unitId or sambhagId is used
