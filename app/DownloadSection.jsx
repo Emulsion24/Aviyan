@@ -6,21 +6,25 @@ export default function DownloadsSection() {
   const downloads = [
     {
       id: 1,
-      title: "अभियान PDF",
+      title: "गौ सम्मान आह्वान अभियान प्रचार पत्रक",
       description: "गौ सम्मान आह्वान अभियान की पूर्ण जानकारी",
       icon: FileText,
-      file: "/aviyan.pdf",
-      filename: "Gau-Samman-Aviyan.pdf",
+      files: [ 
+        { type: "PDF", file: "/GSAA-02 A5 Final (1).pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1i61Fu6BGfR3KTfzv1-caVIFcviYriWrC/view?usp=drive_link", filename: "Gau-Samman-Aviyan.cdr" } 
+      ],
       color: "from-orange-500 to-amber-600",
       bgPattern: "from-orange-50 to-amber-50"
     },
     {
       id: 2,
-      title: "प्रिंट फाइल",
+      title: "गौ सम्मान आह्वान अभियान उद्बोधन पत्र",
       description: "प्रिंट करने योग्य अभियान सामग्री",
       icon: Printer,
-      file: "https://drive.google.com/file/d/1COLb3QqAsFpYg6lt69HB7MTCKnj_UGUu/view?usp=drive_link",
-      filename: "Gau-Samman-Printable",
+      files: [ 
+        { type: "PDF", file: "/GMPC Finaly C.pdf", filename: "Gau-Samman-उद्बोधन-पत्र.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1F0UnSuYDMEKEM36Jt1cyq2xyvVdFMG_-/view?usp=drive_link", filename: "Gau-Samman-उद्बोधन-पत्र.cdr" } 
+      ],
       color: "from-blue-500 to-indigo-600",
       bgPattern: "from-blue-50 to-indigo-50"
     },
@@ -29,24 +33,32 @@ export default function DownloadsSection() {
       title: "लोगो डाउनलोड",
       description: "गौ सम्मान आह्वान का आधिकारिक लोगो",
       icon: ImageIcon,
-      file: "/logo.jpg",
-      filename: "Gau-Samman-Logo.jpg",
+      files: [
+        { type: "JPG", file: "/logo.jpg", filename: "Gau-Samman-Logo.jpg" }
+      ],
       color: "from-green-500 to-emerald-600",
       bgPattern: "from-green-50 to-emerald-50"
     },
- {
+    {
       id: 4,
       title: "अभियान गीत (MP3)",
       description: "गौ सम्मान आह्वान अभियान का आधिकारिक गीत डाउनलोड करें।",
-      icon:Music2Icon,
-      file: "/aviyan-song.mp3", // Placeholder for actual music file URL
-      filename: "Gau-Samman-Geet.mp3",
+      icon: Music2Icon,
+      files: [ // Standardized to use files array
+        { type: "MP3", file: "/aviyan-song.mp3", filename: "Gau-Samman-Geet.mp3" }
+      ],
       color: "from-cyan-500 to-teal-600",
       bgPattern: "from-cyan-50 to-teal-50"
     }
   ];
 
   const handleDownload = (file, filename) => {
+    // For Google Drive links, we want to open them in a new tab, not download directly
+    if (file.includes("drive.google.com")) {
+      window.open(file, '_blank');
+      return;
+    }
+    
     const link = document.createElement('a');
     link.href = file;
     link.download = filename;
@@ -94,7 +106,7 @@ export default function DownloadsSection() {
           {downloads.map((item, index) => (
             <div
               key={item.id}
-              className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border-2 border-gray-100"
+              className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border-2 border-gray-100 flex flex-col" // Added flex flex-col
               style={{
                 animationDelay: `${index * 150}ms`
               }}
@@ -103,7 +115,7 @@ export default function DownloadsSection() {
               <div className={`absolute inset-0 bg-gradient-to-br ${item.bgPattern} opacity-50 group-hover:opacity-70 transition-opacity duration-300`}></div>
               
               {/* Content */}
-              <div className="relative p-8">
+              <div className="relative p-8 flex-grow"> {/* Added flex-grow */}
                 {/* Icon */}
                 <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${item.color} shadow-lg mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   <item.icon size={40} className="text-white" />
@@ -118,15 +130,25 @@ export default function DownloadsSection() {
                 <p className="text-gray-600 mb-6 text-sm leading-relaxed">
                   {item.description}
                 </p>
+              </div>
 
-                {/* Download Button */}
-                <button
-                  onClick={() => handleDownload(item.file, item.filename)}
-                  className={`w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r ${item.color} text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95`}
-                >
-                  <Download size={20} />
-                  <span>डाउनलोड करें</span>
-                </button>
+              {/* Download Button(s) - This section is pushed to the bottom */}
+              <div className="relative px-8 pb-8 pt-0"> {/* Wrapper div for buttons */}
+                <div className="flex gap-3">
+                  {item.files.map((fileInfo) => (
+                    <button
+                      key={fileInfo.type}
+                      onClick={() => handleDownload(fileInfo.file, fileInfo.filename)}
+                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r ${item.color} text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95`}
+                    >
+                      <Download size={18} />
+                      <span>
+                        {/* If only one file, show "डाउनलोड करें". If multiple, show file type. */}
+                        {item.files.length > 1 ? fileInfo.type : "डाउनलोड करें"}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Decorative corner */}
@@ -151,7 +173,7 @@ export default function DownloadsSection() {
                 
  <li className="flex items-start gap-2">
                   <span className="text-orange-500 mt-1">•</span>
-                  <span>जो प्रिंटिंग वाली फाइल दी हुए हे उसे वैसे ही छपवानी हे, आपको ना एक शब्द हटाना हे और न ही एक शब्द जोड़ना हे</span>
+                  <span>जो प्रिंटिंग वाली फाइल दी हुए हे उसे वैसे ही छपवानी हे, आपको ना एक शब्द हटाना हे और न ही एक शब्द जोड़ना हे</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-orange-500 mt-1">•</span>
