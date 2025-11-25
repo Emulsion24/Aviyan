@@ -995,7 +995,7 @@ const handleDeleteBaithak = async (id) => {
     >
       <div className="flex items-center gap-3">
         <Award size={20} />
-        <span>Zone Management</span>
+        <span>Rajya Samuh Management</span>
       </div>
       <span
         className={`px-3 py-1 rounded-full text-sm font-bold ${

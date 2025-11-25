@@ -395,10 +395,10 @@ export default function ZonePrabhariManagement() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2 flex items-center gap-3">
             <MapPin className="text-orange-600" size={40} />
-            Zone Prabhari Management
+            Rajya Samuh Prabhari Management
           </h1>
           <p className="text-gray-600">
-            Manage zones and zone prabharis across different states
+            Manage Rajya Samuh and Rajya Samuh prabharis across different states
           </p>
         </div>
 
@@ -419,7 +419,7 @@ export default function ZonePrabhariManagement() {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
               <MapPin className="text-orange-600" size={28} />
-              Zones
+              Rajya Samuh
             </h2>
             <button
               onClick={() => {
@@ -429,7 +429,7 @@ export default function ZonePrabhariManagement() {
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-bold hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               <Plus size={20} />
-              {showZoneForm ? "Cancel" : "Create Zone"}
+              {showZoneForm ? "Cancel" : "Create Rajya Samuh"}
             </button>
           </div>
 
@@ -437,12 +437,12 @@ export default function ZonePrabhariManagement() {
           {(showZoneForm || editingZone) && (
             <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-6 rounded-2xl mb-6 border-2 border-orange-200">
               <h3 className="text-xl font-bold text-gray-800 mb-4">
-                {editingZone ? "Edit Zone" : "Create New Zone"}
+                {editingZone ? "Edit Rajya Samuh" : "Create New Rajya Samuh"}
               </h3>
               <form onSubmit={editingZone ? handleUpdateZone : handleAddZone}>
                 <div className="mb-4">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Zone Name *
+                   Rajya Samuh Name *
                   </label>
                   <input
                     type="text"
@@ -506,7 +506,7 @@ export default function ZonePrabhariManagement() {
                       <div className="col-span-full text-center py-8 text-gray-500">
                         <p className="font-semibold">No states available</p>
                         <p className="text-sm mt-2">
-                          All states have been assigned to zones
+                          All states have been assigned to Rajya Samuh
                         </p>
                       </div>
                     ) : (
@@ -568,7 +568,7 @@ export default function ZonePrabhariManagement() {
                     ) : (
                       <Plus size={20} />
                     )}
-                    {editingZone ? "Update Zone" : "Create Zone"}
+                    {editingZone ? "Update Rajya Samuh" : "Create Rajya Samuh"}
                   </button>
                 </div>
               </form>
@@ -640,7 +640,7 @@ export default function ZonePrabhariManagement() {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
               <Users className="text-orange-600" size={28} />
-              Zone Prabharis
+              Rajya Samuh Prabharis
             </h2>
             <button
               onClick={() => {
@@ -650,7 +650,7 @@ export default function ZonePrabhariManagement() {
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-bold hover:from-orange-600 hover:to-yellow-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               <UserPlus size={20} />
-              {showZonePrabhariForm ? "Cancel" : "Add Zone Prabhari"}
+              {showZonePrabhariForm ? "Cancel" : "Add Rajya Samuh Prabhari"}
             </button>
           </div>
 
@@ -659,8 +659,8 @@ export default function ZonePrabhariManagement() {
             <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-6 rounded-2xl mb-6 border-2 border-orange-200">
               <h3 className="text-xl font-bold text-gray-800 mb-4">
                 {editingZonePrabhari
-                  ? "Edit Zone Prabhari"
-                  : "Add New Zone Prabhari"}
+                  ? "Edit Rajya Samuh Prabhari"
+                  : "Add New Rajya Samuh Prabhari"}
               </h3>
               <form
                 onSubmit={
@@ -672,7 +672,7 @@ export default function ZonePrabhariManagement() {
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Zone *
+                      Rajya Samuh *
                     </label>
                     <select
                       value={
@@ -807,7 +807,7 @@ export default function ZonePrabhariManagement() {
                     ) : (
                       <UserPlus size={20} />
                     )}
-                    {editingZonePrabhari ? "Update" : "Add"} Zone Prabhari
+                    {editingZonePrabhari ? "Update" : "Add"} Rajya Samuh Prabhari
                   </button>
                 </div>
               </form>
@@ -819,14 +819,14 @@ export default function ZonePrabhariManagement() {
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="animate-spin text-orange-600 mb-4" size={56} />
               <p className="text-gray-600 font-semibold text-lg">
-                Loading Zone Prabharis...
+                Loading Rajya Samuh Prabharis...
               </p>
             </div>
           ) : zonePrabharis.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-2xl">
               <Users className="mx-auto mb-4 text-gray-400" size={64} />
               <p className="text-gray-500 text-xl font-semibold">
-                No Zone Prabharis found
+                No Rajya Samuh Prabharis found
               </p>
             </div>
           ) : (
@@ -844,7 +844,7 @@ export default function ZonePrabhariManagement() {
                       Phone
                     </th>
                     <th className="p-5 text-left font-bold text-gray-800 text-sm uppercase tracking-wide">
-                      Zone
+                      Rajya Samuh
                     </th>
                     <th className="p-5 text-center font-bold text-gray-800 text-sm uppercase tracking-wide">
                       Actions
@@ -930,7 +930,7 @@ export default function ZonePrabhariManagement() {
                 {selectedPrabhari.name}
               </h2>
               <p className="text-lg text-orange-600 font-semibold">
-                Zone Prabhari
+                Rajya Samuh Prabhari
               </p>
             </div>
 
@@ -964,7 +964,7 @@ export default function ZonePrabhariManagement() {
                 <Building size={20} className="text-orange-500 shrink-0 mt-1" />
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase">
-                    Zone
+                    Rajya Samuh
                   </p>
                   <p className="text-gray-800 font-medium">
                     {selectedPrabhari.zoneName}
@@ -977,7 +977,7 @@ export default function ZonePrabhariManagement() {
                 <MapPin size={20} className="text-orange-500 shrink-0 mt-1" />
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
-                    States & State Prabharis in Zone
+                    States & State Prabharis in Rajya Samuh 
                   </p>
                   {isModalLoading ? (
                      <div className="flex items-center gap-2 text-gray-600">
@@ -1032,7 +1032,7 @@ export default function ZonePrabhariManagement() {
                         )
                       ) : (
                         <p className="text-gray-600">
-                          No states assigned to this zone.
+                          No states assigned to this Rajya Samuh.
                         </p>
                       )}
                     </div>

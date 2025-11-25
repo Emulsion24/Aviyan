@@ -58,13 +58,13 @@ const translations = {
     SUBTITLE: "आपके क्षेत्र में गो सेवा प्रभारी की जानकारी प्राप्त करें",
     SEARCH_TITLE: "प्रभारी खोजें",
     
-    LEVEL_ZONE: "ज़ोन प्रभारी",
+    LEVEL_ZONE: "राज्य समूह प्रभारी",
     LEVEL_STATE: "राज्य प्रभारी",
     LEVEL_SAMBHAG: "संभाग प्रभारी",
     LEVEL_DISTRICT: "जिला प्रभारी",
     LEVEL_TEHSIL: "तहसील प्रभारी",
 
-    SELECT_ZONE: "ज़ोन चुनें",
+    SELECT_ZONE: "राज्य समूह चुनें",
     SELECT_STATE: "राज्य चुनें",
     SELECT_SAMBHAG: "संभाग चुनें",
     SELECT_DISTRICT: "जिला चुनें",
@@ -74,7 +74,7 @@ const translations = {
     RESET_BUTTON: "रीसेट करें",
     SEARCHING: "खोज हो रही है...",
     
-    ERROR_SELECT_ZONE: "कृपया ज़ोन चुनें।",
+    ERROR_SELECT_ZONE: "कृपया राज्य समूह प्रभारी चुनें।",
     ERROR_SELECT_STATE: "कृपया राज्य चुनें।",
     ERROR_SELECT_SAMBHAG: "कृपया संभाग चुनें।",
     ERROR_SELECT_STATE_DISTRICT: "कृपया राज्य और जिला दोनों चुनें।",
@@ -93,7 +93,7 @@ const translations = {
     // NEW MODAL STRINGS
     VIEW_AREAS: "सौंपे गए क्षेत्र देखें",
     LOADING_AREAS: "सौंपे गए क्षेत्र लोड हो रहे हैं...",
-    STATES_IN_ZONE: "ज़ोन में राज्य और राज्य प्रभारी",
+    STATES_IN_ZONE: "राज्य समूह में राज्य और राज्य प्रभारी",
     SAMBHAGS_IN_STATE: "राज्य में संभाग और संभाग प्रभारी",
     DISTRICTS_IN_SAMBHAG: "संभाग में जिले और जिला प्रभारी",
     TEHSILS_IN_DISTRICT: "जिले में तहसील और तहसील प्रभारी",
