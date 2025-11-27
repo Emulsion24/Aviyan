@@ -35,6 +35,37 @@ const Contact = () => {
 
   {/* Contact Buttons */}
   <div className="relative flex flex-wrap justify-center gap-6">
+    
+    {/* Calling Number */}
+    <a
+      href="tel:9571712140"
+      className="flex items-center gap-3 px-7 py-3.5 
+                 bg-white/80 backdrop-blur-sm rounded-2xl 
+                 border border-blue-200 hover:border-blue-400
+                 hover:bg-blue-50 transition-all duration-300 
+                 shadow-lg hover:shadow-blue-300/40"
+    >
+      <Phone className="text-blue-600 text-3xl" />
+      <span className="font-bold text-lg text-blue-800">
+        कॉलिंग नंबर: +91 9571712140
+      </span>
+    </a>
+
+    {/* Missed Call Number */}
+    <a
+      href="tel:9067777323"
+      className="flex items-center gap-3 px-7 py-3.5 
+                 bg-white/80 backdrop-blur-sm rounded-2xl 
+                 border border-red-200 hover:border-red-400
+                 hover:bg-red-50 transition-all duration-300 
+                 shadow-lg hover:shadow-red-300/40"
+    >
+      <Phone className="text-red-600 text-3xl" />
+      <span className="font-bold text-lg text-red-800">
+        मिस्ड कॉल नंबर: +91 9067777323
+      </span>
+    </a>
+    
     {/* WhatsApp Contact */}
     <a
       href="https://wa.me/918239711008"

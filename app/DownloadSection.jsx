@@ -1,8 +1,105 @@
 "use client";
-import { Download, FileText, Printer, ImageIcon, Music2Icon } from "lucide-react";
+import { Download, FileText, Printer, ImageIcon, Music2Icon, X } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+
+// Modal Component (Integrated for simplicity)
+const DownloadModal = ({ file, onClose }) => {
+  if (!file) return null;
+
+  const handleDownloadClick = () => {
+    // For Google Drive links, open in new tab
+    if (file.file.includes("drive.google.com")) {
+      window.open(file.file, '_blank');
+      onClose(); // Close modal after action
+      return;
+    }
+
+    // Direct download
+    const link = document.createElement('a');
+    link.href = file.file;
+    link.download = file.filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    onClose(); // Close modal after download is initiated
+  };
+  
+  const isViewable = file.type === "PDF" || file.type === "JPG";
+  const isPlayable = file.type === "MP3";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={onClose}>
+      <div 
+        className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 md:p-8 transform transition-all duration-300 scale-100 opacity-100" 
+        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+      >
+        <div className="flex justify-between items-center border-b pb-4 mb-4">
+          <h3 className="text-2xl font-bold text-gray-800">
+            {file.filename}
+          </h3>
+          <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100 transition">
+            <X size={24} className="text-gray-500" />
+          </button>
+        </div>
+
+        <p className="text-gray-600 mb-6">
+          आप **{file.type}** फ़ाइल के साथ क्या करना चाहते हैं?
+        </p>
+
+        {/* MP3 Playback Section */}
+        {isPlayable && (
+          <div className="bg-orange-100 p-4 rounded-xl mb-6 border border-orange-300">
+            <h4 className="font-bold text-orange-800 mb-2 flex items-center gap-2">
+                <Music2Icon size={20} /> पहले गीत सुनें:
+            </h4>
+            <audio controls src={file.file} className="w-full">
+                Your browser does not support the audio element.
+            </audio>
+          </div>
+        )}
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+          <p className="font-semibold text-gray-800 mb-1">फाइल का प्रकार (Type): <span className="text-orange-600">{file.type}</span></p>
+          <p className="font-semibold text-gray-800">नाम (Name): <span className="text-gray-700 break-words">{file.filename}</span></p>
+        </div>
+
+        {/* View/Preview Link for applicable files */}
+        {((isViewable && !isPlayable) || file.file.includes("drive.google.com")) && (
+          <a
+            href={file.file}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full mb-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-indigo-500 text-white font-semibold shadow-md hover:bg-indigo-600 transition-all duration-300"
+          >
+            <FileText size={18} />
+            {file.file.includes("drive.google.com") ? "गूगल ड्राइव में देखें" : "फाइल का पूर्वावलोकन (Preview)"}
+          </a>
+        )}
+
+        {/* Final Download Button */}
+        <button
+          onClick={handleDownloadClick}
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-green-600 text-white font-bold shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-[1.01] active:scale-95"
+        >
+          <Download size={20} />
+          <span>हाँ, डाउनलोड करें</span>
+        </button>
+        
+        <button 
+          onClick={onClose} 
+          className="w-full mt-3 text-sm text-gray-500 hover:text-gray-700 transition"
+        >
+          रद्द करें
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function DownloadsSection() {
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const downloads = [
     {
       id: 1,
@@ -52,24 +149,21 @@ export default function DownloadsSection() {
     }
   ];
 
-  const handleDownload = (file, filename) => {
-    // For Google Drive links, we want to open them in a new tab, not download directly
-    if (file.includes("drive.google.com")) {
-      window.open(file, '_blank');
-      return;
-    }
-    
-    const link = document.createElement('a');
-    link.href = file;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Updated handler to open the modal
+  const handleDownloadPrepare = (fileInfo) => {
+    setSelectedFile(fileInfo);
   };
-
+  
   return (
     <section id="downlaod"
     className="relative py-20 bg-gradient-to-br from-yellow-50 via-white to-orange-50 overflow-hidden">
+      
+      {/* Download Modal */}
+      <DownloadModal 
+        file={selectedFile} 
+        onClose={() => setSelectedFile(null)} 
+      />
+      
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
@@ -138,12 +232,12 @@ export default function DownloadsSection() {
                   {item.files.map((fileInfo) => (
                     <button
                       key={fileInfo.type}
-                      onClick={() => handleDownload(fileInfo.file, fileInfo.filename)}
+                      onClick={() => handleDownloadPrepare(fileInfo)} // Use the new prepare function
                       className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r ${item.color} text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95`}
                     >
                       <Download size={18} />
                       <span>
-                        {/* If only one file, show "डाउनलोड करें". If multiple, show file type. */}
+                        {/* Show file type or "Download" */}
                         {item.files.length > 1 ? fileInfo.type : "डाउनलोड करें"}
                       </span>
                     </button>

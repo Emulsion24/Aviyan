@@ -35,7 +35,7 @@ export const metadata = {
     siteName: "Gau Samman Ahvaan Abhiyan",
     images: [
       {
-        url: "/og-image.jpg", // replace with your image
+        url: "/logo.jpg", // replace with your image
         width: 1200,
         height: 630,
         alt: "Gau Samman Ahvaan Abhiyan",
