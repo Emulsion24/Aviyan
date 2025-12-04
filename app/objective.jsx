@@ -99,53 +99,50 @@ const Objectives = () => {
       <div className="relative max-w-6xl mx-auto px-4 space-y-16">
         {/* 🌸 Header Section */}
         <div className="relative text-center">
-      <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 px-4 sm:px-6 md:px-10 flex-nowrap text-center">
-  {/* Left ornament */}
-  <div className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0">
-    <Image
-      src="/3.png"
-      alt="left decoration"
-      width={64}
-      height={64}
-      className="w-8 sm:w-10 md:w-14 opacity-95 drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
-    />
-  </div>
+          <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 px-4 sm:px-6 md:px-10 flex-nowrap text-center">
+            {/* Left ornament */}
+            <div className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0">
+              <Image
+                src="/3.png"
+                alt="left decoration"
+                width={64}
+                height={64}
+                className="w-8 sm:w-10 md:w-14 opacity-95 drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
+              />
+            </div>
 
-  {/* Main Heading */}
-  <div className="flex-shrink text-center">
-    <h2
-      id="objectives"
-      className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight
+            {/* Main Heading */}
+            <div className="flex-shrink text-center">
+              <h2
+                id="objectives"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight
         bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-500 bg-clip-text text-transparent
         tracking-wide drop-shadow-[0_3px_3px_rgba(0,0,0,0.2)]
         pb-1 pt-1"
-    >
-      भारत सरकार से गो रक्षा सम्बंधित मुख्य आग्रह
-    </h2>
-  </div>
+              >
+                भारत सरकार से गो रक्षा सम्बंधित मुख्य आग्रह
+              </h2>
+            </div>
 
-  {/* Right ornament */}
-  <div
-    className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 bg-gradient-to-br from-yellow-500 to-amber-400 rounded-full flex items-center justify-center animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0"
-    style={{ animationDelay: '1s' }}
-  >
-    <Image
-      src="/2.png"
-      alt="right decoration"
-      width={64}
-      height={64}
-      className="w-8 sm:w-10 md:w-14 opacity-95 drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
-    />
-  </div>
-</div>
+            {/* Right ornament */}
+            <div
+              className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 bg-gradient-to-br from-yellow-500 to-amber-400 rounded-full flex items-center justify-center animate-bounce drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)] flex-shrink-0"
+              style={{ animationDelay: '1s' }}
+            >
+              <Image
+                src="/2.png"
+                alt="right decoration"
+                width={64}
+                height={64}
+                className="w-8 sm:w-10 md:w-14 opacity-95 drop-shadow-[0_4px_8px_rgba(255,166,0,0.4)]"
+              />
+            </div>
+          </div>
 
 
 
           {/* Underline */}
           <div className="w-28 h-1.5 mx-auto mt-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 rounded-full shadow-md"></div>
-
-          {/* Subheading */}
-    
         </div>
 
         {/* 🪔 Main 3 Demands Grid */}
@@ -170,42 +167,55 @@ const Objectives = () => {
                   <h3 className="text-2xl whitespace-pre-line font-extrabold text-red-600">
                     {demand.title}
                   </h3>
-            
+
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* 🔽 View More Button */}
-        <div className="text-center  mb-15">
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="group relative px-10 py-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 
-                       text-white text-lg font-bold rounded-full shadow-lg 
-                       hover:shadow-[0_10px_30px_rgba(255,183,0,0.4)] hover:scale-105 
-                       transition-all duration-300 overflow-hidden"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              {showAll ? "कम देखें" : "अन्य सभी आग्रह विस्तार से देखे"}
-              <svg 
-                className={`w-5 h-5 transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </button>
+        {/* 🔽 UPDATED VIEW MORE SECTION: Long & Expanded Background 🔽 */}
+        <div className="relative w-full flex items-center justify-center py-24 my-8">
+          
+          {/* 1. Long Wide Horizontal Glow (The Expanded Background) */}
+          <div className="absolute inset-0 flex items-center justify-center">
+             <div className="w-full h-32 bg-gradient-to-r from-transparent via-amber-100/60 to-transparent blur-3xl"></div>
+          </div>
+
+          {/* 2. Sharp Decorative Lines (To give it structure) */}
+          <div className="absolute left-0 w-full flex items-center justify-center opacity-60">
+             <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+          </div>
+
+          {/* 3. The Original Button (Unchanged as requested) */}
+          <div className="relative group z-10">
+            {/* The Outer Glow (Blur effect behind the button) */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+
+            {/* The Button Itself */}
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="relative px-8 py-4 bg-white ring-1 ring-gray-900/5 rounded-full leading-none flex items-center divide-x divide-gray-600 shadow-xl"
+            >
+              <span className="flex items-center space-x-5">
+                <span className="pr-6 text-amber-600 font-bold text-lg">
+                  {showAll ? "कम देखें" : "अन्य सभी आग्रह विस्तार से देखे"}
+                </span>
+              </span>
+              <span className={`pl-6 text-amber-600 transition-transform duration-300 ${showAll ? '-rotate-180' : ''}`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </span>
+            </button>
+          </div>
         </div>
+        {/* 🔼 END UPDATED SECTION 🔼 */}
+
 
         {/* 🌿 Detailed Demands - Expandable */}
         {showAll && (
           <div className="space-y-8 opacity-0 animate-fadeIn mb-15">
             {allDemands.map((section, idx) => (
-              <div 
+              <div
                 key={idx}
                 className="relative p-8 bg-white/90 border-2 border-yellow-200 rounded-2xl 
                            shadow-[0_10px_25px_rgba(255,183,0,0.15)] hover:shadow-[0_12px_40px_rgba(255,153,0,0.25)] 
@@ -237,21 +247,22 @@ const Objectives = () => {
                 </div>
               </div>
             ))}
-            
+
           </div>
 
-          
+
         )}
-        
+
       </div>
- <div className="absolute bottom-0 left-0 right-0 flex justify-around items-end opacity-80">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="text-4xl md:text-6xl" style={{ transform: i >= 3 ? "scale(1) scaleX(-1)" : "scale(1)" }}>
-              <Image src="/3.png" alt="Decorative Flower" width={100} height={100} />
-            </div>
-          ))}
-        </div>
-      <style dangerouslySetInnerHTML={{__html: `
+      <div className="absolute bottom-0 left-0 right-0 flex justify-around items-end opacity-80">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="text-4xl md:text-6xl" style={{ transform: i >= 3 ? "scale(1) scaleX(-1)" : "scale(1)" }}>
+            <Image src="/3.png" alt="Decorative Flower" width={100} height={100} />
+          </div>
+        ))}
+      </div>
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes fadeIn {
           from {
             opacity: 0;

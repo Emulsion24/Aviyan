@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { 
     Search, MapPin, User, Phone, Mail, Award, Loader2, AlertCircle, 
-    TrendingUp, Globe, Building, X, List, ChevronDown 
+    TrendingUp, Globe, Building, X, List, ChevronDown, ArrowLeft, ChevronRight 
 } from "lucide-react";
 
 // --- Translation Data ---
@@ -46,12 +46,14 @@ const translations = {
     
     // MODAL STRINGS
     VIEW_AREAS: "View Assigned Areas",
-    LOADING_AREAS: "Loading assigned areas...",
-    STATES_IN_ZONE: "States & State Prabharis in Zone",
-    SAMBHAGS_IN_STATE: "Sambhags & Sambhag Prabharis in State",
-    DISTRICTS_IN_SAMBHAG: "Districts & District Prabharis in Sambhag",
-    TEHSILS_IN_DISTRICT: "Tehsils & Tehsil Prabharis in District",
-    NO_CHILD_UNITS: "No lower-level units assigned or found.",
+    LOADING_AREAS: "Loading data...",
+    STATES_IN_ZONE: "States in Zone",
+    SAMBHAGS_IN_STATE: "Sambhags in State",
+    DISTRICTS_IN_SAMBHAG: "Districts in Sambhag",
+    TEHSILS_IN_DISTRICT: "Tehsils in District",
+    NO_CHILD_UNITS: "No lower-level units found.",
+    CLICK_TO_DRILL: "Click to view",
+    BACK: "Back"
   },
   hi: {
     TITLE: "प्रभारी दर्शिका",
@@ -92,187 +94,266 @@ const translations = {
 
     // NEW MODAL STRINGS
     VIEW_AREAS: "सौंपे गए क्षेत्र देखें",
-    LOADING_AREAS: "सौंपे गए क्षेत्र लोड हो रहे हैं...",
-    STATES_IN_ZONE: "राज्य समूह में राज्य और राज्य प्रभारी",
-    SAMBHAGS_IN_STATE: "राज्य में संभाग और संभाग प्रभारी",
-    DISTRICTS_IN_SAMBHAG: "संभाग में जिले और जिला प्रभारी",
-    TEHSILS_IN_DISTRICT: "जिले में तहसील और तहसील प्रभारी",
-    NO_CHILD_UNITS: "कोई निम्न-स्तरीय इकाई असाइन या मिली नहीं।",
+    LOADING_AREAS: "डेटा लोड हो रहा है...",
+    STATES_IN_ZONE: "जोन के अंतर्गत राज्य",
+    SAMBHAGS_IN_STATE: "राज्य के अंतर्गत संभाग",
+    DISTRICTS_IN_SAMBHAG: "संभाग के अंतर्गत जिले",
+    TEHSILS_IN_DISTRICT: "जिले के अंतर्गत तहसीलें",
+    NO_CHILD_UNITS: "कोई निम्न-स्तरीय इकाई नहीं मिली।",
+    CLICK_TO_DRILL: "विवरण देखने के लिए क्लिक करें",
+    BACK: "पीछे"
   },
 };
 
-// --- New Component: Modal for Showing Child Units ---
-const PrabhariDetailsModal = ({ prabhari, onClose, getT }) => {
+// --- Updated Component: Modal with Drill-Down Capability ---
+const PrabhariDetailsModal = ({ initialPrabhari, onClose, getT }) => {
+    // History stack to manage drill-down navigation
+    // Start with the initial prabhari passed from the search results
+    const [history, setHistory] = useState([initialPrabhari]);
+    
     const [childUnits, setChildUnits] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const unitDetails = useMemo(() => {
+    // The current item we are viewing is always the last item in history
+    const currentView = history[history.length - 1];
+
+    // Determine config based on the level of the CURRENT view item
+    const viewConfig = useMemo(() => {
         let titleKey = '';
         let endpoint = '';
-        // Determine the ID of the unit the current prabhari is assigned to
-        let unitId = prabhari.unitId || prabhari.zoneId || prabhari.stateId || prabhari.sambhagId || prabhari.districtId || prabhari.id; 
+        // Use unitId if available (for drill down items), otherwise fallback to standard ids
+        let unitId = currentView.unitId || currentView.zoneId || currentView.stateId || currentView.sambhagId || currentView.districtId || currentView.id; 
         
-        let nextLevelKey = ''; 
+        let nextLevel = ''; 
 
-        switch (prabhari.level) {
+        switch (currentView.level) {
             case 'ZONE':
                 titleKey = 'STATES_IN_ZONE';
                 endpoint = `/api/states/prabharis?zoneId=${unitId}`; 
-                nextLevelKey = 'STATE';
+                nextLevel = 'STATE';
                 break;
             case 'STATE':
                 titleKey = 'SAMBHAGS_IN_STATE';
-                // FIX 1: Using the confirmed GET API endpoint which returns Sambhags with nested prabhari object.
                 endpoint = `/api/sambhags?stateId=${unitId}`; 
-                nextLevelKey = 'SAMBHAG';
+                nextLevel = 'SAMBHAG';
                 break;
             case 'SAMBHAG':
                 titleKey = 'DISTRICTS_IN_SAMBHAG';
-                // Note: The /api/districts/prabharis POST endpoint requires districtIds array in the body.
-                // We'll proceed with a standard GET assumption, but if it fails, we know it needs a POST/body fix later.
                 endpoint = `/api/districts?sambhagId=${unitId}`;
-                nextLevelKey = 'DISTRICT';
+                nextLevel = 'DISTRICT';
                 break;
             case 'DISTRICT':
                 titleKey = 'TEHSILS_IN_DISTRICT';
-                // Assuming standard GET, or we rely on the backend to handle the query parameter correctly.
                 endpoint = `/api/tehsils?districtId=${unitId}`;
-                nextLevelKey = 'TEHSIL';
+                nextLevel = 'TEHSIL';
                 break;
             default:
                 return null; // Tehsil level has no lower units
         }
-        return { title: getT(titleKey), endpoint, nextLevelKey };
-    }, [prabhari, getT]);
+        return { title: getT(titleKey), endpoint, nextLevel };
+    }, [currentView, getT]);
 
+    // Fetch data whenever the current view changes
     useEffect(() => {
-        if (!unitDetails) return;
+        if (!viewConfig) {
+            setChildUnits([]);
+            return;
+        }
         
         const fetchChildUnits = async () => {
             setLoading(true);
             setError('');
+            setChildUnits(null);
+            
             try {
-                // Log endpoint for debugging 405/404 issues
-                console.log(`[Modal Fetch] Attempting GET to: ${unitDetails.endpoint}`);
-
-                const res = await fetch(window.location.origin + unitDetails.endpoint);
+                const res = await fetch(window.location.origin + viewConfig.endpoint);
                 
                 if (!res.ok) {
                     let errorBody = await res.text();
-                    try {
-                        errorBody = JSON.parse(errorBody).error || errorBody;
-                    } catch (e) {}
-                    // Throw a detailed error to be caught by the front-end display
-                    throw new Error(`[${res.status} ${res.statusText}] Failed to fetch assigned units. API response detail: ${errorBody.slice(0, 100)}...`);
+                    try { errorBody = JSON.parse(errorBody).error || errorBody; } catch (e) {}
+                    throw new Error(errorBody);
                 }
                 
                 let data = await res.json();
-                
-                // Assuming API returns {data: []} or just []
-                const unitsArray = data.data || data; 
-                setChildUnits(unitsArray || []);
+                setChildUnits(data.data || data || []);
             } catch (err) {
-                console.error("Child unit fetch error:", err);
+                console.error("Fetch error:", err);
                 setError(err.message || getT('ERROR_API_GENERAL'));
             } finally {
                 setLoading(false);
             }
         };
         fetchChildUnits();
-    }, [unitDetails, getT]);
+    }, [viewConfig, getT]);
 
-    if (!unitDetails) return null;
+    // Handle clicking a row to drill down
+    const handleDrillDown = (item) => {
+        if (!viewConfig || !viewConfig.nextLevel) return;
+
+        // Create a new "view" object representing the clicked item
+        // We artificially assign it the 'level' so the next render knows what API to call
+        const nextViewItem = {
+            id: item.id,
+            name: item.name,
+            level: viewConfig.nextLevel,
+            unitId: item.id, // Important: use this ID for the next API call
+            // Pass through prabhari info if needed for header display, though mainly we need ID and Level
+        };
+
+        setHistory(prev => [...prev, nextViewItem]);
+    };
+
+    const handleBack = () => {
+        if (history.length > 1) {
+            setHistory(prev => prev.slice(0, -1));
+        }
+    };
+
+    if (!currentView) return null;
 
     return (
         <div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
             onClick={onClose}
         >
             <div 
-                className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 m-4 relative animate-fade-in max-h-[90vh] overflow-y-auto"
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
             >
-                <button
-                    onClick={onClose}
-                    className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2 transition-all"
-                >
-                    <X size={24} />
-                </button>
-
-                <div className="text-center mb-6 border-b pb-4">
-                    <h3 className="text-2xl font-bold text-gray-800">{prabhari.name}</h3>
-                    <p className="text-md text-purple-600 font-semibold mt-1">
-                        {getT(`LEVEL_${prabhari.level}`)} for {prabhari.zoneName || prabhari.stateName || prabhari.sambhagName || prabhari.districtName || 'Area'}
-                    </p>
+                {/* Header Section */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 border-b flex items-start justify-between shrink-0">
+                    <div className="flex items-center gap-3">
+                        {history.length > 1 && (
+                            <button 
+                                onClick={handleBack}
+                                className="p-2 -ml-2 hover:bg-white rounded-full transition-colors text-gray-600 hover:text-blue-600"
+                                title={getT('BACK')}
+                            >
+                                <ArrowLeft size={20} />
+                            </button>
+                        )}
+                        <div>
+                            <h3 className="text-xl font-bold text-gray-800 leading-tight">
+                                {currentView.name}
+                            </h3>
+                            <p className="text-sm text-purple-600 font-semibold flex items-center gap-1 mt-0.5">
+                                <Award size={14} />
+                                {getT(`LEVEL_${currentView.level}`)}
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full p-2 transition-all"
+                    >
+                        <X size={24} />
+                    </button>
                 </div>
 
-                <h4 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-4">
-                    <List className="w-5 h-5 text-blue-600" />
-                    {unitDetails.title}
-                </h4>
-
-                {loading ? (
-                    <div className="flex flex-col items-center justify-center py-10 text-gray-600">
-                        <Loader2 className="w-8 h-8 animate-spin mb-3" />
-                        <p>{getT('LOADING_AREAS')}</p>
+                {/* Content Section */}
+                <div className="p-4 overflow-y-auto flex-1 bg-gray-50/50">
+                    <div className="flex items-center justify-between mb-4 px-1">
+                        <h4 className="text-lg font-bold text-gray-700 flex items-center gap-2">
+                            <List className="w-5 h-5 text-blue-600" />
+                            {viewConfig ? viewConfig.title : getT('VIEW_AREAS')}
+                        </h4>
+                        {history.length > 1 && (
+                             <span className="text-xs text-gray-400 font-medium px-2 py-1 bg-gray-100 rounded-md">
+                                Level {history.length}
+                             </span>
+                        )}
                     </div>
-                ) : error ? (
-                    <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
-                        <span className="font-semibold block mb-2">Error Loading Details:</span>
-                        <p className="text-sm break-all">{error}</p>
-                        <p className="text-xs mt-2 italic">Please check the console for API endpoint details.</p>
-                    </div>
-                ) : childUnits && childUnits.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto p-2 bg-gray-50 rounded-lg border">
-                        {childUnits.map((unit) => {
-                            // FIX 2: Handle both single object (unit.prabhari, common for State/Sambhag)
-                            // and array (unit.prabharis, common for District/Tehsil)
-                            const rawPrabhariData = unit.prabharis || unit.prabhari;
-                            const unitPrabharis = Array.isArray(rawPrabhariData) 
-                                ? rawPrabhariData 
-                                : (rawPrabhariData ? [rawPrabhariData] : []);
-                            const nextLevelKey = unitDetails.nextLevelKey; 
 
-                            return (
-                                <div 
-                                    key={unit.id} 
-                                    className="p-3 bg-white rounded-lg shadow-sm border border-gray-200"
-                                >
-                                    <h5 className="font-bold text-gray-800 flex items-center gap-2">
-                                        <MapPin size={16} className="text-purple-500"/>
-                                        {unit.name}
-                                    </h5>
-                                    
-                                    {unitPrabharis.length > 0 ? (
-                                        <div className="mt-2 text-sm text-gray-600 space-y-1 border-t pt-2">
-                                            {unitPrabharis.map((p) => (
-                                                <div key={p.id} className="space-y-0.5">
-                                                    <p className="flex items-center gap-2">
-                                                        <User size={14} className="text-gray-500" />
-                                                        <strong>{p.name}</strong>
-                                                        <span className="text-xs text-blue-500 ml-1">({getT(`LEVEL_${nextLevelKey}`)} Prabhari)</span>
-                                                    </p>
-                                                    <p className="flex items-center gap-2 text-xs ml-5">
-                                                        <Phone size={12} className="text-gray-500" />
-                                                        {p.phone}
-                                                    </p>
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                            <Loader2 className="w-8 h-8 animate-spin mb-3 text-blue-500" />
+                            <p>{getT('LOADING_AREAS')}</p>
+                        </div>
+                    ) : error ? (
+                        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                            <p className="font-semibold flex items-center gap-2">
+                                <AlertCircle size={16}/> Error
+                            </p>
+                            <p className="mt-1">{error}</p>
+                        </div>
+                    ) : childUnits && childUnits.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-3">
+                            {childUnits.map((unit) => {
+                                // Handle data inconsistencies (array vs object)
+                                const rawPrabhariData = unit.prabharis || unit.prabhari;
+                                const unitPrabharis = Array.isArray(rawPrabhariData) 
+                                    ? rawPrabhariData 
+                                    : (rawPrabhariData ? [rawPrabhariData] : []);
+                                
+                                const isClickable = viewConfig && viewConfig.nextLevel !== 'TEHSIL' && viewConfig.nextLevel !== '';
+
+                                return (
+                                    <div 
+                                        key={unit.id} 
+                                        onClick={() => isClickable && handleDrillDown(unit)}
+                                        className={`bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-200 
+                                            ${isClickable ? 'hover:shadow-md hover:border-blue-300 cursor-pointer group' : ''}
+                                        `}
+                                    >
+                                        <div className="p-4">
+                                            <div className="flex justify-between items-start">
+                                                <h5 className="font-bold text-gray-800 flex items-center gap-2 text-lg">
+                                                    <MapPin size={18} className="text-purple-500"/>
+                                                    {unit.name}
+                                                </h5>
+                                                {isClickable && (
+                                                    <ChevronRight className="text-gray-300 group-hover:text-blue-500 transition-colors" size={20} />
+                                                )}
+                                            </div>
+                                            
+                                            {unitPrabharis.length > 0 ? (
+                                                <div className="mt-3 space-y-2">
+                                                    {unitPrabharis.map((p, idx) => (
+                                                        <div key={idx} className="flex items-start gap-3 p-2 bg-gray-50 rounded-lg border border-gray-100">
+                                                            <div className="mt-1 bg-white p-1 rounded-full shadow-sm">
+                                                                <User size={14} className="text-blue-600" />
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <p className="text-sm font-bold text-gray-800 truncate">{p.name}</p>
+                                                                <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
+                                                                    <p className="flex items-center gap-1 text-xs text-gray-600">
+                                                                        <Phone size={10} /> {p.phone}
+                                                                    </p>
+                                                                    {viewConfig && (
+                                                                        <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-medium">
+                                                                            {getT(`LEVEL_${viewConfig.nextLevel}`)}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                <p className="text-sm text-gray-400 mt-2 italic ml-7">
+                                                    No {viewConfig ? getT(`LEVEL_${viewConfig.nextLevel}`) : 'Prabhari'} assigned.
+                                                </p>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            No {getT(`LEVEL_${nextLevelKey}`)} assigned.
-                                        </p>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                ) : (
-                    <p className="text-center py-6 text-gray-500">{getT('NO_CHILD_UNITS')}</p>
-                )}
-                
+                                        {isClickable && (
+                                            <div className="bg-gray-50 px-4 py-1.5 border-t border-gray-100 flex justify-end">
+                                                <span className="text-xs font-medium text-blue-500 group-hover:underline flex items-center gap-1">
+                                                    {getT('CLICK_TO_DRILL')} {viewConfig.nextLevel === 'SAMBHAG' ? 'Districts' : viewConfig.nextLevel === 'DISTRICT' ? 'Tehsils' : 'Details'}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="text-center py-10 bg-white rounded-xl border border-dashed border-gray-300">
+                            <MapPin className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                            <p className="text-gray-500">{getT('NO_CHILD_UNITS')}</p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
@@ -314,7 +395,7 @@ const PravariSearchUI = () => {
   const [showResults, setShowResults] = useState(false);
   
   // --- Modal State ---
-  const [selectedPrabhari, setSelectedPrabhari] = useState(null); // New state for modal
+  const [selectedPrabhari, setSelectedPrabhari] = useState(null); 
 
   // Filter States
   const [zoneId, setZoneId] = useState("");
@@ -1082,7 +1163,7 @@ const PravariSearchUI = () => {
       {/* Modal Render */}
       {selectedPrabhari && (
           <PrabhariDetailsModal 
-              prabhari={selectedPrabhari} 
+              initialPrabhari={selectedPrabhari} 
               onClose={closeModal} 
               getT={getT} 
           />
