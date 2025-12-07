@@ -107,8 +107,8 @@ export default function DownloadsSection() {
       description: "गौ सम्मान आह्वान अभियान की पूर्ण जानकारी",
       icon: FileText,
       files: [ 
-        { type: "PDF", file: "/GSAA-02 A5 Final (1).pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
-        { type: "CDR", file: "https://drive.google.com/file/d/1i61Fu6BGfR3KTfzv1-caVIFcviYriWrC/view?usp=drive_link", filename: "Gau-Samman-Aviyan.cdr" } 
+        { type: "PDF", file: "/prachar.pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1PXVzEbxNPgnbiHjZEM5m9F4QNOCBY-fH/view?usp=drive_link", filename: "Gau-Samman-Aviyan.cdr" } 
       ],
       color: "from-orange-500 to-amber-600",
       bgPattern: "from-orange-50 to-amber-50"
