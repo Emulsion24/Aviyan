@@ -3,7 +3,7 @@ import { Download, FileText, Printer, ImageIcon, Music2Icon, X } from "lucide-re
 import Image from "next/image";
 import { useState } from "react";
 
-// Modal Component (Integrated for simplicity)
+// Modal Component
 const DownloadModal = ({ file, onClose }) => {
   if (!file) return null;
 
@@ -11,7 +11,7 @@ const DownloadModal = ({ file, onClose }) => {
     // For Google Drive links, open in new tab
     if (file.file.includes("drive.google.com")) {
       window.open(file.file, '_blank');
-      onClose(); // Close modal after action
+      onClose();
       return;
     }
 
@@ -22,9 +22,10 @@ const DownloadModal = ({ file, onClose }) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    onClose(); // Close modal after download is initiated
+    onClose(); 
   };
   
+  // Logic to detect file types for preview
   const isViewable = file.type === "PDF" || file.type === "JPG";
   const isPlayable = file.type === "MP3";
 
@@ -32,7 +33,7 @@ const DownloadModal = ({ file, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={onClose}>
       <div 
         className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 md:p-8 transform transition-all duration-300 scale-100 opacity-100" 
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+        onClick={(e) => e.stopPropagation()} 
       >
         <div className="flex justify-between items-center border-b pb-4 mb-4">
           <h3 className="text-2xl font-bold text-gray-800">
@@ -101,21 +102,36 @@ export default function DownloadsSection() {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const downloads = [
+    // 1. Hindi Prachar Patrak
     {
       id: 1,
-      title: "गौ सम्मान आह्वान अभियान प्रचार पत्रक",
-      description: "गौ सम्मान आह्वान अभियान की पूर्ण जानकारी",
+      title: "प्रचार पत्रक (Hindi)",
+      description: "गौ सम्मान आह्वान अभियान की पूर्ण जानकारी (हिंदी)",
       icon: FileText,
       files: [ 
-        { type: "PDF", file: "/prachar.pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
-        { type: "CDR", file: "https://drive.google.com/file/d/1PXVzEbxNPgnbiHjZEM5m9F4QNOCBY-fH/view?usp=drive_link", filename: "Gau-Samman-Aviyan.cdr" } 
+        { type: "PDF", file: "/GSAA-02 A5 Final (2).pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1MGZL_Rzj8LXrv-gF1htxyNyqdnE8jCza/view?usp=drive_link", filename: "Gau-Samman-Aviyan.cdr" } 
       ],
       color: "from-orange-500 to-amber-600",
       bgPattern: "from-orange-50 to-amber-50"
     },
+    // 2. English Prachar Patrak (New)
     {
       id: 2,
-      title: "गौ सम्मान आह्वान अभियान उद्बोधन पत्र",
+      title: "Prachar Patrak (English)",
+      description: "Complete information about Gau Samman Abhiyan (English)",
+      icon: FileText,
+      files: [ 
+        { type: "PDF", file: "/GSAA-02 A5 English.pdf", filename: "Gau-Samman-Aviyan-English.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1r4fVYAQvLd2Nai1FtyocgpEq4-Fxk6cY/view?usp=sharing", filename: "Gau-Samman-Aviyan-English.cdr" } 
+      ],
+      color: "from-purple-500 to-violet-600",
+      bgPattern: "from-purple-50 to-violet-50"
+    },
+    // 3. Udbodhan Patra
+    {
+      id: 3,
+      title: "उद्बोधन पत्र",
       description: "प्रिंट करने योग्य अभियान सामग्री",
       icon: Printer,
       files: [ 
@@ -125,8 +141,9 @@ export default function DownloadsSection() {
       color: "from-blue-500 to-indigo-600",
       bgPattern: "from-blue-50 to-indigo-50"
     },
+    // 4. Logo
     {
-      id: 3,
+      id: 4,
       title: "लोगो डाउनलोड",
       description: "गौ सम्मान आह्वान का आधिकारिक लोगो",
       icon: ImageIcon,
@@ -136,20 +153,86 @@ export default function DownloadsSection() {
       color: "from-green-500 to-emerald-600",
       bgPattern: "from-green-50 to-emerald-50"
     },
+    // 5. Song
     {
-      id: 4,
+      id: 5,
       title: "अभियान गीत (MP3)",
       description: "गौ सम्मान आह्वान अभियान का आधिकारिक गीत डाउनलोड करें।",
       icon: Music2Icon,
-      files: [ // Standardized to use files array
+      files: [ 
         { type: "MP3", file: "/aviyan-song.mp3", filename: "Gau-Samman-Geet.mp3" }
       ],
       color: "from-cyan-500 to-teal-600",
       bgPattern: "from-cyan-50 to-teal-50"
+    },
+    // 6. Poster 19 x 22
+    {
+      id: 6,
+      title: "पोस्टर (Poster) 19x22",
+      description: "19x22 इंच पोस्टर प्रिंट फाइल डाउनलोड करें।",
+      icon: ImageIcon,
+      files: [
+        { type: "PDF", file: "Poster 19x22.pdf", filename: "Poster-19x22.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/19pverH4yBchrbnRpPawmkF4XUWq2Kh9W/view?usp=sharing", filename: "Poster-19x22.cdr" }
+      ],
+      color: "from-red-500 to-rose-600",
+      bgPattern: "from-red-50 to-rose-50"
+    },
+    // 7. Flex 20 x 10
+    {
+      id: 7,
+      title: "फ्लेक्स (Flex) 20x10",
+      description: "20x10 फीट फ्लेक्स प्रिंट फाइल डाउनलोड करें।",
+      icon: ImageIcon,
+      files: [
+        { type: "PDF", file: "Flex 20x10 ...1.pdf", filename: "Flex-20x10.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1DdPlLONlPe5nCetjDnADwkEqXuOhlTYk/view?usp=sharing", filename: "Flex-20x10.cdr" }
+      ],
+      color: "from-pink-500 to-fuchsia-600",
+      bgPattern: "from-pink-50 to-fuchsia-50"
+    },
+    // 8. Flex 10 x 10
+    {
+      id: 8,
+      title: "फ्लेक्स (Flex) 10x10",
+      description: "10x10 फीट फ्लेक्स प्रिंट फाइल डाउनलोड करें।",
+      icon: ImageIcon,
+      files: [
+        // Using the file path provided in your previous snippet for 10x10 (check if correct)
+        { type: "PDF", file: "Flex 4x2 ...1.pdf", filename: "Flex-10x10.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1pFs78o-KcFKJCu_mdQrQxn_WbDewvTI_/view?usp=sharing", filename: "Flex-10x10.cdr" }
+      ],
+      color: "from-indigo-500 to-violet-600",
+      bgPattern: "from-indigo-50 to-violet-50"
+    },
+    // 9. Flex 6 x 4
+    {
+      id: 9,
+      title: "फ्लेक्स (Flex) 6x4",
+      description: "6x4 फीट फ्लेक्स प्रिंट फाइल डाउनलोड करें।",
+      icon: ImageIcon,
+      files: [
+        { type: "PDF", file: "Flex 6x4 ..1.pdf", filename: "Flex-6x4.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1kKH5DXXBvW4lBSWle-t73kebSqQK_pjd/view?usp=sharing", filename: "Flex-6x4.cdr" }
+      ],
+      color: "from-teal-500 to-emerald-600",
+      bgPattern: "from-teal-50 to-emerald-50"
+    },
+    // 10. Flex 4 x 2
+    {
+      id: 10,
+      title: "फ्लेक्स (Flex) 4x2",
+      description: "4x2 फीट फ्लेक्स प्रिंट फाइल डाउनलोड करें।",
+      icon: ImageIcon,
+      files: [
+        { type: "PDF", file: "Flex 4x2 ...1.pdf", filename: "Flex-4x2.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1eWFjLbv580dEP0dI-PM2o_r9CxcXPs7s/view?usp=sharing", filename: "Flex-4x2.cdr" }
+      ],
+      color: "from-sky-500 to-blue-600",
+      bgPattern: "from-sky-50 to-blue-50"
     }
   ];
 
-  // Updated handler to open the modal
   const handleDownloadPrepare = (fileInfo) => {
     setSelectedFile(fileInfo);
   };
@@ -158,20 +241,17 @@ export default function DownloadsSection() {
     <section id="downlaod"
     className="relative py-20 bg-gradient-to-br from-yellow-50 via-white to-orange-50 overflow-hidden">
       
-      {/* Download Modal */}
       <DownloadModal 
         file={selectedFile} 
         onClose={() => setSelectedFile(null)} 
       />
       
-      {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-block mb-4">
             <Image
@@ -195,63 +275,52 @@ export default function DownloadsSection() {
           
         </div>
 
-        {/* Download Cards Grid */}
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           {downloads.map((item, index) => (
             <div
               key={item.id}
-              className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border-2 border-gray-100 flex flex-col" // Added flex flex-col
+              className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border-2 border-gray-100 flex flex-col" 
               style={{
-                animationDelay: `${index * 150}ms`
+                animationDelay: `${index * 100}ms`
               }}
             >
-              {/* Gradient background */}
               <div className={`absolute inset-0 bg-gradient-to-br ${item.bgPattern} opacity-50 group-hover:opacity-70 transition-opacity duration-300`}></div>
               
-              {/* Content */}
-              <div className="relative p-8 flex-grow"> {/* Added flex-grow */}
-                {/* Icon */}
+              <div className="relative p-8 flex-grow"> 
                 <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${item.color} shadow-lg mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   <item.icon size={40} className="text-white" />
                 </div>
 
-                {/* Title */}
-                <h3 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-orange-600 transition-colors">
+                <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-orange-600 transition-colors">
                   {item.title}
                 </h3>
 
-                {/* Description */}
                 <p className="text-gray-600 mb-6 text-sm leading-relaxed">
                   {item.description}
                 </p>
               </div>
 
-              {/* Download Button(s) - This section is pushed to the bottom */}
-              <div className="relative px-8 pb-8 pt-0"> {/* Wrapper div for buttons */}
+              <div className="relative px-8 pb-8 pt-0"> 
+                {/* Two buttons (PDF and CDR) per card */}
                 <div className="flex gap-3">
                   {item.files.map((fileInfo) => (
                     <button
                       key={fileInfo.type}
-                      onClick={() => handleDownloadPrepare(fileInfo)} // Use the new prepare function
-                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r ${item.color} text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95`}
+                      onClick={() => handleDownloadPrepare(fileInfo)} 
+                      className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg bg-gradient-to-r ${item.color} text-white font-semibold shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 text-sm`}
                     >
-                      <Download size={18} />
-                      <span>
-                        {/* Show file type or "Download" */}
-                        {item.files.length > 1 ? fileInfo.type : "डाउनलोड करें"}
-                      </span>
+                      <Download size={16} />
+                      <span>{fileInfo.type}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Decorative corner */}
               <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${item.color} opacity-10 rounded-bl-full`}></div>
             </div>
           ))}
         </div>
 
-        {/* Info Box */}
         <div className="max-w-3xl mx-auto bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-200 rounded-2xl p-6 shadow-lg">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 mt-1">
