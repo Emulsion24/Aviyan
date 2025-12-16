@@ -1,7 +1,8 @@
 {
   "phases": {
     "setup": {
-      "nixPkgs": ["nodejs", "npm", "bash"]
+      "nixPkgs": ["nodejs", "npm", "bash"],
+      "aptPkgs": ["bash"]
     }
   }
 }
