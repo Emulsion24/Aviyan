@@ -160,7 +160,7 @@ export default function DownloadsSection() {
       description: "गौ सम्मान आह्वान अभियान का आधिकारिक गीत डाउनलोड करें।",
       icon: Music2Icon,
       files: [ 
-        { type: "MP3", file: "/aviyan-song.mp3", filename: "Gau-Samman-Geet.mp3" }
+        { type: "MP3", file: "/Goumata DynamicCD.wav", filename: "Gau-Samman-Geet.mp3" }
       ],
       color: "from-cyan-500 to-teal-600",
       bgPattern: "from-cyan-50 to-teal-50"
