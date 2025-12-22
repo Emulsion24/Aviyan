@@ -109,8 +109,8 @@ export default function DownloadsSection() {
       description: "गौ सम्मान आह्वान अभियान की पूर्ण जानकारी (हिंदी)",
       icon: FileText,
       files: [ 
-        { type: "PDF", file: "/GSAA-02 A5 Final (2).pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
-        { type: "CDR", file: "https://drive.google.com/file/d/1MGZL_Rzj8LXrv-gF1htxyNyqdnE8jCza/view?usp=drive_link", filename: "Gau-Samman-Aviyan.cdr" } 
+        { type: "PDF", file: "/Hindi-01.pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1v6vE9rEdmx99QLUE3Co4jvDTGFqSAp6s/view?usp=sharing", filename: "Gau-Samman-Aviyan.cdr" } 
       ],
       color: "from-orange-500 to-amber-600",
       bgPattern: "from-orange-50 to-amber-50"
@@ -230,7 +230,19 @@ export default function DownloadsSection() {
       ],
       color: "from-sky-500 to-blue-600",
       bgPattern: "from-sky-50 to-blue-50"
-    }
+    },
+       {
+      id: 11,
+      title: "प्रचार पत्रक (Gujarati)",
+      description: "गौ सम्मान आह्वान अभियान की पूर्ण जानकारी (गुजराती)",
+      icon: FileText,
+      files: [ 
+        { type: "PDF", file: "/GSAA-02 A5 Final Gujrati.pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1av13J5-tN3HtkYd4kARt2Je_TeRCRnKF/view?usp=sharing", filename: "Gau-Samman-Aviyan.cdr" } 
+      ],
+      color: "from-orange-500 to-amber-600",
+      bgPattern: "from-orange-50 to-amber-50"
+    },
   ];
 
   const handleDownloadPrepare = (fileInfo) => {
