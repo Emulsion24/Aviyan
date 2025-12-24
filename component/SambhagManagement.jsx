@@ -14,13 +14,8 @@ import {
   User,
   Search,
   Map,
-  Download, // Added
-  FileText  // Added
 } from "lucide-react";
-import { fontBase64 } from "../app/Hindifont"; // Adjust path based on where you saved it
 import { useState, useEffect, useMemo, useCallback } from "react";
-import jsPDF from "jspdf"; // Added
-import autoTable from "jspdf-autotable"; // Added
 
 // Helper function for confirmation dialog
 const showConfirmation = (message) => {
@@ -57,7 +52,7 @@ export default function App() {
     phone: "",
     sambhagId: "",
   });
-  // NEW: State for the prabhari form's state selection
+  // State for the prabhari form's state selection
   const [prabhariFormStateId, setPrabhariFormStateId] = useState("");
 
   // Data for forms
@@ -66,18 +61,13 @@ export default function App() {
 
   // Search & Filter State
   const [searchInput, setSearchInput] = useState("");
-  // NEW: State for the prabhari list's state filter
+  // State for the prabhari list's state filter
   const [prabhariListStateFilter, setPrabhariListStateFilter] = useState("");
 
   // Modal State
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
   const [modalDetails, setModalDetails] = useState(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
-
-  // --- NEW: Export State ---
-  const [showExportModal, setShowExportModal] = useState(false);
-  const [exportStateId, setExportStateId] = useState("");
-  const [isExporting, setIsExporting] = useState(false);
 
   // --- Helper Functions ---
   const clearMessages = useCallback(() => {
@@ -194,7 +184,7 @@ export default function App() {
     }
   }, [formStateId, fetchAllDistrictsForState]);
 
-  // --- NEW: Filtered Sambhags for Prabhari Form ---
+  // --- Filtered Sambhags for Prabhari Form ---
   const sambhagsForPrabhariForm = useMemo(() => {
     if (!prabhariFormStateId) {
       return []; // No state selected, so no sambhags to show
@@ -203,7 +193,7 @@ export default function App() {
   }, [prabhariFormStateId, allSambhags]);
 
 
-  // --- MODIFIED: Filtered Prabharis (List) ---
+  // --- Filtered Prabharis (List) ---
   const filteredPrabharis = useMemo(() => {
     const lowercasedInput = searchInput.toLowerCase();
     
@@ -238,7 +228,7 @@ export default function App() {
           (p.sambhagName && p.sambhagName.toLowerCase().includes(lowercasedInput))
       );
     }
-  }, [searchInput, sambhagPrabharis, prabhariListStateFilter, allSambhags]); // Added dependencies
+  }, [searchInput, sambhagPrabharis, prabhariListStateFilter, allSambhags]); 
 
   // --- Sambhag CRUD Handlers ---
 
@@ -381,7 +371,6 @@ export default function App() {
     setData({ ...currentData, [name]: value });
   }
 
-  // MODIFIED: closePrabhariForm
   const closePrabhariForm = () => {
     setEditingPrabhari(null);
     setShowPrabhariForm(false);
@@ -465,110 +454,6 @@ export default function App() {
       setPrabhariLoading(false);
     }
   };
-
-  // --- NEW: Export to PDF Logic ---
- const handleExportPDF = async () => {
-     if (!exportStateId && !showConfirmation("You have not selected a state. This will export ALL data. Continue?")) {
-      return;
-    }
-
-    setIsExporting(true);
-    try {
-      // 1. Fetch ALL data
-      const response = await fetch('/api/prabharis?level=SAMBHAG&limit=10000');
-      if (!response.ok) {
-        throw new Error("Failed to fetch data for export");
-      }
-      const result = await response.json();
-      let data = result.data || result; 
-
-      // 2. Filter Client Side based on Export State Selection
-      if (exportStateId) {
-        const sambhagIdsInState = new Set(
-            allSambhags
-            .filter(s => s.stateId === exportStateId)
-            .map(s => s.id)
-        );
-        data = data.filter(p => 
-            sambhagIdsInState.has(p.unitId) || sambhagIdsInState.has(p.sambhagId)
-        );
-      }
-
-      if (data.length === 0) throw new Error("No data found for the selected state.");
-
-      // 3. Generate PDF
-      const doc = new jsPDF();
-
-      // --- ADDING HINDI FONT ---
-      const fileName = "NotoSansDevanagari-Regular.ttf";
-      
-      // 1. Add the file to the virtual file system
-      doc.addFileToVFS(fileName, fontBase64);
-      
-      // 2. Register the font (Name used in code: "HindiFont")
-      doc.addFont(fileName, "HindiFont", "normal");
-      
-      // 3. Set the font for general text
-      doc.setFont("HindiFont");
-      // -------------------------
-
-      // Header
-      doc.setFontSize(18);
-      doc.setTextColor(40);
-      doc.text("Sambhag Prabhari List", 14, 15);
-
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      const dateStr = new Date().toLocaleDateString();
-      const stateName = allStates.find(s => s.id === exportStateId)?.name || "All States";
-      doc.text(`Generated: ${dateStr} | Region: ${stateName}`, 14, 22);
-
-      // Table
-      const tableColumn = ["Name", "Phone", "Email", "Sambhag", "State"];
-      const tableRows = data.map(item => [
-        item.name,
-        item.phone,
-        item.email || "N/A",
-        item.sambhagName || item.unitName || "",
-        item.stateName || ""
-      ]);
-
-      autoTable(doc, {
-        head: [tableColumn],
-        body: tableRows,
-        startY: 30,
-        theme: 'grid',
-        headStyles: { fillColor: [13, 148, 136] }, 
-        // --- APPLY FONT TO TABLE ---
-        styles: { 
-            fontSize: 9, 
-            font: "HindiFont", // <--- CRITICAL: Apply the custom font to the table
-            fontStyle: "normal" 
-        },
-      });
-
-      // Footer Total
-      const finalY = doc.lastAutoTable.finalY;
-      doc.setLineWidth(0.5);
-      doc.setDrawColor(200, 200, 200);
-      doc.line(14, finalY + 5, 196, finalY + 5);
-
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      doc.text(`Total Records: ${data.length}`, 14, finalY + 12);
-
-      // Save
-      doc.save("sambhag_prabhari_list.pdf");
-      showSuccess("PDF exported successfully!");
-      setShowExportModal(false);
-
-    } catch (err) {
-      showError(err.message);
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
 
   // --- Modal Logic ---
   const openModal = async (prabhari) => {
@@ -922,15 +807,6 @@ export default function App() {
             </h2>
             
             <div className="flex gap-2">
-                {/* NEW: Export PDF Button */}
-                <button
-                    onClick={() => setShowExportModal(true)}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-                >
-                    <Download size={20} />
-                    Export PDF
-                </button>
-
                 {/* Add Button */}
                 <button
                 onClick={() => {
@@ -949,7 +825,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* --- MODIFIED: Sambhag Prabhari Form --- */}
+          {/* --- Sambhag Prabhari Form --- */}
           {(showPrabhariForm || editingPrabhari) && (
             <div className="bg-gradient-to-r from-teal-50 to-green-50 p-6 rounded-2xl mb-6 border-2 border-teal-400 shadow-inner">
               <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -958,7 +834,7 @@ export default function App() {
               </h3>
               <form onSubmit={editingPrabhari ? handleUpdatePrabhari : handleAddPrabhari}>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
-                  {/* NEW: State Selection */}
+                  {/* State Selection */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Select State *</label>
                     <select
@@ -981,7 +857,7 @@ export default function App() {
                     </select>
                   </div>
 
-                  {/* MODIFIED: Sambhag Selection */}
+                  {/* Sambhag Selection */}
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Assign Sambhag *</label>
                     <select
@@ -1061,7 +937,7 @@ export default function App() {
             </div>
           )}
           
-          {/* --- MODIFIED: Prabhari Search & Filter --- */}
+          {/* --- Prabhari Search & Filter --- */}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
                   <select
               value={prabhariListStateFilter}
@@ -1084,7 +960,7 @@ export default function App() {
               />
             </div>
             
-            {/* NEW: State Filter Dropdown */}
+            {/* State Filter Dropdown */}
       
           </div>
 
@@ -1151,7 +1027,7 @@ export default function App() {
                       </td>
                       <td className="p-5 text-center">
                         <div className="flex items-center justify-center gap-2">
-                          {/* MODIFIED: Edit button onClick */}
+                          {/* Edit button onClick */}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -1196,62 +1072,6 @@ export default function App() {
           )}
         </div>
       </div>
-
-       {/* NEW: Export PDF Modal */}
-       {showExportModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
-          onClick={() => setShowExportModal(false)}
-        >
-           <div
-            className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 m-4 relative animate-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setShowExportModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2 transition-all"
-            >
-              <X size={24} />
-            </button>
-
-            <div className="mb-6 text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Export to PDF</h2>
-              <p className="text-gray-600 text-sm">Download Sambhag Prabhari list report.</p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Select State
-                </label>
-                <select
-                  value={exportStateId}
-                  onChange={(e) => setExportStateId(e.target.value)}
-                  className="w-full border border-gray-200 focus:border-teal-500 p-3 rounded-xl outline-none transition-all bg-white"
-                >
-                  <option value="">Select State</option>
-                  {allStates.map((state) => (
-                    <option key={state.id} value={state.id}>
-                      {state.name}
-                    </option>
-                  ))}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">Leave empty to export for ALL states.</p>
-              </div>
-
-              <button
-                onClick={handleExportPDF}
-                disabled={isExporting}
-                className="w-full flex items-center justify-center gap-2 mt-4 px-6 py-3 rounded-xl font-bold bg-teal-600 hover:bg-teal-700 text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isExporting ? <Loader2 size={20} className="animate-spin" /> : <FileText size={20} />}
-                {isExporting ? "Generating PDF..." : "Download PDF Report"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
 
       {/* Prabhari Details Modal */}
       {selectedPrabhari && (

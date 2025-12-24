@@ -16,7 +16,8 @@ import {
   RefreshCw,
   MoreVertical,
   Download,
-  FileText
+  FileText,
+  Globe 
 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -303,7 +304,7 @@ export default function TehsilPrabhariManagement() {
     } catch (err) { showToast(err.message, "error"); }
   };
 
-  // --- UPDATED EXPORT LOGIC ---
+  // --- EXPORT LOGIC 1: Filtered Export ---
   const handleExportPDF = async () => {
     if (!exportStateId && !window.confirm("You have not selected a state. This will export ALL data. Continue?")) {
       return;
@@ -311,14 +312,14 @@ export default function TehsilPrabhariManagement() {
 
     setIsExportLoading(true);
     try {
+      // Logic: If current view is Prabhari, export prabharis (205). If view is Tehsil, export Tehsils (140)
       const endpoint = currentView === 'PRABHARI' ? '/api/prabharis' : '/api/tehsils';
       const params = new URLSearchParams({ 
         limit: 10000, 
-        page: 1, // Explicitly send page 1 to ensure backend returns data
+        page: 1, 
         level: "TEHSIL" 
       });
 
-      // Match the exact filter logic used in fetchData
       if (exportDistrictId) {
         params.append("districtId", exportDistrictId);
       } else if (exportStateId) {
@@ -332,10 +333,7 @@ export default function TehsilPrabhariManagement() {
 
       if (data.length === 0) throw new Error("No data found for the selected region.");
 
-      // PDF Generation
       const doc = new jsPDF();
-
-      // Header
       doc.setFontSize(18);
       doc.setTextColor(40);
       const title = currentView === 'PRABHARI' ? "Tehsil Prabhari Report" : "Tehsil Unit Report";
@@ -348,7 +346,6 @@ export default function TehsilPrabhariManagement() {
       const districtName = exportDistricts.find(d => d.id === exportDistrictId)?.name || "All Districts";
       doc.text(`Generated: ${dateStr} | Region: ${stateName} - ${districtName}`, 14, 22);
 
-      // Table Data Preparation
       let tableColumn = [];
       let tableRows = [];
 
@@ -384,7 +381,6 @@ export default function TehsilPrabhariManagement() {
         styles: { fontSize: 9 },
       });
 
-      // Total Count
       const finalY = doc.lastAutoTable.finalY;
       doc.setLineWidth(0.5);
       doc.setDrawColor(200, 200, 200);
@@ -403,6 +399,88 @@ export default function TehsilPrabhariManagement() {
       showToast(err.message, "error");
     } finally {
       setIsExportLoading(false);
+    }
+  };
+
+  // --- EXPORT LOGIC 2: Master Export (Updated to fix Count Issue) ---
+  const handleExportMasterList = async () => {
+    if (!window.confirm("This will export a comprehensive Master List of all Tehsil Prabharis. This may take a moment. Continue?")) {
+        return;
+    }
+
+    setIsExportLoading(true);
+    try {
+        // CHANGED: Fetch 'prabharis' instead of 'tehsils' to ensure we get all 205 records (People), not just the 140 Units.
+        const res = await fetch('/api/prabharis?limit=10000&level=TEHSIL');
+        if (!res.ok) throw new Error("Failed to fetch master list data");
+        
+        const result = await res.json();
+        const data = result.data || [];
+
+        if (data.length === 0) throw new Error("No data found.");
+
+        // Sort: State -> District -> Tehsil -> Name
+        data.sort((a, b) => {
+            const stateA = a.stateName || "";
+            const stateB = b.stateName || "";
+            if (stateA !== stateB) return stateA.localeCompare(stateB);
+
+            const distA = a.districtName || "";
+            const distB = b.districtName || "";
+            if (distA !== distB) return distA.localeCompare(distB);
+
+            const tehsilA = a.tehsilName || "";
+            const tehsilB = b.tehsilName || "";
+            if (tehsilA !== tehsilB) return tehsilA.localeCompare(tehsilB);
+            
+            return a.name.localeCompare(b.name);
+        });
+
+        // Generate PDF
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text("Master Tehsil Prabhari List", 14, 15);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text(`Generated: ${new Date().toLocaleDateString()} | Total Prabharis: ${data.length}`, 14, 22);
+
+        const tableRows = data.map(item => {
+            return [
+                item.stateName || "N/A",
+                item.districtName || "N/A",
+                item.tehsilName || "N/A",
+                item.name, 
+                item.phone,
+                item.email || ""
+            ];
+        });
+
+        autoTable(doc, {
+            head: [["State", "District", "Tehsil", "Prabhari Name", "Phone", "Email"]],
+            body: tableRows,
+            startY: 30,
+            theme: 'grid',
+            headStyles: { fillColor: [55, 65, 81] }, // Dark Gray
+            styles: { fontSize: 8, cellPadding: 3 },
+            columnStyles: {
+                0: { cellWidth: 25 }, // State
+                1: { cellWidth: 25 }, // District
+                2: { cellWidth: 30 }, // Tehsil
+                3: { cellWidth: 35 }, // Name
+                4: { cellWidth: 25 }, // Phone
+                5: { cellWidth: 'auto' } // Email
+            }
+        });
+
+        doc.save("master_tehsil_prabhari_list.pdf");
+        showToast("Master list exported!", "success");
+        setShowExportModal(false);
+
+    } catch (err) {
+        showToast(err.message, "error");
+    } finally {
+        setIsExportLoading(false);
     }
   };
 
@@ -685,14 +763,16 @@ export default function TehsilPrabhariManagement() {
             </button>
 
             <div className="mb-6 text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Export to PDF</h2>
-              <p className="text-gray-600 text-sm">Download {currentView === 'PRABHARI' ? 'Prabhari' : 'Tehsil'} list report.</p>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Export Data</h2>
+              <p className="text-gray-600 text-sm">Choose what data you would like to export.</p>
             </div>
 
-            <div className="space-y-4">
+            {/* Section 1: Filtered Export */}
+            <div className="space-y-4 pb-6 border-b border-gray-200">
+              <h3 className="font-bold text-teal-700 text-sm uppercase tracking-wide">1. Filtered Report</h3>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Select State
+                  Select State (Filter)
                 </label>
                 <select
                   value={exportStateId}
@@ -710,7 +790,7 @@ export default function TehsilPrabhariManagement() {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Select District
+                  Select District (Filter)
                 </label>
                 <select
                   value={exportDistrictId}
@@ -727,18 +807,34 @@ export default function TehsilPrabhariManagement() {
                     </option>
                   ))}
                 </select>
-                <p className="text-xs text-gray-500 mt-1">Leave empty to export for the whole state.</p>
               </div>
 
               <button
                 onClick={handleExportPDF}
-                disabled={isExportLoading || !exportStateId}
-                className="w-full flex items-center justify-center gap-2 mt-4 px-6 py-3 rounded-xl font-bold bg-red-600 hover:bg-red-700 text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isExportLoading}
+                className="w-full flex items-center justify-center gap-2 mt-4 px-6 py-3 rounded-xl font-bold bg-teal-600 hover:bg-teal-700 text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isExportLoading ? <Loader2 size={20} className="animate-spin" /> : <FileText size={20} />}
-                {isExportLoading ? "Generating PDF..." : "Download PDF Report"}
+                {isExportLoading ? "Processing..." : "Download Filtered Report"}
               </button>
             </div>
+
+            {/* Section 2: Master Export */}
+            <div className="pt-4 space-y-4">
+                <h3 className="font-bold text-gray-700 text-sm uppercase tracking-wide">2. Master Data List</h3>
+                <p className="text-xs text-gray-500">
+                    Export a comprehensive list of all Tehsil Prabharis (People), sorted by State and District.
+                </p>
+                <button
+                    onClick={handleExportMasterList}
+                    disabled={isExportLoading}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold bg-gray-800 hover:bg-black text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {isExportLoading ? <Loader2 size={20} className="animate-spin" /> : <Globe size={20} />}
+                    {isExportLoading ? "Processing..." : "Export Full Master List"}
+                </button>
+            </div>
+
           </div>
         </div>
       )}

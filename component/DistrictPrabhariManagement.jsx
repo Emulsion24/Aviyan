@@ -16,6 +16,7 @@ import {
   User,
   FileText, // Added for PDF icon
   Download, // Added for Export button
+  Globe,    // Added for Master List icon
 } from "lucide-react";
 import { useState, useEffect } from "react";
 // --- Import PDF Libraries ---
@@ -155,7 +156,7 @@ export default function DistrictPrabhariManagement() {
     return () => controller.abort();
   }, [filterStateId]);
 
-  // --- NEW: Effect: Fetch districts for the EXPORT when state changes ---
+  // Effect: Fetch districts for the EXPORT when state changes
   useEffect(() => {
     const controller = new AbortController();
     
@@ -247,7 +248,7 @@ export default function DistrictPrabhariManagement() {
     }
   };
 
-  // --- NEW: Export Logic ---
+  // --- Export Logic 1: Existing Filtered Export ---
   const handleExportPDF = async () => {
     if (!exportStateId && !showConfirmation("You have not selected a state. This will export ALL data. Continue?")) {
       return;
@@ -327,6 +328,80 @@ export default function DistrictPrabhariManagement() {
       showError(err.message);
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  // --- NEW: Export Logic 2: Export Master List (With Details) ---
+  const handleExportMasterList = async () => {
+    if (!showConfirmation("This will export a master list of all District Prabharis sorted by State. This may take a moment. Continue?")) {
+        return;
+    }
+    
+    setIsExporting(true);
+    try {
+        // Fetch ALL District Prabharis (Bypass pagination)
+        // This endpoint returns State, District, and Personal details
+        const response = await fetch(`/api/prabharis?level=DISTRICT&limit=10000`);
+        
+        if (!response.ok) {
+           const data = await response.json();
+           throw new Error(data.error || "Failed to fetch master list data");
+        }
+        const result = await response.json();
+        const data = result.data || [];
+
+        if (data.length === 0) throw new Error("No data found to export.");
+
+        // Sort Data: First by State Name, then by District Name
+        data.sort((a, b) => {
+            if (a.stateName === b.stateName) {
+                return a.districtName.localeCompare(b.districtName);
+            }
+            return a.stateName.localeCompare(b.stateName);
+        });
+
+        // Initialize PDF
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text("Master District Prabhari List", 14, 15);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text(`Generated: ${new Date().toLocaleDateString()} | Total Records: ${data.length}`, 14, 22);
+
+        // Map Data to Table Rows
+        const tableRows = data.map(item => [
+            item.stateName,
+            item.districtName,
+            item.name,
+            item.phone,
+            item.email || "N/A"
+        ]);
+
+        autoTable(doc, {
+            head: [["State", "District", "Prabhari Name", "Phone", "Email"]],
+            body: tableRows,
+            startY: 30,
+            theme: 'grid',
+            headStyles: { fillColor: [40, 40, 40] }, // Dark Gray Header
+            styles: { fontSize: 9, cellPadding: 3 },
+            columnStyles: {
+                0: { cellWidth: 35 }, // State
+                1: { cellWidth: 35 }, // District
+                2: { cellWidth: 40 }, // Name
+                3: { cellWidth: 30 }, // Phone
+                4: { cellWidth: 'auto' } // Email
+            }
+        });
+
+        doc.save("master_district_prabhari_list.pdf");
+        showSuccess("Master list exported successfully!");
+        setShowExportModal(false);
+
+    } catch (err) {
+        showError("Failed to generate master list: " + err.message);
+    } finally {
+        setIsExporting(false);
     }
   };
 
@@ -907,21 +982,23 @@ export default function DistrictPrabhariManagement() {
             </button>
 
             <div className="mb-6 text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Export to PDF</h2>
-              <p className="text-gray-600 text-sm">Select State and District to generate the PDF report.</p>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Export Data</h2>
+              <p className="text-gray-600 text-sm">Choose what data you would like to export.</p>
             </div>
 
-            <div className="space-y-4">
+            {/* Section 1: Export Prabharis (Existing) */}
+            <div className="space-y-4 pb-6 border-b border-gray-200">
+               <h3 className="font-bold text-purple-700 text-sm uppercase tracking-wide">1. Export Filtered Report</h3>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Select State
+                  Select State (Filter)
                 </label>
                 <select
                   value={exportStateId}
                   onChange={(e) => setExportStateId(e.target.value)}
                   className="w-full border-2 border-gray-200 focus:border-red-500 p-3 rounded-xl outline-none transition-all bg-white"
                 >
-                  <option value="">Select State</option>
+                  <option value="">All States</option>
                   {allStates.map((state) => (
                     <option key={state.id} value={state.id}>
                       {state.name}
@@ -932,7 +1009,7 @@ export default function DistrictPrabhariManagement() {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Select District
+                  Select District (Filter)
                 </label>
                 <select
                   value={exportDistrictId}
@@ -949,17 +1026,32 @@ export default function DistrictPrabhariManagement() {
                     </option>
                   ))}
                 </select>
-                <p className="text-xs text-gray-500 mt-1">Leave empty to export for the whole state.</p>
               </div>
 
               <button
                 onClick={handleExportPDF}
-                disabled={isExporting || !exportStateId}
-                className="w-full flex items-center justify-center gap-2 mt-4 px-6 py-3 rounded-xl font-bold bg-red-600 hover:bg-red-700 text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isExporting}
+                className="w-full flex items-center justify-center gap-2 mt-4 px-6 py-3 rounded-xl font-bold bg-purple-600 hover:bg-purple-700 text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isExporting ? <Loader2 size={20} className="animate-spin" /> : <FileText size={20} />}
-                {isExporting ? "Generating PDF..." : "Download PDF Report"}
+                {isExporting ? "Processing..." : "Download Filtered Report"}
               </button>
+            </div>
+
+            {/* Section 2: Export Master List (New) */}
+            <div className="pt-4 space-y-4">
+                <h3 className="font-bold text-gray-700 text-sm uppercase tracking-wide">2. Master Data List</h3>
+                <p className="text-xs text-gray-500">
+                    Export a full list of all Districts and their Prabhari details (Name, Phone, Email) sorted by State.
+                </p>
+                <button
+                    onClick={handleExportMasterList}
+                    disabled={isExporting}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold bg-gray-800 hover:bg-black text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {isExporting ? <Loader2 size={20} className="animate-spin" /> : <Globe size={20} />}
+                    {isExporting ? "Processing..." : "Export Full Master List"}
+                </button>
             </div>
 
           </div>
