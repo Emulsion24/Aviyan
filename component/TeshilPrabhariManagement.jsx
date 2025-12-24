@@ -14,8 +14,12 @@ import {
   User,
   Phone,
   RefreshCw,
-  MoreVertical
+  MoreVertical,
+  Download,
+  FileText
 } from "lucide-react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 // --- Custom Hooks & Helpers ---
 
@@ -79,6 +83,14 @@ export default function TehsilPrabhariManagement() {
     tehsilId: null,
   });
 
+  // --- Export State ---
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportStateId, setExportStateId] = useState("");
+  const [exportDistrictId, setExportDistrictId] = useState("");
+  const [exportDistricts, setExportDistricts] = useState([]);
+  const [isExportLoading, setIsExportLoading] = useState(false);
+  const [isExportDistrictsLoading, setIsExportDistrictsLoading] = useState(false);
+
   // --- API Helpers ---
 
   const showToast = (message, type) => {
@@ -116,8 +128,13 @@ export default function TehsilPrabhariManagement() {
       });
       
       if (debouncedSearch) params.append("search", debouncedSearch);
-      if (selectedDistrict) params.append("districtId", selectedDistrict);
-      else if (selectedState) params.append("stateId", selectedState);
+      
+      // Filter Logic
+      if (selectedDistrict) {
+        params.append("districtId", selectedDistrict);
+      } else if (selectedState) {
+        params.append("stateId", selectedState);
+      }
 
       const res = await fetch(`${endpoint}?${params.toString()}`);
       if (!res.ok) throw new Error("Failed to fetch data");
@@ -159,6 +176,20 @@ export default function TehsilPrabhariManagement() {
       setFormDistricts([]);
     }
   }, [formData.stateId, fetchDistrictsForState]);
+
+  // --- Export District Effect ---
+  useEffect(() => {
+    if (exportStateId) {
+      setIsExportDistrictsLoading(true);
+      fetchDistrictsForState(exportStateId)
+        .then(setExportDistricts)
+        .finally(() => setIsExportDistrictsLoading(false));
+    } else {
+      setExportDistricts([]);
+      setExportDistrictId("");
+    }
+  }, [exportStateId, fetchDistrictsForState]);
+
 
   // --- Form Handlers ---
   const resetForm = () => {
@@ -271,6 +302,110 @@ export default function TehsilPrabhariManagement() {
       fetchData();
     } catch (err) { showToast(err.message, "error"); }
   };
+
+  // --- UPDATED EXPORT LOGIC ---
+  const handleExportPDF = async () => {
+    if (!exportStateId && !window.confirm("You have not selected a state. This will export ALL data. Continue?")) {
+      return;
+    }
+
+    setIsExportLoading(true);
+    try {
+      const endpoint = currentView === 'PRABHARI' ? '/api/prabharis' : '/api/tehsils';
+      const params = new URLSearchParams({ 
+        limit: 10000, 
+        page: 1, // Explicitly send page 1 to ensure backend returns data
+        level: "TEHSIL" 
+      });
+
+      // Match the exact filter logic used in fetchData
+      if (exportDistrictId) {
+        params.append("districtId", exportDistrictId);
+      } else if (exportStateId) {
+        params.append("stateId", exportStateId);
+      }
+
+      const res = await fetch(`${endpoint}?${params.toString()}`);
+      if (!res.ok) throw new Error("Failed to fetch export data");
+      const result = await res.json();
+      const data = result.data || [];
+
+      if (data.length === 0) throw new Error("No data found for the selected region.");
+
+      // PDF Generation
+      const doc = new jsPDF();
+
+      // Header
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      const title = currentView === 'PRABHARI' ? "Tehsil Prabhari Report" : "Tehsil Unit Report";
+      doc.text(title, 14, 15);
+
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      const dateStr = new Date().toLocaleDateString();
+      const stateName = states.find(s => s.id === exportStateId)?.name || "All States";
+      const districtName = exportDistricts.find(d => d.id === exportDistrictId)?.name || "All Districts";
+      doc.text(`Generated: ${dateStr} | Region: ${stateName} - ${districtName}`, 14, 22);
+
+      // Table Data Preparation
+      let tableColumn = [];
+      let tableRows = [];
+
+      if (currentView === 'PRABHARI') {
+        tableColumn = ["District", "Tehsil", "Prabhari Name", "Phone", "Email"];
+        tableRows = data.map(item => [
+          item.districtName || "",
+          item.tehsilName || "",
+          item.name,
+          item.phone,
+          item.email || "N/A"
+        ]);
+      } else {
+        tableColumn = ["District", "Tehsil", "Assigned Prabhari", "Phone"];
+        tableRows = data.map(item => {
+          const prabhari = item.prabharis?.[0];
+          const distName = item.district?.name || districts.find(d => d.id === item.districtId)?.name || "";
+          return [
+            distName,
+            item.name,
+            prabhari?.name || "Unassigned",
+            prabhari?.phone || "N/A"
+          ];
+        });
+      }
+
+      autoTable(doc, {
+        head: [tableColumn],
+        body: tableRows,
+        startY: 30,
+        theme: 'grid',
+        headStyles: { fillColor: [13, 148, 136] }, // Teal Color
+        styles: { fontSize: 9 },
+      });
+
+      // Total Count
+      const finalY = doc.lastAutoTable.finalY;
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(200, 200, 200);
+      doc.line(14, finalY + 5, 196, finalY + 5);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Total Records: ${data.length}`, 14, finalY + 12);
+
+      doc.save(`tehsil_${currentView.toLowerCase()}_report.pdf`);
+      showToast("PDF exported successfully!", "success");
+      setShowExportModal(false);
+
+    } catch (err) {
+      showToast(err.message, "error");
+    } finally {
+      setIsExportLoading(false);
+    }
+  };
+
 
   // --- Render Helpers ---
 
@@ -433,6 +568,15 @@ export default function TehsilPrabhariManagement() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
+            {/* EXPORT BUTTON */}
+            <button
+                onClick={() => setShowExportModal(true)}
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold shadow-sm transition-all border text-sm md:text-base bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
+            >
+                <Download size={18} />
+                Export PDF
+            </button>
+
             <button
               onClick={() => {
                 const newView = currentView === 'PRABHARI' ? 'TEHSIL' : 'PRABHARI';
@@ -523,7 +667,83 @@ export default function TehsilPrabhariManagement() {
         </div>
       </div>
 
-      {/* Modal */}
+       {/* Export PDF Modal */}
+       {showExportModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+          onClick={() => setShowExportModal(false)}
+        >
+           <div
+            className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 m-4 relative animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowExportModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2 transition-all"
+            >
+              <X size={24} />
+            </button>
+
+            <div className="mb-6 text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Export to PDF</h2>
+              <p className="text-gray-600 text-sm">Download {currentView === 'PRABHARI' ? 'Prabhari' : 'Tehsil'} list report.</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Select State
+                </label>
+                <select
+                  value={exportStateId}
+                  onChange={(e) => setExportStateId(e.target.value)}
+                  className="w-full border border-gray-200 focus:border-red-500 p-3 rounded-xl outline-none transition-all bg-white"
+                >
+                  <option value="">Select State</option>
+                  {states.map((state) => (
+                    <option key={state.id} value={state.id}>
+                      {state.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Select District
+                </label>
+                <select
+                  value={exportDistrictId}
+                  onChange={(e) => setExportDistrictId(e.target.value)}
+                  disabled={!exportStateId || isExportDistrictsLoading}
+                  className="w-full border border-gray-200 focus:border-red-500 p-3 rounded-xl outline-none transition-all bg-white disabled:bg-gray-100"
+                >
+                  <option value="">
+                    {isExportDistrictsLoading ? "Loading..." : "All Districts"}
+                  </option>
+                  {exportDistricts.map((district) => (
+                    <option key={district.id} value={district.id}>
+                      {district.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">Leave empty to export for the whole state.</p>
+              </div>
+
+              <button
+                onClick={handleExportPDF}
+                disabled={isExportLoading || !exportStateId}
+                className="w-full flex items-center justify-center gap-2 mt-4 px-6 py-3 rounded-xl font-bold bg-red-600 hover:bg-red-700 text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isExportLoading ? <Loader2 size={20} className="animate-spin" /> : <FileText size={20} />}
+                {isExportLoading ? "Generating PDF..." : "Download PDF Report"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
@@ -542,7 +762,7 @@ export default function TehsilPrabhariManagement() {
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
-              {/* Form content remains the same... */}
+              {/* Form content */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-sm font-bold text-teal-700 uppercase tracking-wider">
                   <MapPin size={14}/> Location Details

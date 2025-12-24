@@ -14,8 +14,13 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  FileText, // Added for PDF icon
+  Download, // Added for Export button
 } from "lucide-react";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
+// --- Import PDF Libraries ---
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 // --- Configuration ---
 const ITEMS_PER_PAGE = 10;
@@ -69,6 +74,15 @@ export default function DistrictPrabhariManagement() {
   const [selectedPrabhari, setSelectedPrabhari] = useState(null);
   const [modalDetails, setModalDetails] = useState(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
+
+  // --- NEW: Export State ---
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportStateId, setExportStateId] = useState("");
+  const [exportDistrictId, setExportDistrictId] = useState("");
+  const [exportDistricts, setExportDistricts] = useState([]);
+  const [isExportDistrictLoading, setIsExportDistrictLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
 
   // --- 1. Debounce Effect for Search ---
   useEffect(() => {
@@ -141,6 +155,24 @@ export default function DistrictPrabhariManagement() {
     return () => controller.abort();
   }, [filterStateId]);
 
+  // --- NEW: Effect: Fetch districts for the EXPORT when state changes ---
+  useEffect(() => {
+    const controller = new AbortController();
+    
+    setExportDistrictId(""); 
+
+    if (exportStateId) {
+      setIsExportDistrictLoading(true);
+      fetchDistrictsForState(exportStateId, controller.signal)
+        .then((data) => setExportDistricts(data))
+        .finally(() => setIsExportDistrictLoading(false));
+    } else {
+      setExportDistricts([]);
+    }
+
+    return () => controller.abort();
+  }, [exportStateId]);
+
 
   // --- Helper Functions ---
   const clearMessages = () => {
@@ -212,6 +244,89 @@ export default function DistrictPrabhariManagement() {
       showError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // --- NEW: Export Logic ---
+  const handleExportPDF = async () => {
+    if (!exportStateId && !showConfirmation("You have not selected a state. This will export ALL data. Continue?")) {
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      // 1. Fetch ALL data (bypass pagination with high limit)
+      let url = `/api/prabharis?level=DISTRICT&limit=10000`; 
+      if (exportStateId) url += `&stateId=${exportStateId}`;
+      if (exportDistrictId) url += `&districtId=${exportDistrictId}`;
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+         const data = await response.json();
+         throw new Error(data.error || "Failed to fetch data for export");
+      }
+      const result = await response.json();
+      const data = result.data;
+
+      if (!data || data.length === 0) throw new Error("No data found to export.");
+
+      // 2. Initialize PDF
+      const doc = new jsPDF();
+
+      // 3. Header Info
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.text("District Prabhari Report", 14, 15);
+
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      const dateStr = new Date().toLocaleDateString();
+      const stateName = allStates.find(s => s.id === exportStateId)?.name || "All States";
+      const districtName = exportDistricts.find(d => d.id === exportDistrictId)?.name || "All Districts";
+      doc.text(`Generated: ${dateStr} | Region: ${stateName} - ${districtName}`, 14, 22);
+
+      // 4. Generate Table
+      const tableColumn = ["State", "District", "Name", "Phone", "Email"];
+      const tableRows = data.map(item => [
+        item.stateName,
+        item.districtName,
+        item.name,
+        item.phone,
+        item.email || "N/A"
+      ]);
+
+      autoTable(doc, {
+        head: [tableColumn],
+        body: tableRows,
+        startY: 30,
+        theme: 'grid',
+        headStyles: { fillColor: [128, 0, 128] }, // Purple Header
+        styles: { fontSize: 9 },
+      });
+
+      // 5. Add Total at the End
+      const finalY = doc.lastAutoTable.finalY; // Get Y position where table ended
+      
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(200, 200, 200);
+      doc.line(14, finalY + 5, 196, finalY + 5); // Divider line
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0); // Black
+      doc.text(`Total District Prabharis: ${data.length}`, 14, finalY + 12);
+
+      // 6. Save File
+      let filename = "district_prabharis.pdf";
+      if (exportStateId) filename = `${stateName.replace(/\s+/g, '_')}_prabharis.pdf`;
+      doc.save(filename);
+
+      showSuccess("PDF exported successfully!");
+      setShowExportModal(false);
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -451,24 +566,36 @@ export default function DistrictPrabhariManagement() {
 
         {/* District Prabharis Section */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-purple-200">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
               <Users className="text-purple-600" size={28} />
               Prabhari List
             </h2>
-            <button
-              onClick={showPrabhariForm ? closeForm : openAddForm}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold
-                transition-all shadow-lg hover:shadow-xl transform hover:scale-105
-                ${
-                  showPrabhariForm
-                    ? "bg-gray-600 hover:bg-gray-700 text-white"
-                    : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-                }`}
-            >
-              {showPrabhariForm ? <X size={20} /> : <UserPlus size={20} />}
-              {showPrabhariForm ? "Cancel" : "Add District Prabhari"}
-            </button>
+            
+            <div className="flex gap-3">
+                {/* NEW: Export Button */}
+                <button
+                    onClick={() => setShowExportModal(true)}
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-green-600 hover:bg-green-700 text-white transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                    <Download size={20} />
+                    Export PDF
+                </button>
+
+                <button
+                onClick={showPrabhariForm ? closeForm : openAddForm}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold
+                    transition-all shadow-lg hover:shadow-xl transform hover:scale-105
+                    ${
+                    showPrabhariForm
+                        ? "bg-gray-600 hover:bg-gray-700 text-white"
+                        : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                    }`}
+                >
+                {showPrabhariForm ? <X size={20} /> : <UserPlus size={20} />}
+                {showPrabhariForm ? "Cancel" : "Add District Prabhari"}
+                </button>
+            </div>
           </div>
 
           {/* Add/Edit Prabhari Form */}
@@ -761,6 +888,83 @@ export default function DistrictPrabhariManagement() {
           )}
         </div>
       </div>
+
+      {/* NEW: Export as PDF Modal */}
+      {showExportModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
+          onClick={() => setShowExportModal(false)}
+        >
+           <div
+            className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 m-4 relative animate-slideDown"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowExportModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2 transition-all"
+            >
+              <X size={24} />
+            </button>
+
+            <div className="mb-6 text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Export to PDF</h2>
+              <p className="text-gray-600 text-sm">Select State and District to generate the PDF report.</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Select State
+                </label>
+                <select
+                  value={exportStateId}
+                  onChange={(e) => setExportStateId(e.target.value)}
+                  className="w-full border-2 border-gray-200 focus:border-red-500 p-3 rounded-xl outline-none transition-all bg-white"
+                >
+                  <option value="">Select State</option>
+                  {allStates.map((state) => (
+                    <option key={state.id} value={state.id}>
+                      {state.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Select District
+                </label>
+                <select
+                  value={exportDistrictId}
+                  onChange={(e) => setExportDistrictId(e.target.value)}
+                  disabled={!exportStateId || isExportDistrictLoading}
+                  className="w-full border-2 border-gray-200 focus:border-red-500 p-3 rounded-xl outline-none transition-all bg-white disabled:bg-gray-100"
+                >
+                  <option value="">
+                    {isExportDistrictLoading ? "Loading..." : "All Districts"}
+                  </option>
+                  {exportDistricts.map((district) => (
+                    <option key={district.id} value={district.id}>
+                      {district.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">Leave empty to export for the whole state.</p>
+              </div>
+
+              <button
+                onClick={handleExportPDF}
+                disabled={isExporting || !exportStateId}
+                className="w-full flex items-center justify-center gap-2 mt-4 px-6 py-3 rounded-xl font-bold bg-red-600 hover:bg-red-700 text-white transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isExporting ? <Loader2 size={20} className="animate-spin" /> : <FileText size={20} />}
+                {isExporting ? "Generating PDF..." : "Download PDF Report"}
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* Prabhari Details Modal */}
       {selectedPrabhari && (
