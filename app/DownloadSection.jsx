@@ -122,8 +122,8 @@ export default function DownloadsSection() {
       description: "Complete information about Gau Samman Abhiyan (English)",
       icon: FileText,
       files: [ 
-        { type: "PDF", file: "/GSAA-02 A5 English.pdf", filename: "Gau-Samman-Aviyan-English.pdf" },
-        { type: "CDR", file: "https://drive.google.com/file/d/1r4fVYAQvLd2Nai1FtyocgpEq4-Fxk6cY/view?usp=sharing", filename: "Gau-Samman-Aviyan-English.cdr" } 
+        { type: "PDF", file: "/GSAA-02 A5 English (1).pdf", filename: "Gau-Samman-Aviyan-English.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1t3AeN-ZBz4C34Y8owi_7GOTMkYtomViL/view?usp=sharing", filename: "Gau-Samman-Aviyan-English.cdr" } 
       ],
       color: "from-purple-500 to-violet-600",
       bgPattern: "from-purple-50 to-violet-50"
@@ -243,6 +243,74 @@ export default function DownloadsSection() {
       color: "from-orange-500 to-amber-600",
       bgPattern: "from-orange-50 to-amber-50"
     },
+
+{
+  id: 12,
+  title: "10 x 10 Miss Call",
+  description: "गौ सम्मान अभियान हेतु 10x10 मिस कॉल पोस्टर",
+  icon: FileText,
+  files: [
+    { type: "PDF", file: "/10x10 miss call.pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक-10-10-miss-call.pdf" },
+    { type: "CDR", file: "/10x10 miss call C.cdr", filename: "Gau-Samman-Aviyan-10-10-miss-call.cdr" }
+  ],
+  color: "from-red-500 to-rose-600",
+  bgPattern: "from-red-50 to-rose-50"
+},
+{
+  id: 13,
+  title: "10x10 bennar Abhiyan 1",
+  description: "गौ सम्मान अभियान हेतु 10x10 पोस्टर डिजाइन",
+  icon: FileText,
+  files: [
+    { type: "PDF", file: "/10x20 bennar Abhiyan 1.pdf", filename: "Gau-Samman-Aviyan-Poster-English.pdf" },
+    { type: "CDR", file: "https://drive.google.com/file/d/17HvzA4cCXUqSkSRonkk2SxURB5Kf_PpL/view?usp=sharing", filename: "Gau-Samman-Poster-English.cdr" }
+  ],
+  color: "from-blue-500 to-indigo-600",
+  bgPattern: "from-blue-50 to-indigo-50"
+},
+{
+  id: 14,
+  title: "10x10 A social Media",
+  description: "गौ सम्मान अभियान हेतु 10x10 सोशल मीडिया पोस्टर",
+  icon: FileText,
+  files: [
+    { type: "PDF", file: "/10x10 A social media.pdf", filename: "Gau-Samman-Social-Media.pdf" },
+    { type: "CDR", file: "https://drive.google.com/file/d/1ukpljXRvY4ZhrdfIv5npI6LDOXOsy95O/view?usp=sharing", filename: "Gau-Samman-Poster-Hindi.cdr" }
+  ],
+  color: "from-green-500 to-emerald-600",
+  bgPattern: "from-green-50 to-emerald-50"
+},
+{
+  id: 15,
+  title: "VC-02",
+  description: "गौ सम्मान अभियान हेतु बैनर डिजाइन",
+  icon: FileText,
+  files: [
+    { type: "PDF", file: "/VC-02.pdf", filename: "Gau-Samman-Banner.pdf" },
+    { type: "CDR", file: "https://drive.google.com/file/d/1cZtmcmkYI7bWdZGF39XxmhIbmAZndx8F/view?usp=sharing", filename: "Gau-Samman-Banner.cdr" }
+  ],
+  color: "from-purple-500 to-violet-600",
+  bgPattern: "from-purple-50 to-violet-50"
+},
+{
+  id: 16,
+  title: "10x10 x Hendal",
+  description: "गौ सम्मान अभियान हेतु 10x10 पोस्टर डिजाइन",
+  icon: FileText,
+  files: [
+    { type: "PDF", file: "/10x10 X hendal.pdf", filename: "Gau-Samman-Social-Creatives.pdf" },
+    { type: "ZIP", file: "https://drive.google.com/file/d/1VhJVdeYzUDLkXHXP1QEt_3sJ5IJc6Ucx/view?usp=sharing", filename: "Gau-Samman-Social-Creatives.zip" }
+  ],
+  color: "from-cyan-500 to-sky-600",
+  bgPattern: "from-cyan-50 to-sky-50"
+},
+
+
+
+
+
+
+
   ];
 
   const handleDownloadPrepare = (fileInfo) => {
