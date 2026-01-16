@@ -109,8 +109,8 @@ export default function DownloadsSection() {
       description: "गौ सम्मान आह्वान अभियान की पूर्ण जानकारी (हिंदी)",
       icon: FileText,
       files: [ 
-        { type: "PDF", file: "/Hindi-01.pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
-        { type: "CDR", file: "https://drive.google.com/file/d/1v6vE9rEdmx99QLUE3Co4jvDTGFqSAp6s/view?usp=sharing", filename: "Gau-Samman-Aviyan.cdr" } 
+        { type: "PDF", file: "/GSAA-02 A5 Final (3).pdf", filename: "Gau-Samman-Aviyan-प्रचार-पत्रक.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1jiI7LbE1TaZp7ITfF8YkMofg78d92vIp/view?usp=sharing", filename: "Gau-Samman-Aviyan.cdr" } 
       ],
       color: "from-orange-500 to-amber-600",
       bgPattern: "from-orange-50 to-amber-50"
@@ -199,8 +199,8 @@ export default function DownloadsSection() {
       icon: ImageIcon,
       files: [
         // Using the file path provided in your previous snippet for 10x10 (check if correct)
-        { type: "PDF", file: "Flex 4x2 ...1.pdf", filename: "Flex-10x10.pdf" },
-        { type: "CDR", file: "https://drive.google.com/file/d/1pFs78o-KcFKJCu_mdQrQxn_WbDewvTI_/view?usp=sharing", filename: "Flex-10x10.cdr" }
+        { type: "PDF", file: "10x10.pdf", filename: "Flex-10x10.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1IWkT6SyouKo1ORjKjIXjjn-2reHHBQ-A/view?usp=sharing", filename: "Flex-10x10.cdr" }
       ],
       color: "from-indigo-500 to-violet-600",
       bgPattern: "from-indigo-50 to-violet-50"
@@ -212,8 +212,8 @@ export default function DownloadsSection() {
       description: "6x4 फीट फ्लेक्स प्रिंट फाइल डाउनलोड करें।",
       icon: ImageIcon,
       files: [
-        { type: "PDF", file: "Flex 6x4 ..1.pdf", filename: "Flex-6x4.pdf" },
-        { type: "CDR", file: "https://drive.google.com/file/d/1kKH5DXXBvW4lBSWle-t73kebSqQK_pjd/view?usp=sharing", filename: "Flex-6x4.cdr" }
+        { type: "PDF", file: "6x4.pdf", filename: "Flex-6x4.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/15JySIr_Fa7UM8Xw5FrOQ_RNzCMOGoZjP/view?usp=sharing", filename: "Flex-6x4.cdr" }
       ],
       color: "from-teal-500 to-emerald-600",
       bgPattern: "from-teal-50 to-emerald-50"
@@ -225,8 +225,8 @@ export default function DownloadsSection() {
       description: "4x2 फीट फ्लेक्स प्रिंट फाइल डाउनलोड करें।",
       icon: ImageIcon,
       files: [
-        { type: "PDF", file: "Flex 4x2 ...1.pdf", filename: "Flex-4x2.pdf" },
-        { type: "CDR", file: "https://drive.google.com/file/d/1eWFjLbv580dEP0dI-PM2o_r9CxcXPs7s/view?usp=sharing", filename: "Flex-4x2.cdr" }
+        { type: "PDF", file: "2x4.pdf", filename: "Flex-4x2.pdf" },
+        { type: "CDR", file: "https://drive.google.com/file/d/1OqFeD6Tg3pIeWskp_t03GA_T6WgagQep/view?usp=sharing", filename: "Flex-4x2.cdr" }
       ],
       color: "from-sky-500 to-blue-600",
       bgPattern: "from-sky-50 to-blue-50"
@@ -262,8 +262,8 @@ export default function DownloadsSection() {
   description: "गौ सम्मान अभियान हेतु 10x10 पोस्टर डिजाइन",
   icon: FileText,
   files: [
-    { type: "PDF", file: "/10x20 bennar Abhiyan 1.pdf", filename: "Gau-Samman-Aviyan-Poster-English.pdf" },
-    { type: "CDR", file: "https://drive.google.com/file/d/17HvzA4cCXUqSkSRonkk2SxURB5Kf_PpL/view?usp=sharing", filename: "Gau-Samman-Poster-English.cdr" }
+    { type: "PDF", file: "/10x20 bennar Abhiyan new.pdf", filename: "Gau-Samman-Aviyan-Poster-English.pdf" },
+    { type: "CDR", file: "https://drive.google.com/file/d/1cnBaxZrvmLvy6r8rybDX9Z1gb06BQ-G9/view?usp=sharing", filename: "Gau-Samman-Poster-English.cdr" }
   ],
   color: "from-blue-500 to-indigo-600",
   bgPattern: "from-blue-50 to-indigo-50"

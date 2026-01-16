@@ -7,12 +7,15 @@ import { verifyAuth } from '@/lib/Authhelper';
  * Updates an existing Tehsil. (Protected)
  */
 export async function PUT(request, context) {
+ 
   const auth = await verifyAuth(request);
+
   if (!auth.success) {
     return NextResponse.json(auth, { status: auth.status });
   }
 
-  const { id } = context.params;
+  const { id } = await context.params;
+
   
   try {
     const body = await request.json();
