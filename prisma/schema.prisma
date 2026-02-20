@@ -208,3 +208,24 @@ model Prabhari {
   @@index([districtId])
   @@index([tehsilId])
 }
+
+
+
+model DownloadCard {
+  id        String   @id @default(cuid())
+  titleEn   String
+  titleHi   String
+
+  // Store multiple files for one card
+  pdfUrl    String?  @db.Text
+  cdrUrl    String?  @db.Text
+  imageUrl  String?  @db.Text
+  audioUrl  String?  @db.Text
+
+  // Choose which icon shows on the card face
+  mainIcon  String   @default("FILE") // Options: FILE, IMAGE, MUSIC, PRINTER
+  
+  createdAt DateTime @default(now())
+
+  @@map("download_cards")
+}

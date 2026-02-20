@@ -1,13 +1,14 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, ChevronDown, BarChart3, Users, FileText, Edit, Award } from "lucide-react";
+import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, ChevronDown, BarChart3, Users, FileText, Edit, Award, FileUpIcon } from "lucide-react";
 
 import ZonePrabhariManagement from "../../component/ZonePrabhariManagement";
 import StatePrabhariManagement from "../../component/StatePrabhariManagement";
 import SambhagManagement from "../../component/SambhagManagement";
 import DistrictPrabhariManagement from "../../component/DistrictPrabhariManagement";
 import TeshilPrabhariManagement from "../../component/TeshilPrabhariManagement";
+import { useRouter } from "next/navigation";
 
 
 
@@ -260,7 +261,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-
+const router = useRouter();
   // USERS
   const [users, setUsers] = useState([]);
   const [userSearch, setUserSearch] = useState("");
@@ -797,6 +798,10 @@ const handleDeleteBaithak = async (id) => {
   }
 };
 
+const handelUpload=()=>{
+router.push("/dashboard/fileupload");
+}
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
@@ -826,6 +831,14 @@ const handleDeleteBaithak = async (id) => {
             >
               <LogOut size={18} />
               Logout
+            </button>
+              <button
+              onClick={handelUpload}
+              disabled={loading}
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50"
+            >
+              <FileUpIcon size={18} />
+              Upload
             </button>
           </div>
 
