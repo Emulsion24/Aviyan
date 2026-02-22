@@ -11,7 +11,7 @@ export async function GET() {
   try {
     // 1. Fetch ALL cards, ordered by newest first
     const cards = await prisma.downloadCard.findMany({
-      orderBy: { createdAt: 'desc' },
+     orderBy: { sortOrder: 'asc' }
     });
 
     // 2. Return plain array of cards

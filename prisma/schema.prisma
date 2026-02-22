@@ -224,6 +224,7 @@ model DownloadCard {
 
   // Choose which icon shows on the card face
   mainIcon  String   @default("FILE") // Options: FILE, IMAGE, MUSIC, PRINTER
+  sortOrder Int      @default(0)
   
   createdAt DateTime @default(now())
 
