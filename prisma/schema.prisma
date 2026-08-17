@@ -281,63 +281,43 @@ model ProtestRegistration {
 model ProtestRegistrationMember {
   id Int @id @default(autoincrement())
 
-  // -------------------------------------------------------
-  // REGISTRATION
-  // -------------------------------------------------------
-
+  // Registration
   registrationId Int
-
   registration ProtestRegistration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
 
-  // -------------------------------------------------------
-  // PERSON
-  // -------------------------------------------------------
-
-  name  String
+  // Person
+  name String
   phone String
 
-  // -------------------------------------------------------
-  // STATE
-  // -------------------------------------------------------
-
+  // State
   stateId String
-
   state State @relation(fields: [stateId], references: [id], onDelete: Restrict)
 
-  // -------------------------------------------------------
-  // DISTRICT
-  // -------------------------------------------------------
-
+  // District
   districtId String
-
   district District @relation(fields: [districtId], references: [id], onDelete: Restrict)
 
-  // -------------------------------------------------------
-  // TEHSIL
-  // -------------------------------------------------------
-
+  // Tehsil
   tehsilId String
-
   tehsil Tehsil @relation(fields: [tehsilId], references: [id], onDelete: Restrict)
 
-  // -------------------------------------------------------
-  // TIMESTAMP
-  // -------------------------------------------------------
+  // Village
+  village String
 
+  // Timestamp
   createdAt DateTime @default(now())
 
-  // -------------------------------------------------------
-  // INDEXES
-  // -------------------------------------------------------
-
+  // Indexes
   @@index([registrationId])
   @@index([phone])
   @@index([name])
   @@index([stateId])
   @@index([districtId])
   @@index([tehsilId])
+  @@index([village])
   @@index([stateId, districtId])
   @@index([stateId, districtId, tehsilId])
   @@index([createdAt])
+
   @@map("protest_registration_members")
 }
