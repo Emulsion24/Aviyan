@@ -33,8 +33,8 @@ const CampaignActionPlan = () => {
     {
       id: 3,
       title: "राज्य स्तर एवं राष्ट्रव्यापी निर्णायक चरण",
-      date: "अगस्त – दिसंबर 2026",
-      actionDate: "27 अक्टूबर 2026 (मंगलवार) - प्रातः 11 बजे",
+      date: "दिसंबर 2026",
+      actionDate: "17 दिसंबर 2026 (गुरुवार)",
       icon: <Flag className="w-6 h-6" />,
       color: "from-orange-500 to-amber-500",
       bgColor: "from-orange-50 to-amber-50",
