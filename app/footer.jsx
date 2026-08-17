@@ -116,9 +116,7 @@ const Footer = () => {
               <p className="text-sm text-orange-100">
                 © {new Date().getFullYear()} गो सम्मान आह्वान अभियान। सर्वाधिकार सुरक्षित।
               </p>
-              <p className="text-sm text-orange-100/90 text-center">
-  &copy; {new Date().getFullYear()} All Rights Reserved By SHREE KARNI KRIPA GAU SEWA SANSTHAN TAANA.
-</p>
+
             </div>
           </div>
         </div>

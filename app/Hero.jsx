@@ -617,14 +617,14 @@ const HeroWithNav = () => {
               </a>
 
               {/* YouTube - Position 2 (45°) */}
-              <a
-                href="https://www.youtube.com/channel/UCC9dQTSQXl4FeN0a9KTWZjg"
+                 <a
+                href="https://www.instagram.com/gausamman_stories"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-red-50 hover:bg-red-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-red-200"
-                style={{ transform: 'translate(calc(-50% + 78px), calc(-50% + -78px))', transformOrigin: 'center' }}
+                className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-pink-50 hover:bg-pink-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-pink-200"
+                style={{ transform: 'translate(calc(-50% + 0px), calc(-50% + 110px))', transformOrigin: 'center' }}
               >
-                <FaYoutube className="text-red-600 text-xl sm:text-2xl md:text-2xl lg:text-3xl group-hover:scale-125 transition-transform duration-300" />
+                <FaInstagram className="text-pink-700 text-xl sm:text-2xl md:text-2xl lg:text-3xl group-hover:scale-125 transition-transform duration-300" />
               </a>
 
               {/* Email - Position 3 (90° - Right) */}
@@ -669,11 +669,13 @@ const HeroWithNav = () => {
 
               {/* Spotify - Position 7 (270° - Left) */}
               <a
-                href="https://open.spotify.com/user/31hpaxs5skl43g65frugwkxyzfwm?si=8N-tPs2GQ9ixaG-eKRU4rA&nd=1&dlsi=645dce9f1e184bff"
-                className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-emerald-50 hover:bg-emerald-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-emerald-200"
-                style={{ transform: 'translate(calc(-50% + -110px), calc(-50% + 0px))', transformOrigin: 'center' }}
+                href="https://www.youtube.com/channel/UCC9dQTSQXl4FeN0a9KTWZjg"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute top-1/2 left-1/2 w-12 h-12 sm:w-13 sm:h-13 md:w-15 md:h-15 lg:w-16 lg:h-16 bg-red-50 hover:bg-red-100 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group border-2 border-red-200"
+                style={{ transform: 'translate(calc(-50% + 78px), calc(-50% + -78px))', transformOrigin: 'center' }}
               >
-                <FaSpotify className="text-emerald-600 text-xl sm:text-2xl md:text-2xl lg:text-3xl group-hover:scale-125 transition-transform duration-300" />
+                <FaYoutube className="text-red-600 text-xl sm:text-2xl md:text-2xl lg:text-3xl group-hover:scale-125 transition-transform duration-300" />
               </a>
 
               {/* Apple Music - Position 8 (315°) */}
