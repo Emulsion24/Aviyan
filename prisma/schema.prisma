@@ -5,9 +5,13 @@ generator client {
 }
 
 datasource db {
-  provider =  "mysql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+// =========================================================
+// USER
+// =========================================================
 
 model User {
   id        Int      @id @default(autoincrement())
@@ -22,21 +26,24 @@ model User {
   @@map("users")
 }
 
-model Submission {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  phone     String?
-  altphone  String?
-  state     String?
-  district  String?
-  village   String?
-  pincode   String?
-  description   String?  @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// =========================================================
+// SUBMISSION
+// =========================================================
 
-  // Composite indexes for efficient filtering
+model Submission {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  phone       String?
+  altphone    String?
+  state       String?
+  district    String?
+  village     String?
+  pincode     String?
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   @@index([state, district, village])
   @@index([pincode])
   @@index([email])
@@ -45,26 +52,27 @@ model Submission {
   @@index([state])
   @@index([district])
   @@index([village])
-  
-  // Composite index for common filter combinations
   @@index([state, district])
   @@index([district, village])
-  
   @@map("submissions")
 }
 
+// =========================================================
+// EXISTING REGISTRATION
+// =========================================================
+
 model Registration {
-  id            Int      @id @default(autoincrement())
-  name          String
-  phone         String
-  email         String?
-  altPhone      String?
-  state         String
-  district      String
-  village       String
-  meetingInfo   String?  @db.Text
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  phone       String
+  email       String?
+  altPhone    String?
+  state       String
+  district    String
+  village     String
+  meetingInfo String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([phone])
   @@index([state])
@@ -72,14 +80,10 @@ model Registration {
   @@map("registrations")
 }
 
+// =========================================================
+// PRABHARI LEVEL
+// =========================================================
 
-
-
-
-
-
-
-// Enum to define what level the Prabhari is at
 enum PrabhariLevel {
   ZONE
   STATE
@@ -88,145 +92,252 @@ enum PrabhariLevel {
   TEHSIL
 }
 
-// ---------------------------------------------
-// ADMINISTRATIVE UNITS
-// ---------------------------------------------
+// =========================================================
+// ZONE
+// =========================================================
 
 model Zone {
-  id     String  @id @default(cuid())
-  name   String  @unique
-  states State[] // A Zone has many States
+  id   String @id @default(cuid())
+  name String @unique
 
-  // --- ONE-TO-ONE Relationship ---
-  // A Zone can have only ONE Prabhari.
+  states State[]
+
   prabhari Prabhari?
 }
+
+// =========================================================
+// STATE
+// =========================================================
 
 model State {
-  id       String  @id @default(cuid())
-  name     String  @unique // State names should be unique
+  id   String @id @default(cuid())
+  name String @unique
 
-  // --- (MODIFIED) ---
-  // A State can optionally belong to one Zone.
-  // User will assign this in the "Zone Management" UI.
-  zoneId   String?
-  zone     Zone?     @relation(fields: [zoneId], references: [id], onDelete: SetNull)
-  
-  sambhags Sambhag[] // One State has many Sambhags.
-  districts District[] // One State has many Districts.
+  zoneId String?
+  zone   Zone?   @relation(fields: [zoneId], references: [id], onDelete: SetNull)
 
-  // --- ONE-TO-ONE Relationship ---
-  // A State can have only ONE Prabhari.
+  sambhags  Sambhag[]
+  districts District[]
+
   prabhari Prabhari?
+
+  // Protest registration relation
+  protestRegistrationMembers ProtestRegistrationMember[]
 }
 
-model Sambhag {
-  id        String   @id @default(cuid())
-  name      String
-  
-  // A Sambhag must belong to one State.
-  stateId   String
-  state     State    @relation(fields: [stateId], references: [id], onDelete: Cascade)
-  
-  // --- (MODIFIED) ---
-  // A Sambhag can contain many Districts.
-  districts District[] 
+// =========================================================
+// SAMBHAG
+// =========================================================
 
-  // --- ONE-TO-ONE Relationship ---
-  // A Sambhag can have only ONE Prabhari.
+model Sambhag {
+  id   String @id @default(cuid())
+  name String
+
+  stateId String
+  state   State  @relation(fields: [stateId], references: [id], onDelete: Cascade)
+
+  districts District[]
+
   prabhari Prabhari?
 
   @@unique([name, stateId])
 }
 
-model District {
-  id        String   @id @default(cuid())
-  name      String
-  
-  // --- (NEW) ---
-  // A District must belong to one State.
-  // This is pre-seeded.
-  stateId   String
-  state     State    @relation(fields: [stateId], references: [id], onDelete: Cascade)
+// =========================================================
+// DISTRICT
+// =========================================================
 
-  // --- (MODIFIED) ---
-  // A District can optionally belong to one Sambhag.
-  // User will assign this in the "Sambhag Management" UI.
+model District {
+  id   String @id @default(cuid())
+  name String
+
+  stateId String
+  state   State  @relation(fields: [stateId], references: [id], onDelete: Cascade)
+
   sambhagId String?
   sambhag   Sambhag? @relation(fields: [sambhagId], references: [id], onDelete: SetNull)
 
-  // --- ONE-TO-MANY Relationship ---
   tehsils   Tehsil[]
   prabharis Prabhari[]
 
-  @@unique([name, stateId]) // District name must be unique within its state
+  // Protest registration relation
+  protestRegistrationMembers ProtestRegistrationMember[]
+
+  @@unique([name, stateId])
 }
 
+// =========================================================
+// TEHSIL
+// =========================================================
+
 model Tehsil {
-  id         String   @id @default(cuid())
-  name       String
-  
-  // A Tehsil must belong to one District.
-  // This is user-created.
+  id   String @id @default(cuid())
+  name String
+
   districtId String
   district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
 
-  // --- ONE-TO-MANY Relationship ---
-  prabharis  Prabhari[]
+  prabharis Prabhari[]
 
-  @@unique([name, districtId]) // Tehsil name must be unique within its district
+  // Protest registration relation
+  protestRegistrationMembers ProtestRegistrationMember[]
+
+  @@unique([name, districtId])
 }
 
-// ---------------------------------------------
-// UNIFIED PRABHARI MODEL (No changes needed)
-// ---------------------------------------------
+// =========================================================
+// PRABHARI
+// =========================================================
+
 model Prabhari {
-  id    String @id @default(cuid())
+  id    String  @id @default(cuid())
   name  String
-  phone String  
+  phone String
   email String?
 
   level PrabhariLevel
 
-  // --- ONE-TO-ONE Relationships ---
-  zoneId String? @unique 
+  // Zone
+  zoneId String? @unique
   zone   Zone?   @relation(fields: [zoneId], references: [id], onDelete: SetNull)
 
-  stateId String? @unique 
+  // State
+  stateId String? @unique
   state   State?  @relation(fields: [stateId], references: [id], onDelete: SetNull)
 
-  sambhagId String? @unique
+  // Sambhag
+  sambhagId String?  @unique
   sambhag   Sambhag? @relation(fields: [sambhagId], references: [id], onDelete: SetNull)
 
-  // --- ONE-TO-MANY Relationships ---
+  // District
   districtId String?
   district   District? @relation(fields: [districtId], references: [id], onDelete: SetNull)
 
+  // Tehsil
   tehsilId String?
-  tehsil   Tehsil?   @relation(fields: [tehsilId], references: [id], onDelete: SetNull)
+  tehsil   Tehsil? @relation(fields: [tehsilId], references: [id], onDelete: SetNull)
 
   @@index([districtId])
   @@index([tehsilId])
 }
 
-
+// =========================================================
+// DOWNLOAD CARD
+// =========================================================
 
 model DownloadCard {
-  id        String   @id @default(cuid())
-  titleEn   String
-  titleHi   String
+  id      String @id @default(cuid())
+  titleEn String
+  titleHi String
 
-  // Store multiple files for one card
-  pdfUrl    String?  @db.Text
-  cdrUrl    String?  @db.Text
-  imageUrl  String?  @db.Text
-  audioUrl  String?  @db.Text
+  pdfUrl   String? @db.Text
+  cdrUrl   String? @db.Text
+  imageUrl String? @db.Text
+  audioUrl String? @db.Text
 
-  // Choose which icon shows on the card face
-  mainIcon  String   @default("FILE") // Options: FILE, IMAGE, MUSIC, PRINTER
-  sortOrder Int      @default(0)
-  
+  mainIcon  String @default("FILE")
+  sortOrder Int    @default(0)
+
   createdAt DateTime @default(now())
 
   @@map("download_cards")
+}
+
+// =========================================================
+// PROTEST REGISTRATION
+// =========================================================
+//
+// One form submission can contain multiple members.
+//
+// Example:
+//
+// ProtestRegistration #10
+//     ├── Person 1
+//     ├── Person 2
+//     └── Person 3
+//
+// =========================================================
+
+model ProtestRegistration {
+  id                   Int     @id @default(autoincrement())
+  language             String
+  wantsToAttendCapital Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members ProtestRegistrationMember[]
+
+  @@index([createdAt])
+  @@index([language])
+  @@index([wantsToAttendCapital])
+  @@map("protest_registrations")
+}
+
+// =========================================================
+// PROTEST REGISTRATION MEMBER
+// =========================================================
+
+model ProtestRegistrationMember {
+  id Int @id @default(autoincrement())
+
+  // -------------------------------------------------------
+  // REGISTRATION
+  // -------------------------------------------------------
+
+  registrationId Int
+
+  registration ProtestRegistration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  // -------------------------------------------------------
+  // PERSON
+  // -------------------------------------------------------
+
+  name  String
+  phone String
+
+  // -------------------------------------------------------
+  // STATE
+  // -------------------------------------------------------
+
+  stateId String
+
+  state State @relation(fields: [stateId], references: [id], onDelete: Restrict)
+
+  // -------------------------------------------------------
+  // DISTRICT
+  // -------------------------------------------------------
+
+  districtId String
+
+  district District @relation(fields: [districtId], references: [id], onDelete: Restrict)
+
+  // -------------------------------------------------------
+  // TEHSIL
+  // -------------------------------------------------------
+
+  tehsilId String
+
+  tehsil Tehsil @relation(fields: [tehsilId], references: [id], onDelete: Restrict)
+
+  // -------------------------------------------------------
+  // TIMESTAMP
+  // -------------------------------------------------------
+
+  createdAt DateTime @default(now())
+
+  // -------------------------------------------------------
+  // INDEXES
+  // -------------------------------------------------------
+
+  @@index([registrationId])
+  @@index([phone])
+  @@index([name])
+  @@index([stateId])
+  @@index([districtId])
+  @@index([tehsilId])
+  @@index([stateId, districtId])
+  @@index([stateId, districtId, tehsilId])
+  @@index([createdAt])
+  @@map("protest_registration_members")
 }

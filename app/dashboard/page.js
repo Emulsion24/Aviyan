@@ -1,13 +1,14 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, ChevronDown, BarChart3, Users, FileText, Edit, Award, FileUpIcon } from "lucide-react";
+import { Search, Loader2, Trash2, UserPlus, LogOut, RefreshCw, Eye, X, Filter, ChevronDown, BarChart3, Users, FileText, Edit, Award, FileUpIcon ,ShieldCheck} from "lucide-react";
 
 import ZonePrabhariManagement from "../../component/ZonePrabhariManagement";
 import StatePrabhariManagement from "../../component/StatePrabhariManagement";
 import SambhagManagement from "../../component/SambhagManagement";
 import DistrictPrabhariManagement from "../../component/DistrictPrabhariManagement";
 import TeshilPrabhariManagement from "../../component/TeshilPrabhariManagement";
+import ProtestRegistrationManagement from "../../component/ProtestRegistrationManagement";
 import { useRouter } from "next/navigation";
 
 
@@ -840,6 +841,20 @@ router.push("/dashboard/fileupload");
               <FileUpIcon size={18} />
               Upload
             </button>
+            <button
+  onClick={() =>
+    setTab("protestRegistrations")
+  }
+  className={`px-6 py-4 rounded-2xl font-bold transition-all flex items-center gap-2 ${
+    tab === "protestRegistrations"
+      ? "bg-gradient-to-r from-green-700 to-emerald-700 text-white shadow-lg"
+      : "bg-white text-gray-700 border-2 border-gray-200 hover:border-green-300"
+  }`}
+>
+  <ShieldCheck size={20} />
+
+  Protest Registrations
+</button>
           </div>
 
           {/* Stats Cards */}
@@ -1520,6 +1535,9 @@ router.push("/dashboard/fileupload");
           </>
         
         )} 
+        {tab === "protestRegistrations" && (
+  <ProtestRegistrationManagement />
+)}
 
 
 
