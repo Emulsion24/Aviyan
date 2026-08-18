@@ -504,7 +504,7 @@ export default function ProtestRegistrationManagement() {
 
       setTehsils([]);
 
-      setPage(1);
+      setPage(1);<Image src="/logo.jpg" alt="गौ सम्मान लोगो" width={56} height={56} className="rounded-full object-cover" priority />
 
       if (districtId) {
         await fetchTehsils(

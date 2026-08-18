@@ -1535,9 +1535,7 @@ router.push("/dashboard/fileupload");
           </>
         
         )} 
-        {tab === "protestRegistrations" && (
-  <ProtestRegistrationManagement />
-)}
+
 
 
 
