@@ -55,10 +55,10 @@ const TRANSLATIONS = {
     step1: "पुष्टि",
     step2: "विवरण",
     question:
-      "क्या आप अपने राज्य की राजधानी में विरोध प्रदर्शन के लिए जाना चाहते हैं?",
+      "क्या आप अपने राज्य की राजधानी में 17 दिसंबर को प्रार्थना पत्र देने के लिए शामिल होना चाहते है?",
     yes: "हाँ, मैं जाना चाहता हूँ",
     yesDescription:
-      "क्या आप अपने राज्य की राजधानी में 17 दिसंबर को प्रार्थना पत्र देने के लिए शामिल होना चाहते है",
+      "17 दिसंबर को अपने राज्य की राजधानी में प्रार्थना पत्र देने के इस अभियान का हिस्सा बनें।",
     no: "नहीं, मैं नहीं जा सकता",
     noDescription:
       "मैं राज्य राजधानी के कार्यक्रम में शामिल नहीं हो पाऊँगा।",
@@ -115,857 +115,929 @@ const TRANSLATIONS = {
     goHome: "होम पेज पर जाएँ",
   },
 
-  en: {
-    registration: "Registration",
-    title: "17 December – Let’s Go to the State Capital",
-    description:
-      "Gau Samman Aahvan Abhiyan – Third Phase: 31 Crore Signatures. On 17 December, as part of the third phase of the Gau Samman Aahvan Abhiyan, a petition will be submitted in the capitals of all states of India with 31 crore signatures. Register your presence and become a part of this nationwide campaign.",
-    language: "Language",
-    chooseLanguage: "Choose language",
-    step1: "Confirm",
-    step2: "Details",
-    question:
-      "Do you want to go to your state capital for the protest?",
-    yes: "Yes, I want to go",
-    yesDescription:
-      "Do you want to join in submitting the petition in your state capital on 17 December?",
-    no: "No, I cannot go",
-    noDescription:
-      "I will not be able to attend the state capital program.",
-    participantDetails: "Participant Details",
-    participantDescription:
-      "Enter the details of everyone who will be attending with you.",
-    member: "Member",
-    fullName: "Full Name",
-    mobileNumber: "Mobile Number",
-    state: "State",
-    district: "District",
-    tehsil: "Tehsil / Block",
-    village: "Village",
-    enterVillage: "Enter village name",
-    enterName: "Enter your full name",
-    enterPhone: "10-digit mobile number",
-    selectState: "Select State",
-    selectDistrict: "Select District",
-    selectTehsil: "Select Tehsil / Block",
-    selectStateFirst: "Select State First",
-    selectDistrictFirst: "Select District First",
-    loadingStates: "Loading states...",
-    loadingDistricts: "Loading districts...",
-    loadingDetails: "Loading tehsils...",
-    loadingPrabhari: "Loading Prabhari...",
-    addMember: "Add Another Member",
-    removeMember: "Remove Member",
-    districtPrabhari: "District Prabhari",
-    contact: "Contact",
-    submit: "Submit Registration",
-    submitting: "Submitting...",
-    back: "Back",
-    changeAnswer: "Change Answer",
-    success: "Registration Successful",
-    successDescription:
-      "Your registration has been successfully submitted.",
-    registeredMembers: "Registered Members",
-    thankYou: "Thank You",
-    noAttendance:
-      "You have selected that you will not attend the state capital protest.",
-    requiredName: "Please enter your name.",
-    requiredPhone:
-      "Please enter a valid 10-digit mobile number.",
-    requiredState: "Please select a state.",
-    requiredDistrict: "Please select a district.",
-    requiredTehsil: "Please select a tehsil / block.",
-    requiredVillage: "Please enter your village name.",
-    submitError:
-      "Registration could not be submitted. Please try again.",
-    noPrabhari:
-      "District in-charge information is not available.",
-    additionalMemberNote:
-      "For this member, enter only name and mobile number. Location will be taken from the first member.",
-    goHome: "Go to Home",
-  },
+ en: {
+  registration: "Registration",
+  title: "17 December – Let’s Go to the State Capital",
+  description:
+    "Gau Samman Aahvan Abhiyan – Third Phase: 31 Crore Signatures. On 17 December, as part of the third phase of the Gau Samman Aahvan Abhiyan, a petition will be submitted in the capitals of all states of India with 31 crore signatures. Register your presence and become a part of this nationwide campaign.",
+  language: "Language",
+  chooseLanguage: "Choose language",
+  step1: "Confirm",
+  step2: "Details",
 
-  bn: {
-    registration: "নিবন্ধন",
-    title: "১৭ ডিসেম্বর – চলুন রাজ্যের রাজধানীতে যাই",
-    description:
-      "গৌ সম্মান আহ্বান অভিযান – তৃতীয় পর্যায়: ৩১ কোটি স্বাক্ষর। ১৭ ডিসেম্বর, গৌ সম্মান আহ্বান অভিযানের তৃতীয় পর্যায়ে ৩১ কোটি স্বাক্ষরসহ ভারতের সমস্ত রাজ্যের রাজধানীতে আবেদনপত্র জমা দেওয়া হবে। আপনার উপস্থিতি নথিভুক্ত করে এই দেশব্যাপী অভিযানের অংশ হন।",
-    language: "ভাষা",
-    chooseLanguage: "ভাষা নির্বাচন করুন",
-    step1: "নিশ্চিত করুন",
-    step2: "বিবরণ",
-    question:
-      "আপনি কি প্রতিবাদের জন্য আপনার রাজ্যের রাজধানীতে যেতে চান?",
-    yes: "হ্যাঁ, আমি যেতে চাই",
-    yesDescription:
-      "আপনি কি ১৭ ডিসেম্বর আপনার রাজ্যের রাজধানীতে আবেদনপত্র জমা দেওয়ার কর্মসূচিতে যোগ দিতে চান?",
-    no: "না, আমি যেতে পারব না",
-    noDescription:
-      "আমি রাজ্যের রাজধানীর কর্মসূচিতে যোগ দিতে পারব না।",
-    participantDetails: "অংশগ্রহণকারীর বিবরণ",
-    participantDescription:
-      "আপনার সঙ্গে আসা প্রত্যেক সদস্যের তথ্য দিন।",
-    member: "সদস্য",
-    fullName: "পুরো নাম",
-    mobileNumber: "মোবাইল নম্বর",
-    state: "রাজ্য",
-    district: "জেলা",
-    tehsil: "তহসিল / ব্লক",
-    village: "গ্রাম",
-    enterVillage: "গ্রামের নাম লিখুন",
-    enterName: "আপনার পুরো নাম লিখুন",
-    enterPhone: "১০ সংখ্যার মোবাইল নম্বর",
-    selectState: "রাজ্য নির্বাচন করুন",
-    selectDistrict: "জেলা নির্বাচন করুন",
-    selectTehsil: "তহসিল / ব্লক নির্বাচন করুন",
-    selectStateFirst: "প্রথমে রাজ্য নির্বাচন করুন",
-    selectDistrictFirst: "প্রথমে জেলা নির্বাচন করুন",
-    loadingStates: "রাজ্য লোড হচ্ছে...",
-    loadingDistricts: "জেলা লোড হচ্ছে...",
-    loadingDetails: "তহসিল লোড হচ্ছে...",
-    loadingPrabhari: "প্রভারি লোড হচ্ছে...",
-    addMember: "আরও সদস্য যোগ করুন",
-    removeMember: "সদস্য সরান",
-    districtPrabhari: "জেলা প্রভারি",
-    contact: "যোগাযোগ",
-    submit: "নিবন্ধন জমা দিন",
-    submitting: "জমা হচ্ছে...",
-    back: "পিছনে",
-    changeAnswer: "উত্তর পরিবর্তন করুন",
-    success: "নিবন্ধন সফল",
-    successDescription: "আপনার নিবন্ধন সফলভাবে জমা হয়েছে।",
-    registeredMembers: "নিবন্ধিত সদস্য",
-    thankYou: "ধন্যবাদ",
-    noAttendance:
-      "আপনি রাজ্যের রাজধানীর প্রতিবাদে অংশ নেবেন না বলে নির্বাচন করেছেন।",
-    requiredName: "অনুগ্রহ করে নাম লিখুন।",
-    requiredPhone:
-      "অনুগ্রহ করে সঠিক ১০ সংখ্যার মোবাইল নম্বর দিন।",
-    requiredState: "অনুগ্রহ করে রাজ্য নির্বাচন করুন।",
-    requiredDistrict: "অনুগ্রহ করে জেলা নির্বাচন করুন।",
-    requiredTehsil:
-      "অনুগ্রহ করে তহসিল / ব্লক নির্বাচন করুন।",
-    requiredVillage: "অনুগ্রহ করে গ্রামের নাম লিখুন।",
-    submitError:
-      "নিবন্ধন জমা দেওয়া যায়নি। আবার চেষ্টা করুন।",
-    noPrabhari: "জেলা প্রভারির তথ্য পাওয়া যায়নি।",
-    additionalMemberNote:
-      "এই সদস্যের জন্য শুধু নাম ও মোবাইল নম্বর দিন। অবস্থানের তথ্য প্রথম সদস্যের থেকে নেওয়া হবে।",
-    goHome: "হোম পেজে যান",
-  },
+  question:
+    "Do you want to join us in going to your state capital on 17 December to submit the petition?",
 
-  mr: {
-    registration: "नोंदणी",
-    title: "१७ डिसेंबर – चला राज्याच्या राजधानीत",
-    description:
-      "गौ सन्मान आह्वान अभियान – तिसरा टप्पा: ३१ कोटी स्वाक्षऱ्या. १७ डिसेंबर रोजी गौ सन्मान आह्वान अभियानाच्या तिसऱ्या टप्प्यात ३१ कोटी स्वाक्षऱ्यांसह भारतातील सर्व राज्यांच्या राजधानीत निवेदन सादर केले जाईल. आपली उपस्थिती नोंदवून या राष्ट्रव्यापी अभियानाचा भाग बना.",
-    language: "भाषा",
-    chooseLanguage: "भाषा निवडा",
-    step1: "पुष्टी",
-    step2: "तपशील",
-    question:
-      "तुम्हाला तुमच्या राज्याच्या राजधानीत आंदोलनासाठी जायचे आहे का?",
-    yes: "होय, मला जायचे आहे",
-    yesDescription:
-      "तुम्हाला १७ डिसेंबर रोजी तुमच्या राज्याच्या राजधानीत निवेदन सादर करण्यासाठी सहभागी व्हायचे आहे का?",
-    no: "नाही, मला जाता येणार नाही",
-    noDescription:
-      "मी राज्याच्या राजधानीतील कार्यक्रमाला उपस्थित राहू शकणार नाही.",
-    participantDetails: "सहभागीचा तपशील",
-    participantDescription:
-      "तुमच्यासोबत येणाऱ्या प्रत्येक सदस्याचा तपशील भरा.",
-    member: "सदस्य",
-    fullName: "पूर्ण नाव",
-    mobileNumber: "मोबाईल नंबर",
-    state: "राज्य",
-    district: "जिल्हा",
-    tehsil: "तहसील / ब्लॉक",
-    village: "गाव",
-    enterVillage: "तुमच्या गावाचे नाव लिहा",
-    enterName: "तुमचे पूर्ण नाव लिहा",
-    enterPhone: "१० अंकी मोबाईल नंबर",
-    selectState: "राज्य निवडा",
-    selectDistrict: "जिल्हा निवडा",
-    selectTehsil: "तहसील / ब्लॉक निवडा",
-    selectStateFirst: "प्रथम राज्य निवडा",
-    selectDistrictFirst: "प्रथम जिल्हा निवडा",
-    loadingStates: "राज्य लोड होत आहेत...",
-    loadingDistricts: "जिल्हे लोड होत आहेत...",
-    loadingDetails: "तहसील लोड होत आहेत...",
-    loadingPrabhari: "प्रभारीची माहिती लोड होत आहे...",
-    addMember: "आणखी सदस्य जोडा",
-    removeMember: "सदस्य हटवा",
-    districtPrabhari: "जिल्हा प्रभारी",
-    contact: "संपर्क",
-    submit: "नोंदणी जमा करा",
-    submitting: "जमा होत आहे...",
-    back: "मागे",
-    changeAnswer: "उत्तर बदला",
-    success: "नोंदणी यशस्वी",
-    successDescription:
-      "तुमची नोंदणी यशस्वीरित्या जमा झाली आहे.",
-    registeredMembers: "नोंदणीकृत सदस्य",
-    thankYou: "धन्यवाद",
-    noAttendance:
-      "तुम्ही राज्याच्या राजधानीतील आंदोलनात सहभागी होणार नसल्याचे निवडले आहे.",
-    requiredName: "कृपया नाव लिहा.",
-    requiredPhone:
-      "कृपया योग्य १० अंकी मोबाईल नंबर लिहा.",
-    requiredState: "कृपया राज्य निवडा.",
-    requiredDistrict: "कृपया जिल्हा निवडा.",
-    requiredTehsil: "कृपया तहसील / ब्लॉक निवडा.",
-    requiredVillage: "कृपया गावाचे नाव लिहा.",
-    submitError:
-      "नोंदणी जमा करता आली नाही. कृपया पुन्हा प्रयत्न करा.",
-    noPrabhari:
-      "या क्षेत्रासाठी प्रभारीची माहिती उपलब्ध नाही.",
-    additionalMemberNote:
-      "या सदस्यासाठी फक्त नाव आणि मोबाईल नंबर भरा. स्थानाची माहिती पहिल्या सदस्याकडून घेतली जाईल.",
-    goHome: "होम पेजवर जा",
-  },
+  yes: "Yes, I want to go",
 
-  te: {
-    registration: "నమోదు",
-    title: "డిసెంబర్ 17 – రాష్ట్ర రాజధానికి వెళ్దాం",
-    description:
-      "గో సమ్మాన్ ఆహ్వాన్ అభియాన్ – మూడవ దశ: 31 కోట్ల సంతకాలు. డిసెంబర్ 17న గో సమ్మాన్ ఆహ్వాన్ అభియాన్ మూడవ దశలో 31 కోట్ల సంతకాలతో భారతదేశంలోని అన్ని రాష్ట్రాల రాజధానుల్లో వినతిపత్రం సమర్పించబడుతుంది. మీ హాజరును నమోదు చేసుకుని ఈ దేశవ్యాప్త కార్యక్రమంలో భాగస్వాములు అవ్వండి.",
-    language: "భాష",
-    chooseLanguage: "భాషను ఎంచుకోండి",
-    step1: "నిర్ధారించండి",
-    step2: "వివరాలు",
-    question:
-      "మీ రాష్ట్ర రాజధానికి నిరసన కోసం వెళ్లాలనుకుంటున్నారా?",
-    yes: "అవును, నేను వెళ్లాలనుకుంటున్నాను",
-    yesDescription:
-      "డిసెంబర్ 17న మీ రాష్ట్ర రాజధానిలో వినతిపత్రం సమర్పించే కార్యక్రమంలో పాల్గొనాలనుకుంటున్నారా?",
-    no: "లేదు, నేను వెళ్లలేను",
-    noDescription:
-      "నేను రాష్ట్ర రాజధాని కార్యక్రమానికి హాజరు కాలేను.",
-    participantDetails: "పాల్గొనేవారి వివరాలు",
-    participantDescription:
-      "మీతో వచ్చే ప్రతి సభ్యుని వివరాలను నమోదు చేయండి.",
-    member: "సభ్యుడు",
-    fullName: "పూర్తి పేరు",
-    mobileNumber: "మొబైల్ నంబర్",
-    state: "రాష్ట్రం",
-    district: "జిల్లా",
-    tehsil: "తహసీల్ / బ్లాక్",
-    village: "గ్రామం",
-    enterVillage: "మీ గ్రామం పేరు నమోదు చేయండి",
-    enterName: "మీ పూర్తి పేరు నమోదు చేయండి",
-    enterPhone: "10 అంకెల మొబైల్ నంబర్",
-    selectState: "రాష్ట్రాన్ని ఎంచుకోండి",
-    selectDistrict: "జిల్లాను ఎంచుకోండి",
-    selectTehsil: "తహసీల్ / బ్లాక్ ఎంచుకోండి",
-    selectStateFirst: "ముందుగా రాష్ట్రాన్ని ఎంచుకోండి",
-    selectDistrictFirst: "ముందుగా జిల్లాను ఎంచుకోండి",
-    loadingStates: "రాష్ట్రాలు లోడ్ అవుతున్నాయి...",
-    loadingDistricts: "జిల్లాలు లోడ్ అవుతున్నాయి...",
-    loadingDetails: "తహసీల్లు లోడ్ అవుతున్నాయి...",
-    loadingPrabhari: "ప్రభారి సమాచారం లోడ్ అవుతోంది...",
-    addMember: "మరో సభ్యుడిని జోడించండి",
-    removeMember: "సభ్యుడిని తొలగించండి",
-    districtPrabhari: "జిల్లా ప్రభారి",
-    contact: "సంప్రదించండి",
-    submit: "నమోదు సమర్పించండి",
-    submitting: "సమర్పిస్తోంది...",
-    back: "వెనుకకు",
-    changeAnswer: "సమాధానం మార్చండి",
-    success: "నమోదు విజయవంతమైంది",
-    successDescription:
-      "మీ నమోదు విజయవంతంగా సమర్పించబడింది.",
-    registeredMembers: "నమోదైన సభ్యులు",
-    thankYou: "ధన్యవాదాలు",
-    noAttendance:
-      "మీరు రాష్ట్ర రాజధాని నిరసన కార్యక్రమంలో పాల్గొనరాదని ఎంచుకున్నారు.",
-    requiredName: "దయచేసి పేరు నమోదు చేయండి.",
-    requiredPhone:
-      "దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి.",
-    requiredState: "దయచేసి రాష్ట్రాన్ని ఎంచుకోండి.",
-    requiredDistrict: "దయచేసి జిల్లాను ఎంచుకోండి.",
-    requiredTehsil:
-      "దయచేసి తహసీల్ / బ్లాక్ ఎంచుకోండి.",
-    requiredVillage: "దయచేసి మీ గ్రామం పేరు నమోదు చేయండి.",
-    submitError:
-      "నమోదును సమర్పించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.",
-    noPrabhari:
-      "ఈ ప్రాంతానికి ప్రభారి సమాచారం అందుబాటులో లేదు.",
-    additionalMemberNote:
-      "ఈ సభ్యునికి పేరు మరియు మొబైల్ నంబర్ మాత్రమే నమోదు చేయండి. స్థాన వివరాలు మొదటి సభ్యుని నుండి తీసుకోబడతాయి.",
-    goHome: "హోమ్ పేజీకి వెళ్లండి",
-  },
+  yesDescription:
+    "Be a part of this campaign to submit the petition in your state capital on 17 December.",
 
-  ta: {
-    registration: "பதிவு",
-    title: "டிசம்பர் 17 – மாநிலத் தலைநகருக்கு செல்வோம்",
-    description:
-      "கௌ சம்மான் ஆஹ்வான் அபியான் – மூன்றாம் கட்டம்: 31 கோடி கையெழுத்துகள். டிசம்பர் 17 அன்று கௌ சம்மான் ஆஹ்வான் அபியான் மூன்றாம் கட்டத்தின் கீழ், 31 கோடி கையெழுத்துகளுடன் இந்தியாவின் அனைத்து மாநில தலைநகரங்களிலும் மனு சமர்ப்பிக்கப்படும். உங்கள் வருகையை பதிவு செய்து இந்த நாடு தழுவிய இயக்கத்தின் ஒரு பகுதியாகுங்கள்.",
-    language: "மொழி",
-    chooseLanguage: "மொழியைத் தேர்ந்தெடுக்கவும்",
-    step1: "உறுதிப்படுத்தவும்",
-    step2: "விவரங்கள்",
-    question:
-      "உங்கள் மாநிலத் தலைநகருக்கு போராட்டத்திற்காக செல்ல விரும்புகிறீர்களா?",
-    yes: "ஆம், நான் செல்ல விரும்புகிறேன்",
-    yesDescription:
-      "டிசம்பர் 17 அன்று உங்கள் மாநிலத் தலைநகரில் மனு சமர்ப்பிக்கும் நிகழ்வில் பங்கேற்க விரும்புகிறீர்களா?",
-    no: "இல்லை, என்னால் செல்ல முடியாது",
-    noDescription:
-      "நான் மாநிலத் தலைநகர் நிகழ்வில் பங்கேற்க முடியாது.",
-    participantDetails: "பங்கேற்பாளர் விவரங்கள்",
-    participantDescription:
-      "உங்களுடன் வருபவர்களின் விவரங்களை உள்ளிடவும்.",
-    member: "உறுப்பினர்",
-    fullName: "முழு பெயர்",
-    mobileNumber: "மொபைல் எண்",
-    state: "மாநிலம்",
-    district: "மாவட்டம்",
-    tehsil: "தாலுகா / தொகுதி",
-    village: "கிராமம்",
-    enterVillage: "உங்கள் கிராமத்தின் பெயரை உள்ளிடவும்",
-    enterName: "உங்கள் முழு பெயரை உள்ளிடவும்",
-    enterPhone: "10 இலக்க மொபைல் எண்",
-    selectState: "மாநிலத்தைத் தேர்ந்தெடுக்கவும்",
-    selectDistrict: "மாவட்டத்தைத் தேர்ந்தெடுக்கவும்",
-    selectTehsil: "தாலுகா / தொகுதியைத் தேர்ந்தெடுக்கவும்",
-    selectStateFirst: "முதலில் மாநிலத்தைத் தேர்ந்தெடுக்கவும்",
-    selectDistrictFirst: "முதலில் மாவட்டத்தைத் தேர்ந்தெடுக்கவும்",
-    loadingStates: "மாநிலங்கள் ஏற்றப்படுகின்றன...",
-    loadingDistricts: "மாவட்டங்கள் ஏற்றப்படுகின்றன...",
-    loadingDetails: "தாலுகாக்கள் ஏற்றப்படுகின்றன...",
-    loadingPrabhari: "பொறுப்பாளர் தகவல் ஏற்றப்படுகிறது...",
-    addMember: "மற்றொரு உறுப்பினரைச் சேர்க்கவும்",
-    removeMember: "உறுப்பினரை அகற்றவும்",
-    districtPrabhari: "மாவட்ட பொறுப்பாளர்",
-    contact: "தொடர்பு",
-    submit: "பதிவைச் சமர்ப்பிக்கவும்",
-    submitting: "சமர்ப்பிக்கப்படுகிறது...",
-    back: "பின்செல்",
-    changeAnswer: "பதிலை மாற்றவும்",
-    success: "பதிவு வெற்றிகரமாக முடிந்தது",
-    successDescription:
-      "உங்கள் பதிவு வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது.",
-    registeredMembers: "பதிவு செய்யப்பட்ட உறுப்பினர்கள்",
-    thankYou: "நன்றி",
-    noAttendance:
-      "மாநிலத் தலைநகர் போராட்டத்தில் பங்கேற்க மாட்டேன் என்று நீங்கள் தேர்ந்தெடுத்துள்ளீர்கள்.",
-    requiredName: "தயவுசெய்து உங்கள் பெயரை உள்ளிடவும்.",
-    requiredPhone:
-      "தயவுசெய்து சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.",
-    requiredState: "தயவுசெய்து மாநிலத்தைத் தேர்ந்தெடுக்கவும்.",
-    requiredDistrict: "தயவுசெய்து மாவட்டத்தைத் தேர்ந்தெடுக்கவும்.",
-    requiredTehsil:
-      "தயவுசெய்து தாலுகா / தொகுதியைத் தேர்ந்தெடுக்கவும்.",
-    requiredVillage:
-      "தயவுசெய்து உங்கள் கிராமத்தின் பெயரை உள்ளிடவும்.",
-    submitError:
-      "பதிவைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
-    noPrabhari:
-      "இந்தப் பகுதிக்கான பொறுப்பாளர் தகவல் கிடைக்கவில்லை.",
-    additionalMemberNote:
-      "இந்த உறுப்பினருக்கு பெயர் மற்றும் மொபைல் எண் மட்டும் உள்ளிடவும். இருப்பிடத் தகவல் முதல் உறுப்பினரிடமிருந்து பெறப்படும்.",
-    goHome: "முகப்புப் பக்கத்திற்குச் செல்லவும்",
-  },
+  no: "No, I cannot go",
 
-  gu: {
-    registration: "નોંધણી",
-    title: "17 ડિસેમ્બર – ચાલો રાજ્યની રાજધાનીમાં",
-    description:
-      "ગૌ સન્માન આહ્વાન અભિયાન – ત્રીજો તબક્કો: 31 કરોડ હસ્તાક્ષર. 17 ડિસેમ્બરે ગૌ સન્માન આહ્વાન અભિયાનના ત્રીજા તબક્કામાં 31 કરોડ હસ્તાક્ષરો સાથે ભારતના તમામ રાજ્યોની રાજધાનીઓમાં અરજીપત્ર રજૂ કરવામાં આવશે. તમારી હાજરી નોંધાવીને આ રાષ્ટ્રવ્યાપી અભિયાનનો ભાગ બનો.",
-    language: "ભાષા",
-    chooseLanguage: "ભાષા પસંદ કરો",
-    step1: "પુષ્ટિ",
-    step2: "વિગતો",
-    question:
-      "શું તમે વિરોધ પ્રદર્શન માટે તમારા રાજ્યની રાજધાનીમાં જવા માંગો છો?",
-    yes: "હા, હું જવા માંગું છું",
-    yesDescription:
-      "શું તમે 17 ડિસેમ્બરે તમારા રાજ્યની રાજધાનીમાં અરજીપત્ર રજૂ કરવાની કામગીરીમાં જોડાવા માંગો છો?",
-    no: "ના, હું જઈ શકતો નથી",
-    noDescription:
-      "હું રાજ્યની રાજધાનીના કાર્યક્રમમાં હાજર રહી શકીશ નહીં.",
-    participantDetails: "સહભાગીની વિગતો",
-    participantDescription:
-      "તમારી સાથે આવનાર દરેક સભ્યની વિગતો દાખલ કરો.",
-    member: "સભ્ય",
-    fullName: "પૂરું નામ",
-    mobileNumber: "મોબાઇલ નંબર",
-    state: "રાજ્ય",
-    district: "જિલ્લો",
-    tehsil: "તહેસીલ / બ્લોક",
-    village: "ગામ",
-    enterVillage: "તમારા ગામનું નામ દાખલ કરો",
-    enterName: "તમારું પૂરું નામ દાખલ કરો",
-    enterPhone: "10 અંકનો મોબાઇલ નંબર",
-    selectState: "રાજ્ય પસંદ કરો",
-    selectDistrict: "જિલ્લો પસંદ કરો",
-    selectTehsil: "તહેસીલ / બ્લોક પસંદ કરો",
-    selectStateFirst: "પહેલા રાજ્ય પસંદ કરો",
-    selectDistrictFirst: "પહેલા જિલ્લો પસંદ કરો",
-    loadingStates: "રાજ્યો લોડ થઈ રહ્યા છે...",
-    loadingDistricts: "જિલ્લાઓ લોડ થઈ રહ્યા છે...",
-    loadingDetails: "તહેસીલ લોડ થઈ રહી છે...",
-    loadingPrabhari: "પ્રભારીની માહિતી લોડ થઈ રહી છે...",
-    addMember: "બીજો સભ્ય ઉમેરો",
-    removeMember: "સભ્ય દૂર કરો",
-    districtPrabhari: "જિલ્લા પ્રભારી",
-    contact: "સંપર્ક",
-    submit: "નોંધણી સબમિટ કરો",
-    submitting: "સબમિટ થઈ રહ્યું છે...",
-    back: "પાછા",
-    changeAnswer: "જવાબ બદલો",
-    success: "નોંધણી સફળ",
-    successDescription:
-      "તમારી નોંધણી સફળતાપૂર્વક સબમિટ કરવામાં આવી છે.",
-    registeredMembers: "નોંધાયેલા સભ્યો",
-    thankYou: "આભાર",
-    noAttendance:
-      "તમે પસંદ કર્યું છે કે તમે રાજ્યની રાજધાનીના વિરોધ પ્રદર્શનમાં ભાગ નહીં લો.",
-    requiredName: "કૃપા કરીને નામ દાખલ કરો.",
-    requiredPhone:
-      "કૃપા કરીને યોગ્ય 10 અંકનો મોબાઇલ નંબર દાખલ કરો.",
-    requiredState: "કૃપા કરીને રાજ્ય પસંદ કરો.",
-    requiredDistrict: "કૃપા કરીને જિલ્લો પસંદ કરો.",
-    requiredTehsil:
-      "કૃપા કરીને તહેસીલ / બ્લોક પસંદ કરો.",
-    requiredVillage: "કૃપા કરીને તમારા ગામનું નામ દાખલ કરો.",
-    submitError:
-      "નોંધણી સબમિટ થઈ શકી નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
-    noPrabhari:
-      "આ વિસ્તાર માટે પ્રભારીની માહિતી ઉપલબ્ધ નથી.",
-    additionalMemberNote:
-      "આ સભ્ય માટે માત્ર નામ અને મોબાઇલ નંબર દાખલ કરો. સ્થાનની માહિતી પ્રથમ સભ્ય પાસેથી લેવામાં આવશે.",
-    goHome: "હોમ પેજ પર જાઓ",
-  },
+  noDescription:
+    "I will not be able to attend the program at the state capital.",
 
-  kn: {
-    registration: "ನೋಂದಣಿ",
-    title: "ಡಿಸೆಂಬರ್ 17 – ರಾಜ್ಯದ ರಾಜಧಾನಿಗೆ ಹೋಗೋಣ",
-    description:
-      "ಗೌ ಸಮ್ಮಾನ್ ಆಹ್ವಾನ್ ಅಭಿಯಾನ – ಮೂರನೇ ಹಂತ: 31 ಕೋಟಿ ಸಹಿಗಳು. ಡಿಸೆಂಬರ್ 17ರಂದು ಗೌ ಸಮ್ಮಾನ್ ಆಹ್ವಾನ್ ಅಭಿಯಾನದ ಮೂರನೇ ಹಂತದಲ್ಲಿ 31 ಕೋಟಿ ಸಹಿಗಳೊಂದಿಗೆ ಭಾರತದ ಎಲ್ಲಾ ರಾಜ್ಯಗಳ ರಾಜಧಾನಿಗಳಲ್ಲಿ ಮನವಿ ಪತ್ರವನ್ನು ಸಲ್ಲಿಸಲಾಗುತ್ತದೆ. ನಿಮ್ಮ ಹಾಜರಾತಿಯನ್ನು ನೋಂದಾಯಿಸಿ ಈ ರಾಷ್ಟ್ರವ್ಯಾಪಿ ಅಭಿಯಾನದ ಭಾಗವಾಗಿರಿ.",
-    language: "ಭಾಷೆ",
-    chooseLanguage: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-    step1: "ದೃಢೀಕರಿಸಿ",
-    step2: "ವಿವರಗಳು",
-    question:
-      "ನಿಮ್ಮ ರಾಜ್ಯದ ರಾಜಧಾನಿಗೆ ಪ್ರತಿಭಟನೆಗಾಗಿ ಹೋಗಲು ಬಯಸುತ್ತೀರಾ?",
-    yes: "ಹೌದು, ನಾನು ಹೋಗಲು ಬಯಸುತ್ತೇನೆ",
-    yesDescription:
-      "ಡಿಸೆಂಬರ್ 17ರಂದು ನಿಮ್ಮ ರಾಜ್ಯದ ರಾಜಧಾನಿಯಲ್ಲಿ ಮನವಿ ಪತ್ರ ಸಲ್ಲಿಸುವ ಕಾರ್ಯಕ್ರಮದಲ್ಲಿ ಭಾಗವಹಿಸಲು ಬಯಸುತ್ತೀರಾ?",
-    no: "ಇಲ್ಲ, ನಾನು ಹೋಗಲು ಸಾಧ್ಯವಿಲ್ಲ",
-    noDescription:
-      "ನಾನು ರಾಜ್ಯದ ರಾಜಧಾನಿಯ ಕಾರ್ಯಕ್ರಮದಲ್ಲಿ ಭಾಗವಹಿಸಲು ಸಾಧ್ಯವಾಗುವುದಿಲ್ಲ.",
-    participantDetails: "ಭಾಗವಹಿಸುವವರ ವಿವರಗಳು",
-    participantDescription:
-      "ನಿಮ್ಮೊಂದಿಗೆ ಬರುವ ಪ್ರತಿಯೊಬ್ಬ ಸದಸ್ಯರ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.",
-    member: "ಸದಸ್ಯ",
-    fullName: "ಪೂರ್ಣ ಹೆಸರು",
-    mobileNumber: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
-    state: "ರಾಜ್ಯ",
-    district: "ಜಿಲ್ಲೆ",
-    tehsil: "ತಹಸಿಲ್ / ಬ್ಲಾಕ್",
-    village: "ಗ್ರಾಮ",
-    enterVillage: "ನಿಮ್ಮ ಗ್ರಾಮದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
-    enterName: "ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
-    enterPhone: "10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
-    selectState: "ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-    selectDistrict: "ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-    selectTehsil: "ತಹಸಿಲ್ / ಬ್ಲಾಕ್ ಆಯ್ಕೆಮಾಡಿ",
-    selectStateFirst: "ಮೊದಲು ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-    selectDistrictFirst: "ಮೊದಲು ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-    loadingStates: "ರಾಜ್ಯಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...",
-    loadingDistricts: "ಜಿಲ್ಲೆಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...",
-    loadingDetails: "ತಹಸಿಲ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...",
-    loadingPrabhari: "ಪ್ರಭಾರಿ ಮಾಹಿತಿ ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
-    addMember: "ಮತ್ತೊಬ್ಬ ಸದಸ್ಯರನ್ನು ಸೇರಿಸಿ",
-    removeMember: "ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ",
-    districtPrabhari: "ಜಿಲ್ಲಾ ಪ್ರಭಾರಿ",
-    contact: "ಸಂಪರ್ಕಿಸಿ",
-    submit: "ನೋಂದಣಿ ಸಲ್ಲಿಸಿ",
-    submitting: "ಸಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...",
-    back: "ಹಿಂದೆ",
-    changeAnswer: "ಉತ್ತರ ಬದಲಿಸಿ",
-    success: "ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ",
-    successDescription:
-      "ನಿಮ್ಮ ನೋಂದಣಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ.",
-    registeredMembers: "ನೋಂದಾಯಿತ ಸದಸ್ಯರು",
-    thankYou: "ಧನ್ಯವಾದಗಳು",
-    noAttendance:
-      "ನೀವು ರಾಜ್ಯದ ರಾಜಧಾನಿಯ ಪ್ರತಿಭಟನೆಯಲ್ಲಿ ಭಾಗವಹಿಸುವುದಿಲ್ಲ ಎಂದು ಆಯ್ಕೆ ಮಾಡಿದ್ದೀರಿ.",
-    requiredName: "ದಯವಿಟ್ಟು ಹೆಸರು ನಮೂದಿಸಿ.",
-    requiredPhone:
-      "ದಯವಿಟ್ಟು ಸರಿಯಾದ 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
-    requiredState: "ದಯವಿಟ್ಟು ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
-    requiredDistrict: "ದಯವಿಟ್ಟು ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
-    requiredTehsil:
-      "ದಯವಿಟ್ಟು ತಹಸಿಲ್ / ಬ್ಲಾಕ್ ಆಯ್ಕೆಮಾಡಿ.",
-    requiredVillage: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಗ್ರಾಮದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.",
-    submitError:
-      "ನೋಂದಣಿಯನ್ನು ಸಲ್ಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
-    noPrabhari:
-      "ಈ ಪ್ರದೇಶಕ್ಕೆ ಪ್ರಭಾರಿ ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ.",
-    additionalMemberNote:
-      "ಈ ಸದಸ್ಯರಿಗೆ ಹೆಸರು ಮತ್ತು ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಮಾತ್ರ ನಮೂದಿಸಿ. ಸ್ಥಳದ ಮಾಹಿತಿಯನ್ನು ಮೊದಲ ಸದಸ್ಯರಿಂದ ಪಡೆಯಲಾಗುತ್ತದೆ.",
-    goHome: "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
-  },
+  participantDetails: "Participant Details",
+  participantDescription:
+    "Enter the details of everyone who will be attending with you.",
+  member: "Member",
+  fullName: "Full Name",
+  mobileNumber: "Mobile Number",
+  state: "State",
+  district: "District",
+  tehsil: "Tehsil / Block",
+  village: "Village",
+  enterVillage: "Enter village name",
+  enterName: "Enter your full name",
+  enterPhone: "10-digit mobile number",
+  selectState: "Select State",
+  selectDistrict: "Select District",
+  selectTehsil: "Select Tehsil / Block",
+  selectStateFirst: "Select State First",
+  selectDistrictFirst: "Select District First",
+  loadingStates: "Loading states...",
+  loadingDistricts: "Loading districts...",
+  loadingDetails: "Loading tehsils...",
+  loadingPrabhari: "Loading Prabhari...",
+  addMember: "Add Another Member",
+  removeMember: "Remove Member",
+  districtPrabhari: "District Prabhari",
+  contact: "Contact",
+  submit: "Submit Registration",
+  submitting: "Submitting...",
+  back: "Back",
+  changeAnswer: "Change Answer",
+  success: "Registration Successful",
+  successDescription:
+    "Your registration has been successfully submitted.",
+  registeredMembers: "Registered Members",
+  thankYou: "Thank You",
+  noAttendance:
+    "You have selected that you will not attend the state capital protest.",
+  requiredName: "Please enter your name.",
+  requiredPhone:
+    "Please enter a valid 10-digit mobile number.",
+  requiredState: "Please select a state.",
+  requiredDistrict: "Please select a district.",
+  requiredTehsil: "Please select a tehsil / block.",
+  requiredVillage: "Please enter your village name.",
+  submitError:
+    "Registration could not be submitted. Please try again.",
+  noPrabhari:
+    "District in-charge information is not available.",
+  additionalMemberNote:
+    "For this member, enter only name and mobile number. Location will be taken from the first member.",
+  goHome: "Go to Home",
+},
 
-  ml: {
-    registration: "രജിസ്ട്രേഷൻ",
-    title: "ഡിസംബർ 17 – സംസ്ഥാന തലസ്ഥാനത്തേക്ക് പോകാം",
-    description:
-      "ഗൗ സമ്മാൻ ആഹ്വാൻ അഭിയാൻ – മൂന്നാം ഘട്ടം: 31 കോടി ഒപ്പുകൾ. ഡിസംബർ 17ന് ഗൗ സമ്മാൻ ആഹ്വാൻ അഭിയാന്റെ മൂന്നാം ഘട്ടത്തിൽ 31 കോടി ഒപ്പുകളോടെ ഇന്ത്യയിലെ എല്ലാ സംസ്ഥാന തലസ്ഥാനങ്ങളിലും നിവേദനം സമർപ്പിക്കും. നിങ്ങളുടെ സാന്നിധ്യം രേഖപ്പെടുത്തി ഈ രാജ്യവ്യാപക പ്രചാരണത്തിന്റെ ഭാഗമാകൂ.",
-    language: "ഭാഷ",
-    chooseLanguage: "ഭാഷ തിരഞ്ഞെടുക്കുക",
-    step1: "സ്ഥിരീകരിക്കുക",
-    step2: "വിശദാംശങ്ങൾ",
-    question:
-      "നിങ്ങളുടെ സംസ്ഥാന തലസ്ഥാനത്തേക്ക് പ്രതിഷേധത്തിനായി പോകാൻ ആഗ്രഹിക്കുന്നുണ്ടോ?",
-    yes: "അതെ, എനിക്ക് പോകണം",
-    yesDescription:
-      "ഡിസംബർ 17ന് നിങ്ങളുടെ സംസ്ഥാന തലസ്ഥാനത്ത് നിവേദനം സമർപ്പിക്കുന്ന പരിപാടിയിൽ പങ്കെടുക്കാൻ ആഗ്രഹിക്കുന്നുണ്ടോ?",
-    no: "ഇല്ല, എനിക്ക് പോകാൻ കഴിയില്ല",
-    noDescription:
-      "എനിക്ക് സംസ്ഥാന തലസ്ഥാനത്തെ പരിപാടിയിൽ പങ്കെടുക്കാൻ കഴിയില്ല.",
-    participantDetails: "പങ്കെടുക്കുന്നയാളുടെ വിശദാംശങ്ങൾ",
-    participantDescription:
-      "നിങ്ങളോടൊപ്പം വരുന്ന ഓരോ അംഗത്തിന്റെയും വിശദാംശങ്ങൾ നൽകുക.",
-    member: "അംഗം",
-    fullName: "പൂർണ്ണ പേര്",
-    mobileNumber: "മൊബൈൽ നമ്പർ",
-    state: "സംസ്ഥാനം",
-    district: "ജില്ല",
-    tehsil: "തഹസിൽ / ബ്ലോക്ക്",
-    village: "ഗ്രാമം",
-    enterVillage: "നിങ്ങളുടെ ഗ്രാമത്തിന്റെ പേര് നൽകുക",
-    enterName: "നിങ്ങളുടെ പൂർണ്ണ പേര് നൽകുക",
-    enterPhone: "10 അക്ക മൊബൈൽ നമ്പർ",
-    selectState: "സംസ്ഥാനം തിരഞ്ഞെടുക്കുക",
-    selectDistrict: "ജില്ല തിരഞ്ഞെടുക്കുക",
-    selectTehsil: "തഹസിൽ / ബ്ലോക്ക് തിരഞ്ഞെടുക്കുക",
-    selectStateFirst: "ആദ്യം സംസ്ഥാനം തിരഞ്ഞെടുക്കുക",
-    selectDistrictFirst: "ആദ്യം ജില്ല തിരഞ്ഞെടുക്കുക",
-    loadingStates: "സംസ്ഥാനങ്ങൾ ലോഡ് ചെയ്യുന്നു...",
-    loadingDistricts: "ജില്ലകൾ ലോഡ് ചെയ്യുന്നു...",
-    loadingDetails: "തഹസിലുകൾ ലോഡ് ചെയ്യുന്നു...",
-    loadingPrabhari: "പ്രഭാരി വിവരങ്ങൾ ലോഡ് ചെയ്യുന്നു...",
-    addMember: "മറ്റൊരു അംഗത്തെ ചേർക്കുക",
-    removeMember: "അംഗത്തെ നീക്കം ചെയ്യുക",
-    districtPrabhari: "ജില്ലാ പ്രഭാരി",
-    contact: "ബന്ധപ്പെടുക",
-    submit: "രജിസ്ട്രേഷൻ സമർപ്പിക്കുക",
-    submitting: "സമർപ്പിക്കുന്നു...",
-    back: "തിരികെ",
-    changeAnswer: "ഉത്തരം മാറ്റുക",
-    success: "രജിസ്ട്രേഷൻ വിജയകരം",
-    successDescription:
-      "നിങ്ങളുടെ രജിസ്ട്രേഷൻ വിജയകരമായി സമർപ്പിച്ചു.",
-    registeredMembers: "രജിസ്റ്റർ ചെയ്ത അംഗങ്ങൾ",
-    thankYou: "നന്ദി",
-    noAttendance:
-      "സംസ്ഥാന തലസ്ഥാനത്തെ പ്രതിഷേധത്തിൽ പങ്കെടുക്കില്ലെന്ന് നിങ്ങൾ തിരഞ്ഞെടുത്തു.",
-    requiredName: "ദയവായി പേര് നൽകുക.",
-    requiredPhone:
-      "ദയവായി സാധുവായ 10 അക്ക മൊബൈൽ നമ്പർ നൽകുക.",
-    requiredState: "ദയവായി സംസ്ഥാനം തിരഞ്ഞെടുക്കുക.",
-    requiredDistrict: "ദയവായി ജില്ല തിരഞ്ഞെടുക്കുക.",
-    requiredTehsil:
-      "ദയവായി തഹസിൽ / ബ്ലോക്ക് തിരഞ്ഞെടുക്കുക.",
-    requiredVillage:
-      "ദയവായി നിങ്ങളുടെ ഗ്രാമത്തിന്റെ പേര് നൽകുക.",
-    submitError:
-      "രജിസ്ട്രേഷൻ സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.",
-    noPrabhari:
-      "ഈ പ്രദേശത്തിനുള്ള പ്രഭാരി വിവരങ്ങൾ ലഭ്യമല്ല.",
-    additionalMemberNote:
-      "ഈ അംഗത്തിന് പേര്, മൊബൈൽ നമ്പർ എന്നിവ മാത്രം നൽകുക. സ്ഥലവിവരം ആദ്യ അംഗത്തിൽ നിന്ന് എടുക്കും.",
-    goHome: "ഹോം പേജിലേക്ക് പോകുക",
-  },
+bn: {
+  registration: "নিবন্ধন",
+  title: "১৭ ডিসেম্বর – চলুন রাজ্যের রাজধানীতে যাই",
+  description:
+    "গৌ সম্মান আহ্বান অভিযান – তৃতীয় পর্যায়: ৩১ কোটি স্বাক্ষর। ১৭ ডিসেম্বর, গৌ সম্মান আহ্বান অভিযানের তৃতীয় পর্যায়ে ৩১ কোটি স্বাক্ষরসহ ভারতের সমস্ত রাজ্যের রাজধানীতে আবেদনপত্র জমা দেওয়া হবে। আপনার উপস্থিতি নথিভুক্ত করে এই দেশব্যাপী অভিযানের অংশ হন।",
+  language: "ভাষা",
+  chooseLanguage: "ভাষা নির্বাচন করুন",
+  step1: "নিশ্চিত করুন",
+  step2: "বিবরণ",
 
-  or: {
-    registration: "ପଞ୍ଜୀକରଣ",
-    title: "୧୭ ଡିସେମ୍ବର – ଚାଲନ୍ତୁ ରାଜ୍ୟ ରାଜଧାନୀକୁ",
-    description:
-      "ଗୋ ସମ୍ମାନ ଆହ୍ୱାନ ଅଭିଯାନ – ତୃତୀୟ ପର୍ଯ୍ୟାୟ: ୩୧ କୋଟି ସ୍ୱାକ୍ଷର। ୧୭ ଡିସେମ୍ବରରେ ଗୋ ସମ୍ମାନ ଆହ୍ୱାନ ଅଭିଯାନର ତୃତୀୟ ପର୍ଯ୍ୟାୟରେ ୩୧ କୋଟି ସ୍ୱାକ୍ଷର ସହିତ ଭାରତର ସମସ୍ତ ରାଜ୍ୟର ରାଜଧାନୀରେ ଆବେଦନପତ୍ର ଦାଖଲ କରାଯିବ। ଆପଣଙ୍କ ଉପସ୍ଥିତି ପଞ୍ଜିକରଣ କରି ଏହି ଦେଶବ୍ୟାପୀ ଅଭିଯାନର ଅଂଶ ହୁଅନ୍ତୁ।",
-    language: "ଭାଷା",
-    chooseLanguage: "ଭାଷା ବାଛନ୍ତୁ",
-    step1: "ନିଶ୍ଚିତ କରନ୍ତୁ",
-    step2: "ବିବରଣୀ",
-    question:
-      "ଆପଣ ଆପଣଙ୍କ ରାଜ୍ୟର ରାଜଧାନୀକୁ ବିରୋଧ ପାଇଁ ଯିବାକୁ ଚାହୁଁଛନ୍ତି କି?",
-    yes: "ହଁ, ମୁଁ ଯିବାକୁ ଚାହୁଁଛି",
-    yesDescription:
-      "୧୭ ଡିସେମ୍ବରରେ ଆପଣଙ୍କ ରାଜ୍ୟର ରାଜଧାନୀରେ ଆବେଦନପତ୍ର ଦାଖଲ କରିବା କାର୍ଯ୍ୟକ୍ରମରେ ଯୋଗ ଦେବାକୁ ଚାହୁଁଛନ୍ତି କି?",
-    no: "ନା, ମୁଁ ଯାଇପାରିବି ନାହିଁ",
-    noDescription:
-      "ମୁଁ ରାଜ୍ୟ ରାଜଧାନୀର କାର୍ଯ୍ୟକ୍ରମରେ ଯୋଗ ଦେଇପାରିବି ନାହିଁ।",
-    participantDetails: "ଅଂଶଗ୍ରହଣକାରୀଙ୍କ ବିବରଣୀ",
-    participantDescription:
-      "ଆପଣଙ୍କ ସହିତ ଆସୁଥିବା ପ୍ରତ୍ୟେକ ସଦସ୍ୟଙ୍କ ବିବରଣୀ ଦିଅନ୍ତୁ।",
-    member: "ସଦସ୍ୟ",
-    fullName: "ପୂର୍ଣ୍ଣ ନାମ",
-    mobileNumber: "ମୋବାଇଲ ନମ୍ବର",
-    state: "ରାଜ୍ୟ",
-    district: "ଜିଲ୍ଲା",
-    tehsil: "ତହସିଲ / ବ୍ଲକ",
-    village: "ଗାଁ",
-    enterVillage: "ଆପଣଙ୍କ ଗାଁର ନାମ ଦିଅନ୍ତୁ",
-    enterName: "ଆପଣଙ୍କ ପୂର୍ଣ୍ଣ ନାମ ଦିଅନ୍ତୁ",
-    enterPhone: "୧୦ ଅଙ୍କର ମୋବାଇଲ ନମ୍ବର",
-    selectState: "ରାଜ୍ୟ ବାଛନ୍ତୁ",
-    selectDistrict: "ଜିଲ୍ଲା ବାଛନ୍ତୁ",
-    selectTehsil: "ତହସିଲ / ବ୍ଲକ ବାଛନ୍ତୁ",
-    selectStateFirst: "ପ୍ରଥମେ ରାଜ୍ୟ ବାଛନ୍ତୁ",
-    selectDistrictFirst: "ପ୍ରଥମେ ଜିଲ୍ଲା ବାଛନ୍ତୁ",
-    loadingStates: "ରାଜ୍ୟଗୁଡ଼ିକ ଲୋଡ୍ ହେଉଛି...",
-    loadingDistricts: "ଜିଲ୍ଲାଗୁଡ଼ିକ ଲୋଡ୍ ହେଉଛି...",
-    loadingDetails: "ତହସିଲଗୁଡ଼ିକ ଲୋଡ୍ ହେଉଛି...",
-    loadingPrabhari: "ପ୍ରଭାରୀଙ୍କ ସୂଚନା ଲୋଡ୍ ହେଉଛି...",
-    addMember: "ଆଉ ଜଣେ ସଦସ୍ୟ ଯୋଡନ୍ତୁ",
-    removeMember: "ସଦସ୍ୟଙ୍କୁ ହଟାନ୍ତୁ",
-    districtPrabhari: "ଜିଲ୍ଲା ପ୍ରଭାରୀ",
-    contact: "ଯୋଗାଯୋଗ",
-    submit: "ପଞ୍ଜୀକରଣ ଦାଖଲ କରନ୍ତୁ",
-    submitting: "ଦାଖଲ ହେଉଛି...",
-    back: "ପଛକୁ",
-    changeAnswer: "ଉତ୍ତର ବଦଳାନ୍ତୁ",
-    success: "ପଞ୍ଜୀକରଣ ସଫଳ",
-    successDescription:
-      "ଆପଣଙ୍କ ପଞ୍ଜୀକରଣ ସଫଳତାର ସହିତ ଦାଖଲ ହୋଇଛି।",
-    registeredMembers: "ପଞ୍ଜୀକୃତ ସଦସ୍ୟ",
-    thankYou: "ଧନ୍ୟବାଦ",
-    noAttendance:
-      "ଆପଣ ରାଜ୍ୟ ରାଜଧାନୀର ବିରୋଧ ପ୍ରଦର୍ଶନରେ ଯୋଗ ଦେବେ ନାହିଁ ବୋଲି ବାଛିଛନ୍ତି।",
-    requiredName: "ଦୟାକରି ନାମ ଦିଅନ୍ତୁ।",
-    requiredPhone:
-      "ଦୟାକରି ସଠିକ୍ ୧୦ ଅଙ୍କର ମୋବାଇଲ ନମ୍ବର ଦିଅନ୍ତୁ।",
-    requiredState: "ଦୟାକରି ରାଜ୍ୟ ବାଛନ୍ତୁ।",
-    requiredDistrict: "ଦୟାକରି ଜିଲ୍ଲା ବାଛନ୍ତୁ।",
-    requiredTehsil:
-      "ଦୟାକରି ତହସିଲ / ବ୍ଲକ ବାଛନ୍ତୁ।",
-    requiredVillage: "ଦୟାକରି ଆପଣଙ୍କ ଗାଁର ନାମ ଦିଅନ୍ତୁ।",
-    submitError:
-      "ପଞ୍ଜୀକରଣ ଦାଖଲ ହୋଇପାରିଲା ନାହିଁ। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
-    noPrabhari:
-      "ଏହି ଅଞ୍ଚଳ ପାଇଁ ପ୍ରଭାରୀଙ୍କ ସୂଚନା ଉପଲବ୍ଧ ନାହିଁ।",
-    additionalMemberNote:
-      "ଏହି ସଦସ୍ୟଙ୍କ ପାଇଁ କେବଳ ନାମ ଏବଂ ମୋବାଇଲ ନମ୍ବର ଦିଅନ୍ତୁ। ସ୍ଥାନର ସୂଚନା ପ୍ରଥମ ସଦସ୍ୟଙ୍କଠାରୁ ନିଆଯିବ।",
-    goHome: "ହୋମ ପେଜକୁ ଯାଆନ୍ତୁ",
-  },
+  question:
+    "আপনি কি ১৭ ডিসেম্বর আপনার রাজ্যের রাজধানীতে আবেদনপত্র জমা দেওয়ার জন্য আমাদের সঙ্গে যোগ দিতে চান?",
 
-  pa: {
-    registration: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ",
-    title: "17 ਦਸੰਬਰ – ਆਓ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਚੱਲੀਏ",
-    description:
-      "ਗੌ ਸਨਮਾਨ ਆਹਵਾਨ ਅਭਿਆਨ – ਤੀਜਾ ਪੜਾਅ: 31 ਕਰੋੜ ਦਸਤਖ਼ਤ। 17 ਦਸੰਬਰ ਨੂੰ ਗੌ ਸਨਮਾਨ ਆਹਵਾਨ ਅਭਿਆਨ ਦੇ ਤੀਜੇ ਪੜਾਅ ਵਿੱਚ 31 ਕਰੋੜ ਦਸਤਖ਼ਤਾਂ ਦੇ ਨਾਲ ਭਾਰਤ ਦੇ ਸਾਰੇ ਰਾਜਾਂ ਦੀਆਂ ਰਾਜਧਾਨੀਆਂ ਵਿੱਚ ਅਰਜ਼ੀ ਪੇਸ਼ ਕੀਤੀ ਜਾਵੇਗੀ। ਆਪਣੀ ਹਾਜ਼ਰੀ ਦਰਜ ਕਰਵਾ ਕੇ ਇਸ ਦੇਸ਼ਵਿਆਪੀ ਅਭਿਆਨ ਦਾ ਹਿੱਸਾ ਬਣੋ।",
-    language: "ਭਾਸ਼ਾ",
-    chooseLanguage: "ਭਾਸ਼ਾ ਚੁਣੋ",
-    step1: "ਪੁਸ਼ਟੀ",
-    step2: "ਵੇਰਵੇ",
-    question:
-      "ਕੀ ਤੁਸੀਂ ਆਪਣੇ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਵਿੱਚ ਵਿਰੋਧ ਪ੍ਰਦਰਸ਼ਨ ਲਈ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
-    yes: "ਹਾਂ, ਮੈਂ ਜਾਣਾ ਚਾਹੁੰਦਾ ਹਾਂ",
-    yesDescription:
-      "ਕੀ ਤੁਸੀਂ 17 ਦਸੰਬਰ ਨੂੰ ਆਪਣੇ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਵਿੱਚ ਅਰਜ਼ੀ ਪੇਸ਼ ਕਰਨ ਲਈ ਸ਼ਾਮਲ ਹੋਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
-    no: "ਨਹੀਂ, ਮੈਂ ਨਹੀਂ ਜਾ ਸਕਦਾ",
-    noDescription:
-      "ਮੈਂ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਦੇ ਕਾਰਜਕ੍ਰਮ ਵਿੱਚ ਸ਼ਾਮਲ ਨਹੀਂ ਹੋ ਸਕਾਂਗਾ।",
-    participantDetails: "ਭਾਗੀਦਾਰ ਦੇ ਵੇਰਵੇ",
-    participantDescription:
-      "ਤੁਹਾਡੇ ਨਾਲ ਆਉਣ ਵਾਲੇ ਹਰ ਮੈਂਬਰ ਦੇ ਵੇਰਵੇ ਦਰਜ ਕਰੋ।",
-    member: "ਮੈਂਬਰ",
-    fullName: "ਪੂਰਾ ਨਾਮ",
-    mobileNumber: "ਮੋਬਾਈਲ ਨੰਬਰ",
-    state: "ਰਾਜ",
-    district: "ਜ਼ਿਲ੍ਹਾ",
-    tehsil: "ਤਹਿਸੀਲ / ਬਲਾਕ",
-    village: "ਪਿੰਡ",
-    enterVillage: "ਆਪਣੇ ਪਿੰਡ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ",
-    enterName: "ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ",
-    enterPhone: "10 ਅੰਕਾਂ ਦਾ ਮੋਬਾਈਲ ਨੰਬਰ",
-    selectState: "ਰਾਜ ਚੁਣੋ",
-    selectDistrict: "ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ",
-    selectTehsil: "ਤਹਿਸੀਲ / ਬਲਾਕ ਚੁਣੋ",
-    selectStateFirst: "ਪਹਿਲਾਂ ਰਾਜ ਚੁਣੋ",
-    selectDistrictFirst: "ਪਹਿਲਾਂ ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ",
-    loadingStates: "ਰਾਜ ਲੋਡ ਹੋ ਰਹੇ ਹਨ...",
-    loadingDistricts: "ਜ਼ਿਲ੍ਹੇ ਲੋਡ ਹੋ ਰਹੇ ਹਨ...",
-    loadingDetails: "ਤਹਿਸੀਲਾਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ...",
-    loadingPrabhari: "ਪ੍ਰਭਾਰੀ ਦੀ ਜਾਣਕਾਰੀ ਲੋਡ ਹੋ ਰਹੀ ਹੈ...",
-    addMember: "ਇੱਕ ਹੋਰ ਮੈਂਬਰ ਸ਼ਾਮਲ ਕਰੋ",
-    removeMember: "ਮੈਂਬਰ ਹਟਾਓ",
-    districtPrabhari: "ਜ਼ਿਲ੍ਹਾ ਪ੍ਰਭਾਰੀ",
-    contact: "ਸੰਪਰਕ",
-    submit: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਜਮ੍ਹਾਂ ਕਰੋ",
-    submitting: "ਜਮ੍ਹਾਂ ਹੋ ਰਿਹਾ ਹੈ...",
-    back: "ਵਾਪਸ",
-    changeAnswer: "ਜਵਾਬ ਬਦਲੋ",
-    success: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਫਲ",
-    successDescription:
-      "ਤੁਹਾਡੀ ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਫਲਤਾਪੂਰਵਕ ਜਮ੍ਹਾਂ ਹੋ ਗਈ ਹੈ।",
-    registeredMembers: "ਰਜਿਸਟਰਡ ਮੈਂਬਰ",
-    thankYou: "ਧੰਨਵਾਦ",
-    noAttendance:
-      "ਤੁਸੀਂ ਚੁਣਿਆ ਹੈ ਕਿ ਤੁਸੀਂ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਦੇ ਵਿਰੋਧ ਪ੍ਰਦਰਸ਼ਨ ਵਿੱਚ ਸ਼ਾਮਲ ਨਹੀਂ ਹੋਵੋਗੇ।",
-    requiredName: "ਕਿਰਪਾ ਕਰਕੇ ਨਾਮ ਦਰਜ ਕਰੋ।",
-    requiredPhone:
-      "ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ 10 ਅੰਕਾਂ ਦਾ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ।",
-    requiredState: "ਕਿਰਪਾ ਕਰਕੇ ਰਾਜ ਚੁਣੋ।",
-    requiredDistrict: "ਕਿਰਪਾ ਕਰਕੇ ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ।",
-    requiredTehsil:
-      "ਕਿਰਪਾ ਕਰਕੇ ਤਹਿਸੀਲ / ਬਲਾਕ ਚੁਣੋ।",
-    requiredVillage: "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਪਿੰਡ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ।",
-    submitError:
-      "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਜਮ੍ਹਾਂ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
-    noPrabhari:
-      "ਇਸ ਖੇਤਰ ਲਈ ਪ੍ਰਭਾਰੀ ਦੀ ਜਾਣਕਾਰੀ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।",
-    additionalMemberNote:
-      "ਇਸ ਮੈਂਬਰ ਲਈ ਸਿਰਫ਼ ਨਾਮ ਅਤੇ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ। ਸਥਾਨ ਦੀ ਜਾਣਕਾਰੀ ਪਹਿਲੇ ਮੈਂਬਰ ਤੋਂ ਲਈ ਜਾਵੇਗੀ।",
-    goHome: "ਹੋਮ ਪੇਜ 'ਤੇ ਜਾਓ",
-  },
+  yes: "হ্যাঁ, আমি যেতে চাই",
 
-  as: {
-    registration: "পঞ্জীয়ন",
-    title: "১৭ ডিচেম্বৰ – আহক ৰাজ্যৰ ৰাজধানীলৈ",
-    description:
-      "গৌ সন্মান আহ্বান অভিযান – তৃতীয় পৰ্যায়: ৩১ কোটি স্বাক্ষৰ। ১৭ ডিচেম্বৰত গৌ সন্মান আহ্বান অভিযানৰ তৃতীয় পৰ্যায়ত ৩১ কোটি স্বাক্ষৰৰ সৈতে ভাৰতৰ সকলো ৰাজ্যৰ ৰাজধানীত আবেদন পত্ৰ দাখিল কৰা হ'ব। আপোনাৰ উপস্থিতি পঞ্জীয়ন কৰি এই ৰাষ্ট্ৰব্যাপী অভিযানৰ অংশ হওক।",
-    language: "ভাষা",
-    chooseLanguage: "ভাষা বাছক",
-    step1: "নিশ্চিত কৰক",
-    step2: "বিৱৰণ",
-    question:
-      "আপুনি আপোনাৰ ৰাজ্যৰ ৰাজধানীলৈ প্ৰতিবাদৰ বাবে যাব বিচাৰে নেকি?",
-    yes: "হয়, মই যাব বিচাৰোঁ",
-    yesDescription:
-      "আপুনি ১৭ ডিচেম্বৰত আপোনাৰ ৰাজ্যৰ ৰাজধানীত আবেদন পত্ৰ দাখিলৰ কাৰ্যসূচীত অংশগ্ৰহণ কৰিব বিচাৰে নেকি?",
-    no: "নহয়, মই যাব নোৱাৰোঁ",
-    noDescription:
-      "মই ৰাজ্যৰ ৰাজধানীৰ কাৰ্যসূচীত অংশগ্ৰহণ কৰিব নোৱাৰিম।",
-    participantDetails: "অংশগ্ৰহণকাৰীৰ বিৱৰণ",
-    participantDescription:
-      "আপোনাৰ সৈতে অহা প্ৰতিজন সদস্যৰ বিৱৰণ দিয়ক।",
-    member: "সদস্য",
-    fullName: "সম্পূৰ্ণ নাম",
-    mobileNumber: "ম'বাইল নম্বৰ",
-    state: "ৰাজ্য",
-    district: "জিলা",
-    tehsil: "তহচিল / ব্লক",
-    village: "গাঁও",
-    enterVillage: "আপোনাৰ গাঁৱৰ নাম দিয়ক",
-    enterName: "আপোনাৰ সম্পূৰ্ণ নাম দিয়ক",
-    enterPhone: "১০ সংখ্যাৰ ম'বাইল নম্বৰ",
-    selectState: "ৰাজ্য বাছক",
-    selectDistrict: "জিলা বাছক",
-    selectTehsil: "তহচিল / ব্লক বাছক",
-    selectStateFirst: "প্ৰথমে ৰাজ্য বাছক",
-    selectDistrictFirst: "প্ৰথমে জিলা বাছক",
-    loadingStates: "ৰাজ্যসমূহ লোড হৈ আছে...",
-    loadingDistricts: "জিলাসমূহ লোড হৈ আছে...",
-    loadingDetails: "তহচিলসমূহ লোড হৈ আছে...",
-    loadingPrabhari: "প্ৰভাৰীৰ তথ্য লোড হৈ আছে...",
-    addMember: "আন এজন সদস্য যোগ কৰক",
-    removeMember: "সদস্য আঁতৰাওক",
-    districtPrabhari: "জিলা প্ৰভাৰী",
-    contact: "যোগাযোগ",
-    submit: "পঞ্জীয়ন দাখিল কৰক",
-    submitting: "দাখিল হৈ আছে...",
-    back: "পিছলৈ",
-    changeAnswer: "উত্তৰ সলনি কৰক",
-    success: "পঞ্জীয়ন সফল",
-    successDescription:
-      "আপোনাৰ পঞ্জীয়ন সফলতাৰে দাখিল কৰা হৈছে।",
-    registeredMembers: "পঞ্জীয়ন কৰা সদস্য",
-    thankYou: "ধন্যবাদ",
-    noAttendance:
-      "আপুনি ৰাজ্যৰ ৰাজধানীৰ প্ৰতিবাদত অংশগ্ৰহণ নকৰাৰ সিদ্ধান্ত লৈছে।",
-    requiredName: "অনুগ্ৰহ কৰি নাম দিয়ক।",
-    requiredPhone:
-      "অনুগ্ৰহ কৰি সঠিক ১০ সংখ্যাৰ ম'বাইল নম্বৰ দিয়ক।",
-    requiredState: "অনুগ্ৰহ কৰি ৰাজ্য বাছক।",
-    requiredDistrict: "অনুগ্ৰহ কৰি জিলা বাছক।",
-    requiredTehsil:
-      "অনুগ্ৰহ কৰি তহচিল / ব্লক বাছক।",
-    requiredVillage:
-      "অনুগ্ৰহ কৰি আপোনাৰ গাঁৱৰ নাম দিয়ক।",
-    submitError:
-      "পঞ্জীয়ন দাখিল কৰিব পৰা নগ'ল। পুনৰ চেষ্টা কৰক।",
-    noPrabhari:
-      "এই অঞ্চলৰ বাবে প্ৰভাৰীৰ তথ্য উপলব্ধ নহয়।",
-    additionalMemberNote:
-      "এই সদস্যৰ বাবে কেৱল নাম আৰু ম'বাইল নম্বৰ দিয়ক। স্থানৰ তথ্য প্ৰথম সদস্যৰ পৰা লোৱা হ'ব।",
-    goHome: "হোম পেজলৈ যাওক",
-  },
+  yesDescription:
+    "১৭ ডিসেম্বর আপনার রাজ্যের রাজধানীতে আবেদনপত্র জমা দেওয়ার এই অভিযানের অংশ হোন।",
 
-  ur: {
-    registration: "رجسٹریشن",
-    title: "17 دسمبر – چلیں ریاستی دارالحکومت",
-    description:
-      "گئو سمان آہوان ابھیان – تیسرا مرحلہ: 31 کروڑ دستخط۔ 17 دسمبر کو گئو سمان آہوان ابھیان کے تیسرے مرحلے میں 31 کروڑ دستخطوں کے ساتھ بھارت کی تمام ریاستوں کے دارالحکومتوں میں عرضداشت پیش کی جائے گی۔ اپنی موجودگی درج کروا کر اس ملک گیر مہم کا حصہ بنیں۔",
-    language: "زبان",
-    chooseLanguage: "زبان منتخب کریں",
-    step1: "تصدیق",
-    step2: "تفصیلات",
-    question:
-      "کیا آپ اپنے ریاستی دارالحکومت میں احتجاج کے لیے جانا چاہتے ہیں؟",
-    yes: "ہاں، میں جانا چاہتا ہوں",
-    yesDescription:
-      "کیا آپ 17 دسمبر کو اپنے ریاستی دارالحکومت میں عرضداشت پیش کرنے کے لیے شامل ہونا چاہتے ہیں؟",
-    no: "نہیں، میں نہیں جا سکتا",
-    noDescription:
-      "میں ریاستی دارالحکومت کے پروگرام میں شرکت نہیں کر سکوں گا۔",
-    participantDetails: "شرکت کنندہ کی تفصیلات",
-    participantDescription:
-      "اپنے ساتھ آنے والے ہر رکن کی تفصیلات درج کریں۔",
-    member: "رکن",
-    fullName: "پورا نام",
-    mobileNumber: "موبائل نمبر",
-    state: "ریاست",
-    district: "ضلع",
-    tehsil: "تحصیل / بلاک",
-    village: "گاؤں",
-    enterVillage: "اپنے گاؤں کا نام درج کریں",
-    enterName: "اپنا پورا نام درج کریں",
-    enterPhone: "10 ہندسوں کا موبائل نمبر",
-    selectState: "ریاست منتخب کریں",
-    selectDistrict: "ضلع منتخب کریں",
-    selectTehsil: "تحصیل / بلاک منتخب کریں",
-    selectStateFirst: "پہلے ریاست منتخب کریں",
-    selectDistrictFirst: "پہلے ضلع منتخب کریں",
-    loadingStates: "ریاستیں لوڈ ہو رہی ہیں...",
-    loadingDistricts: "اضلاع لوڈ ہو رہے ہیں...",
-    loadingDetails: "تحصیلیں لوڈ ہو رہی ہیں...",
-    loadingPrabhari: "انچارج لوڈ ہو رہا ہے...",
-    addMember: "ایک اور رکن شامل کریں",
-    removeMember: "رکن ہٹائیں",
-    districtPrabhari: "ضلعی انچارج",
-    contact: "رابطہ",
-    submit: "رجسٹریشن جمع کریں",
-    submitting: "جمع ہو رہی ہے...",
-    back: "واپس",
-    changeAnswer: "جواب تبدیل کریں",
-    success: "رجسٹریشن کامیاب",
-    successDescription:
-      "آپ کی رجسٹریشن کامیابی سے جمع ہو گئی ہے۔",
-    registeredMembers: "رجسٹرڈ اراکین",
-    thankYou: "شکریہ",
-    noAttendance:
-      "آپ نے منتخب کیا ہے کہ آپ ریاستی دارالحکومت کے احتجاج میں شرکت نہیں کریں گے۔",
-    requiredName: "براہ کرم نام درج کریں۔",
-    requiredPhone:
-      "براہ کرم درست 10 ہندسوں کا موبائل نمبر درج کریں۔",
-    requiredState: "براہ کرم ریاست منتخب کریں۔",
-    requiredDistrict: "براہ کرم ضلع منتخب کریں۔",
-    requiredTehsil:
-      "براہ کرم تحصیل / بلاک منتخب کریں۔",
-    requiredVillage:
-      "براہ کرم اپنے گاؤں کا نام درج کریں۔",
-    submitError:
-      "رجسٹریشن جمع نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
-    noPrabhari:
-      "ضلعی انچارج کی معلومات دستیاب نہیں ہیں۔",
-    additionalMemberNote:
-      "اس رکن کے لیے صرف نام اور موبائل نمبر درج کریں۔ مقام کی معلومات پہلے رکن سے لی جائے گی۔",
-    goHome: "ہوم پیج پر جائیں",
-  },
+  no: "না, আমি যেতে পারব না",
+
+  noDescription:
+    "আমি রাজ্যের রাজধানীতে অনুষ্ঠিত কর্মসূচিতে অংশগ্রহণ করতে পারব না।",
+
+  participantDetails: "অংশগ্রহণকারীর বিবরণ",
+  participantDescription:
+    "আপনার সঙ্গে আসা প্রত্যেক সদস্যের তথ্য দিন।",
+  member: "সদস্য",
+  fullName: "পুরো নাম",
+  mobileNumber: "মোবাইল নম্বর",
+  state: "রাজ্য",
+  district: "জেলা",
+  tehsil: "তহসিল / ব্লক",
+  village: "গ্রাম",
+  enterVillage: "গ্রামের নাম লিখুন",
+  enterName: "আপনার পুরো নাম লিখুন",
+  enterPhone: "১০ সংখ্যার মোবাইল নম্বর",
+  selectState: "রাজ্য নির্বাচন করুন",
+  selectDistrict: "জেলা নির্বাচন করুন",
+  selectTehsil: "তহসিল / ব্লক নির্বাচন করুন",
+  selectStateFirst: "প্রথমে রাজ্য নির্বাচন করুন",
+  selectDistrictFirst: "প্রথমে জেলা নির্বাচন করুন",
+  loadingStates: "রাজ্য লোড হচ্ছে...",
+  loadingDistricts: "জেলা লোড হচ্ছে...",
+  loadingDetails: "তহসিল লোড হচ্ছে...",
+  loadingPrabhari: "প্রভারি লোড হচ্ছে...",
+  addMember: "আরও সদস্য যোগ করুন",
+  removeMember: "সদস্য সরান",
+  districtPrabhari: "জেলা প্রভারি",
+  contact: "যোগাযোগ",
+  submit: "নিবন্ধন জমা দিন",
+  submitting: "জমা হচ্ছে...",
+  back: "পিছনে",
+  changeAnswer: "উত্তর পরিবর্তন করুন",
+  success: "নিবন্ধন সফল",
+  successDescription: "আপনার নিবন্ধন সফলভাবে জমা হয়েছে।",
+  registeredMembers: "নিবন্ধিত সদস্য",
+  thankYou: "ধন্যবাদ",
+  noAttendance:
+    "আপনি রাজ্যের রাজধানীর প্রতিবাদে অংশ নেবেন না বলে নির্বাচন করেছেন।",
+  requiredName: "অনুগ্রহ করে নাম লিখুন।",
+  requiredPhone:
+    "অনুগ্রহ করে সঠিক ১০ সংখ্যার মোবাইল নম্বর দিন।",
+  requiredState: "অনুগ্রহ করে রাজ্য নির্বাচন করুন।",
+  requiredDistrict: "অনুগ্রহ করে জেলা নির্বাচন করুন।",
+  requiredTehsil:
+    "অনুগ্রহ করে তহসিল / ব্লক নির্বাচন করুন।",
+  requiredVillage: "অনুগ্রহ করে গ্রামের নাম লিখুন।",
+  submitError:
+    "নিবন্ধন জমা দেওয়া যায়নি। আবার চেষ্টা করুন।",
+  noPrabhari: "জেলা প্রভারির তথ্য পাওয়া যায়নি।",
+  additionalMemberNote:
+    "এই সদস্যের জন্য শুধু নাম ও মোবাইল নম্বর দিন। অবস্থানের তথ্য প্রথম সদস্যের থেকে নেওয়া হবে।",
+  goHome: "হোম পেজে যান",
+},
+
+mr: {
+  registration: "नोंदणी",
+  title: "१७ डिसेंबर – चला राज्याच्या राजधानीत",
+  description:
+    "गौ सन्मान आह्वान अभियान – तिसरा टप्पा: ३१ कोटी स्वाक्षऱ्या. १७ डिसेंबर रोजी गौ सन्मान आह्वान अभियानाच्या तिसऱ्या टप्प्यात ३१ कोटी स्वाक्षऱ्यांसह भारतातील सर्व राज्यांच्या राजधानीत निवेदन सादर केले जाईल. आपली उपस्थिती नोंदवून या राष्ट्रव्यापी अभियानाचा भाग बना.",
+  language: "भाषा",
+  chooseLanguage: "भाषा निवडा",
+  step1: "पुष्टी",
+  step2: "तपशील",
+
+  question:
+    "तुम्हाला १७ डिसेंबर रोजी तुमच्या राज्याच्या राजधानीत निवेदन सादर करण्यासाठी आमच्यासोबत सहभागी व्हायचे आहे का?",
+
+  yes: "होय, मला जायचे आहे",
+
+  yesDescription:
+    "१७ डिसेंबर रोजी तुमच्या राज्याच्या राजधानीत निवेदन सादर करण्याच्या या अभियानाचा भाग बना.",
+
+  no: "नाही, मला जाता येणार नाही",
+
+  noDescription:
+    "मी राज्याच्या राजधानीतील कार्यक्रमाला उपस्थित राहू शकणार नाही.",
+
+  participantDetails: "सहभागीचा तपशील",
+  participantDescription:
+    "तुमच्यासोबत येणाऱ्या प्रत्येक सदस्याचा तपशील भरा.",
+  member: "सदस्य",
+  fullName: "पूर्ण नाव",
+  mobileNumber: "मोबाईल नंबर",
+  state: "राज्य",
+  district: "जिल्हा",
+  tehsil: "तहसील / ब्लॉक",
+  village: "गाव",
+  enterVillage: "तुमच्या गावाचे नाव लिहा",
+  enterName: "तुमचे पूर्ण नाव लिहा",
+  enterPhone: "१० अंकी मोबाईल नंबर",
+  selectState: "राज्य निवडा",
+  selectDistrict: "जिल्हा निवडा",
+  selectTehsil: "तहसील / ब्लॉक निवडा",
+  selectStateFirst: "प्रथम राज्य निवडा",
+  selectDistrictFirst: "प्रथम जिल्हा निवडा",
+  loadingStates: "राज्य लोड होत आहेत...",
+  loadingDistricts: "जिल्हे लोड होत आहेत...",
+  loadingDetails: "तहसील लोड होत आहेत...",
+  loadingPrabhari: "प्रभारीची माहिती लोड होत आहे...",
+  addMember: "आणखी सदस्य जोडा",
+  removeMember: "सदस्य हटवा",
+  districtPrabhari: "जिल्हा प्रभारी",
+  contact: "संपर्क",
+  submit: "नोंदणी जमा करा",
+  submitting: "जमा होत आहे...",
+  back: "मागे",
+  changeAnswer: "उत्तर बदला",
+  success: "नोंदणी यशस्वी",
+  successDescription:
+    "तुमची नोंदणी यशस्वीरित्या जमा झाली आहे.",
+  registeredMembers: "नोंदणीकृत सदस्य",
+  thankYou: "धन्यवाद",
+  noAttendance:
+    "तुम्ही राज्याच्या राजधानीतील आंदोलनात सहभागी होणार नसल्याचे निवडले आहे.",
+  requiredName: "कृपया नाव लिहा.",
+  requiredPhone:
+    "कृपया योग्य १० अंकी मोबाईल नंबर लिहा.",
+  requiredState: "कृपया राज्य निवडा.",
+  requiredDistrict: "कृपया जिल्हा निवडा.",
+  requiredTehsil: "कृपया तहसील / ब्लॉक निवडा.",
+  requiredVillage: "कृपया गावाचे नाव लिहा.",
+  submitError:
+    "नोंदणी जमा करता आली नाही. कृपया पुन्हा प्रयत्न करा.",
+  noPrabhari:
+    "या क्षेत्रासाठी प्रभारीची माहिती उपलब्ध नाही.",
+  additionalMemberNote:
+    "या सदस्यासाठी फक्त नाव आणि मोबाईल नंबर भरा. स्थानाची माहिती पहिल्या सदस्याकडून घेतली जाईल.",
+  goHome: "होम पेजवर जा",
+},
+
+te: {
+  registration: "నమోదు",
+  title: "డిసెంబర్ 17 – రాష్ట్ర రాజధానికి వెళ్దాం",
+  description:
+    "గో సమ్మాన్ ఆహ్వాన్ అభియాన్ – మూడవ దశ: 31 కోట్ల సంతకాలు. డిసెంబర్ 17న గో సమ్మాన్ ఆహ్వాన్ అభియాన్ మూడవ దశలో 31 కోట్ల సంతకాలతో భారతదేశంలోని అన్ని రాష్ట్రాల రాజధానుల్లో వినతిపత్రం సమర్పించబడుతుంది. మీ హాజరును నమోదు చేసుకుని ఈ దేశవ్యాప్త కార్యక్రమంలో భాగస్వాములు అవ్వండి.",
+  language: "భాష",
+  chooseLanguage: "భాషను ఎంచుకోండి",
+  step1: "నిర్ధారించండి",
+  step2: "వివరాలు",
+
+  question:
+    "డిసెంబర్ 17న మీ రాష్ట్ర రాజధానిలో వినతిపత్రం సమర్పించడానికి మాతో కలిసి వెళ్లాలనుకుంటున్నారా?",
+
+  yes: "అవును, నేను వెళ్లాలనుకుంటున్నాను",
+
+  yesDescription:
+    "డిసెంబర్ 17న మీ రాష్ట్ర రాజధానిలో వినతిపత్రం సమర్పించే ఈ కార్యక్రమంలో భాగం అవ్వండి.",
+
+  no: "లేదు, నేను వెళ్లలేను",
+
+  noDescription:
+    "నేను రాష్ట్ర రాజధానిలో జరిగే కార్యక్రమానికి హాజరు కాలేను.",
+
+  participantDetails: "పాల్గొనేవారి వివరాలు",
+  participantDescription:
+    "మీతో వచ్చే ప్రతి సభ్యుని వివరాలను నమోదు చేయండి.",
+  member: "సభ్యుడు",
+  fullName: "పూర్తి పేరు",
+  mobileNumber: "మొబైల్ నంబర్",
+  state: "రాష్ట్రం",
+  district: "జిల్లా",
+  tehsil: "తహసీల్ / బ్లాక్",
+  village: "గ్రామం",
+  enterVillage: "మీ గ్రామం పేరు నమోదు చేయండి",
+  enterName: "మీ పూర్తి పేరు నమోదు చేయండి",
+  enterPhone: "10 అంకెల మొబైల్ నంబర్",
+  selectState: "రాష్ట్రాన్ని ఎంచుకోండి",
+  selectDistrict: "జిల్లాను ఎంచుకోండి",
+  selectTehsil: "తహసీల్ / బ్లాక్ ఎంచుకోండి",
+  selectStateFirst: "ముందుగా రాష్ట్రాన్ని ఎంచుకోండి",
+  selectDistrictFirst: "ముందుగా జిల్లాను ఎంచుకోండి",
+  loadingStates: "రాష్ట్రాలు లోడ్ అవుతున్నాయి...",
+  loadingDistricts: "జిల్లాలు లోడ్ అవుతున్నాయి...",
+  loadingDetails: "తహసీల్లు లోడ్ అవుతున్నాయి...",
+  loadingPrabhari: "ప్రభారి సమాచారం లోడ్ అవుతోంది...",
+  addMember: "మరో సభ్యుడిని జోడించండి",
+  removeMember: "సభ్యుడిని తొలగించండి",
+  districtPrabhari: "జిల్లా ప్రభారి",
+  contact: "సంప్రదించండి",
+  submit: "నమోదు సమర్పించండి",
+  submitting: "సమర్పిస్తోంది...",
+  back: "వెనుకకు",
+  changeAnswer: "సమాధానం మార్చండి",
+  success: "నమోదు విజయవంతమైంది",
+  successDescription:
+    "మీ నమోదు విజయవంతంగా సమర్పించబడింది.",
+  registeredMembers: "నమోదైన సభ్యులు",
+  thankYou: "ధన్యవాదాలు",
+  noAttendance:
+    "మీరు రాష్ట్ర రాజధాని కార్యక్రమంలో పాల్గొనరాదని ఎంచుకున్నారు.",
+  requiredName: "దయచేసి పేరు నమోదు చేయండి.",
+  requiredPhone:
+    "దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి.",
+  requiredState: "దయచేసి రాష్ట్రాన్ని ఎంచుకోండి.",
+  requiredDistrict: "దయచేసి జిల్లాను ఎంచుకోండి.",
+  requiredTehsil:
+    "దయచేసి తహసీల్ / బ్లాక్ ఎంచుకోండి.",
+  requiredVillage: "దయచేసి మీ గ్రామం పేరు నమోదు చేయండి.",
+  submitError:
+    "నమోదును సమర్పించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.",
+  noPrabhari:
+    "ఈ ప్రాంతానికి ప్రభారి సమాచారం అందుబాటులో లేదు.",
+  additionalMemberNote:
+    "ఈ సభ్యునికి పేరు మరియు మొబైల్ నంబర్ మాత్రమే నమోదు చేయండి. స్థాన వివరాలు మొదటి సభ్యుని నుండి తీసుకోబడతాయి.",
+  goHome: "హోమ్ పేజీకి వెళ్లండి",
+},
+
+ta: {
+  registration: "பதிவு",
+  title: "டிசம்பர் 17 – மாநிலத் தலைநகருக்கு செல்வோம்",
+  description:
+    "கௌ சம்மான் ஆஹ்வான் அபியான் – மூன்றாம் கட்டம்: 31 கோடி கையெழுத்துகள். டிசம்பர் 17 அன்று கௌ சம்மான் ஆஹ்வான் அபியான் மூன்றாம் கட்டத்தின் கீழ், 31 கோடி கையெழுத்துகளுடன் இந்தியாவின் அனைத்து மாநில தலைநகரங்களிலும் மனு சமர்ப்பிக்கப்படும். உங்கள் வருகையை பதிவு செய்து இந்த நாடு தழுவிய இயக்கத்தின் ஒரு பகுதியாகுங்கள்.",
+  language: "மொழி",
+  chooseLanguage: "மொழியைத் தேர்ந்தெடுக்கவும்",
+  step1: "உறுதிப்படுத்தவும்",
+  step2: "விவரங்கள்",
+
+  question:
+    "டிசம்பர் 17 அன்று உங்கள் மாநிலத் தலைநகரில் மனு சமர்ப்பிக்க எங்களுடன் செல்ல விரும்புகிறீர்களா?",
+
+  yes: "ஆம், நான் செல்ல விரும்புகிறேன்",
+
+  yesDescription:
+    "டிசம்பர் 17 அன்று உங்கள் மாநிலத் தலைநகரில் மனு சமர்ப்பிக்கும் இந்த இயக்கத்தின் ஒரு பகுதியாகுங்கள்.",
+
+  no: "இல்லை, என்னால் செல்ல முடியாது",
+
+  noDescription:
+    "என்னால் மாநிலத் தலைநகரில் நடைபெறும் நிகழ்வில் பங்கேற்க முடியாது.",
+
+  participantDetails: "பங்கேற்பாளர் விவரங்கள்",
+  participantDescription:
+    "உங்களுடன் வருபவர்களின் விவரங்களை உள்ளிடவும்.",
+  member: "உறுப்பினர்",
+  fullName: "முழு பெயர்",
+  mobileNumber: "மொபைல் எண்",
+  state: "மாநிலம்",
+  district: "மாவட்டம்",
+  tehsil: "தாலுகா / தொகுதி",
+  village: "கிராமம்",
+  enterVillage: "உங்கள் கிராமத்தின் பெயரை உள்ளிடவும்",
+  enterName: "உங்கள் முழு பெயரை உள்ளிடவும்",
+  enterPhone: "10 இலக்க மொபைல் எண்",
+  selectState: "மாநிலத்தைத் தேர்ந்தெடுக்கவும்",
+  selectDistrict: "மாவட்டத்தைத் தேர்ந்தெடுக்கவும்",
+  selectTehsil: "தாலுகா / தொகுதியைத் தேர்ந்தெடுக்கவும்",
+  selectStateFirst: "முதலில் மாநிலத்தைத் தேர்ந்தெடுக்கவும்",
+  selectDistrictFirst: "முதலில் மாவட்டத்தைத் தேர்ந்தெடுக்கவும்",
+  loadingStates: "மாநிலங்கள் ஏற்றப்படுகின்றன...",
+  loadingDistricts: "மாவட்டங்கள் ஏற்றப்படுகின்றன...",
+  loadingDetails: "தாலுகாக்கள் ஏற்றப்படுகின்றன...",
+  loadingPrabhari: "பொறுப்பாளர் தகவல் ஏற்றப்படுகிறது...",
+  addMember: "மற்றொரு உறுப்பினரைச் சேர்க்கவும்",
+  removeMember: "உறுப்பினரை அகற்றவும்",
+  districtPrabhari: "மாவட்ட பொறுப்பாளர்",
+  contact: "தொடர்பு",
+  submit: "பதிவைச் சமர்ப்பிக்கவும்",
+  submitting: "சமர்ப்பிக்கப்படுகிறது...",
+  back: "பின்செல்",
+  changeAnswer: "பதிலை மாற்றவும்",
+  success: "பதிவு வெற்றிகரமாக முடிந்தது",
+  successDescription:
+    "உங்கள் பதிவு வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது.",
+  registeredMembers: "பதிவு செய்யப்பட்ட உறுப்பினர்கள்",
+  thankYou: "நன்றி",
+  noAttendance:
+    "நீங்கள் மாநிலத் தலைநகர் நிகழ்வில் பங்கேற்க மாட்டீர்கள் என்று தேர்ந்தெடுத்துள்ளீர்கள்.",
+  requiredName: "தயவுசெய்து உங்கள் பெயரை உள்ளிடவும்.",
+  requiredPhone:
+    "தயவுசெய்து சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.",
+  requiredState: "தயவுசெய்து மாநிலத்தைத் தேர்ந்தெடுக்கவும்.",
+  requiredDistrict: "தயவுசெய்து மாவட்டத்தைத் தேர்ந்தெடுக்கவும்.",
+  requiredTehsil:
+    "தயவுசெய்து தாலுகா / தொகுதியைத் தேர்ந்தெடுக்கவும்.",
+  requiredVillage:
+    "தயவுசெய்து உங்கள் கிராமத்தின் பெயரை உள்ளிடவும்.",
+  submitError:
+    "பதிவைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+  noPrabhari:
+    "இந்தப் பகுதிக்கான பொறுப்பாளர் தகவல் கிடைக்கவில்லை.",
+  additionalMemberNote:
+    "இந்த உறுப்பினருக்கு பெயர் மற்றும் மொபைல் எண் மட்டும் உள்ளிடவும். இருப்பிடத் தகவல் முதல் உறுப்பினரிடமிருந்து பெறப்படும்.",
+  goHome: "முகப்புப் பக்கத்திற்குச் செல்லவும்",
+},
+
+gu: {
+  registration: "નોંધણી",
+  title: "17 ડિસેમ્બર – ચાલો રાજ્યની રાજધાનીમાં",
+  description:
+    "ગૌ સન્માન આહ્વાન અભિયાન – ત્રીજો તબક્કો: 31 કરોડ હસ્તાક્ષર. 17 ડિસેમ્બરે ગૌ સન્માન આહ્વાન અભિયાનના ત્રીજા તબક્કામાં 31 કરોડ હસ્તાક્ષરો સાથે ભારતના તમામ રાજ્યોની રાજધાનીઓમાં અરજીપત્ર રજૂ કરવામાં આવશે. તમારી હાજરી નોંધાવીને આ રાષ્ટ્રવ્યાપી અભિયાનનો ભાગ બનો.",
+  language: "ભાષા",
+  chooseLanguage: "ભાષા પસંદ કરો",
+  step1: "પુષ્ટિ",
+  step2: "વિગતો",
+
+  question:
+    "શું તમે 17 ડિસેમ્બરે તમારા રાજ્યની રાજધાનીમાં અરજીપત્ર રજૂ કરવા માટે અમારી સાથે જોડાવા માંગો છો?",
+
+  yes: "હા, હું જવા માંગું છું",
+
+  yesDescription:
+    "17 ડિસેમ્બરે તમારા રાજ્યની રાજધાનીમાં અરજીપત્ર રજૂ કરવાના આ અભિયાનનો ભાગ બનો.",
+
+  no: "ના, હું જઈ શકતો નથી",
+
+  noDescription:
+    "હું રાજ્યની રાજધાનીમાં યોજાનારા કાર્યક્રમમાં હાજર રહી શકીશ નહીં.",
+
+  participantDetails: "સહભાગીની વિગતો",
+  participantDescription:
+    "તમારી સાથે આવનાર દરેક સભ્યની વિગતો દાખલ કરો.",
+  member: "સભ્ય",
+  fullName: "પૂરું નામ",
+  mobileNumber: "મોબાઇલ નંબર",
+  state: "રાજ્ય",
+  district: "જિલ્લો",
+  tehsil: "તહેસીલ / બ્લોક",
+  village: "ગામ",
+  enterVillage: "તમારા ગામનું નામ દાખલ કરો",
+  enterName: "તમારું પૂરું નામ દાખલ કરો",
+  enterPhone: "10 અંકનો મોબાઇલ નંબર",
+  selectState: "રાજ્ય પસંદ કરો",
+  selectDistrict: "જિલ્લો પસંદ કરો",
+  selectTehsil: "તહેસીલ / બ્લોક પસંદ કરો",
+  selectStateFirst: "પહેલા રાજ્ય પસંદ કરો",
+  selectDistrictFirst: "પહેલા જિલ્લો પસંદ કરો",
+  loadingStates: "રાજ્યો લોડ થઈ રહ્યા છે...",
+  loadingDistricts: "જિલ્લાઓ લોડ થઈ રહ્યા છે...",
+  loadingDetails: "તહેસીલ લોડ થઈ રહી છે...",
+  loadingPrabhari: "પ્રભારીની માહિતી લોડ થઈ રહી છે...",
+  addMember: "બીજો સભ્ય ઉમેરો",
+  removeMember: "સભ્ય દૂર કરો",
+  districtPrabhari: "જિલ્લા પ્રભારી",
+  contact: "સંપર્ક",
+  submit: "નોંધણી સબમિટ કરો",
+  submitting: "સબમિટ થઈ રહ્યું છે...",
+  back: "પાછા",
+  changeAnswer: "જવાબ બદલો",
+  success: "નોંધણી સફળ",
+  successDescription:
+    "તમારી નોંધણી સફળતાપૂર્વક સબમિટ કરવામાં આવી છે.",
+  registeredMembers: "નોંધાયેલા સભ્યો",
+  thankYou: "આભાર",
+  noAttendance:
+    "તમે પસંદ કર્યું છે કે તમે રાજ્યની રાજધાનીના કાર્યક્રમમાં ભાગ નહીં લો.",
+  requiredName: "કૃપા કરીને નામ દાખલ કરો.",
+  requiredPhone:
+    "કૃપા કરીને યોગ્ય 10 અંકનો મોબાઇલ નંબર દાખલ કરો.",
+  requiredState: "કૃપા કરીને રાજ્ય પસંદ કરો.",
+  requiredDistrict: "કૃપા કરીને જિલ્લો પસંદ કરો.",
+  requiredTehsil:
+    "કૃપા કરીને તહેસીલ / બ્લોક પસંદ કરો.",
+  requiredVillage: "કૃપા કરીને તમારા ગામનું નામ દાખલ કરો.",
+  submitError:
+    "નોંધણી સબમિટ થઈ શકી નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  noPrabhari:
+    "આ વિસ્તાર માટે પ્રભારીની માહિતી ઉપલબ્ધ નથી.",
+  additionalMemberNote:
+    "આ સભ્ય માટે માત્ર નામ અને મોબાઇલ નંબર દાખલ કરો. સ્થાનની માહિતી પ્રથમ સભ્ય પાસેથી લેવામાં આવશે.",
+  goHome: "હોમ પેજ પર જાઓ",
+},
+
+kn: {
+  registration: "ನೋಂದಣಿ",
+  title: "ಡಿಸೆಂಬರ್ 17 – ರಾಜ್ಯದ ರಾಜಧಾನಿಗೆ ಹೋಗೋಣ",
+  description:
+    "ಗೌ ಸಮ್ಮಾನ್ ಆಹ್ವಾನ್ ಅಭಿಯಾನ – ಮೂರನೇ ಹಂತ: 31 ಕೋಟಿ ಸಹಿಗಳು. ಡಿಸೆಂಬರ್ 17ರಂದು ಗೌ ಸಮ್ಮಾನ್ ಆಹ್ವಾನ್ ಅಭಿಯಾನದ ಮೂರನೇ ಹಂತದಲ್ಲಿ 31 ಕೋಟಿ ಸಹಿಗಳೊಂದಿಗೆ ಭಾರತದ ಎಲ್ಲಾ ರಾಜ್ಯಗಳ ರಾಜಧಾನಿಗಳಲ್ಲಿ ಮನವಿ ಪತ್ರವನ್ನು ಸಲ್ಲಿಸಲಾಗುತ್ತದೆ. ನಿಮ್ಮ ಹಾಜರಾತಿಯನ್ನು ನೋಂದಾಯಿಸಿ ಈ ರಾಷ್ಟ್ರವ್ಯಾಪಿ ಅಭಿಯಾನದ ಭಾಗವಾಗಿರಿ.",
+  language: "ಭಾಷೆ",
+  chooseLanguage: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  step1: "ದೃಢೀಕರಿಸಿ",
+  step2: "ವಿವರಗಳು",
+
+  question:
+    "ಡಿಸೆಂಬರ್ 17ರಂದು ನಿಮ್ಮ ರಾಜ್ಯದ ರಾಜಧಾನಿಯಲ್ಲಿ ಮನವಿ ಪತ್ರ ಸಲ್ಲಿಸಲು ನಮ್ಮೊಂದಿಗೆ ಬರಲು ಬಯಸುತ್ತೀರಾ?",
+
+  yes: "ಹೌದು, ನಾನು ಹೋಗಲು ಬಯಸುತ್ತೇನೆ",
+
+  yesDescription:
+    "ಡಿಸೆಂಬರ್ 17ರಂದು ನಿಮ್ಮ ರಾಜ್ಯದ ರಾಜಧಾನಿಯಲ್ಲಿ ಮನವಿ ಪತ್ರ ಸಲ್ಲಿಸುವ ಈ ಅಭಿಯಾನದ ಭಾಗವಾಗಿರಿ.",
+
+  no: "ಇಲ್ಲ, ನಾನು ಹೋಗಲು ಸಾಧ್ಯವಿಲ್ಲ",
+
+  noDescription:
+    "ನಾನು ರಾಜ್ಯದ ರಾಜಧಾನಿಯಲ್ಲಿ ನಡೆಯುವ ಕಾರ್ಯಕ್ರಮದಲ್ಲಿ ಭಾಗವಹಿಸಲು ಸಾಧ್ಯವಾಗುವುದಿಲ್ಲ.",
+
+  participantDetails: "ಭಾಗವಹಿಸುವವರ ವಿವರಗಳು",
+  participantDescription:
+    "ನಿಮ್ಮೊಂದಿಗೆ ಬರುವ ಪ್ರತಿಯೊಬ್ಬ ಸದಸ್ಯರ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.",
+  member: "ಸದಸ್ಯ",
+  fullName: "ಪೂರ್ಣ ಹೆಸರು",
+  mobileNumber: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+  state: "ರಾಜ್ಯ",
+  district: "ಜಿಲ್ಲೆ",
+  tehsil: "ತಹಸಿಲ್ / ಬ್ಲಾಕ್",
+  village: "ಗ್ರಾಮ",
+  enterVillage: "ನಿಮ್ಮ ಗ್ರಾಮದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+  enterName: "ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+  enterPhone: "10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+  selectState: "ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  selectDistrict: "ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  selectTehsil: "ತಹಸಿಲ್ / ಬ್ಲಾಕ್ ಆಯ್ಕೆಮಾಡಿ",
+  selectStateFirst: "ಮೊದಲು ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  selectDistrictFirst: "ಮೊದಲು ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  loadingStates: "ರಾಜ್ಯಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...",
+  loadingDistricts: "ಜಿಲ್ಲೆಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...",
+  loadingDetails: "ತಹಸಿಲ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ...",
+  loadingPrabhari: "ಪ್ರಭಾರಿ ಮಾಹಿತಿ ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+  addMember: "ಮತ್ತೊಬ್ಬ ಸದಸ್ಯರನ್ನು ಸೇರಿಸಿ",
+  removeMember: "ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಿ",
+  districtPrabhari: "ಜಿಲ್ಲಾ ಪ್ರಭಾರಿ",
+  contact: "ಸಂಪರ್ಕಿಸಿ",
+  submit: "ನೋಂದಣಿ ಸಲ್ಲಿಸಿ",
+  submitting: "ಸಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...",
+  back: "ಹಿಂದೆ",
+  changeAnswer: "ಉತ್ತರ ಬದಲಿಸಿ",
+  success: "ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ",
+  successDescription:
+    "ನಿಮ್ಮ ನೋಂದಣಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ.",
+  registeredMembers: "ನೋಂದಾಯಿತ ಸದಸ್ಯರು",
+  thankYou: "ಧನ್ಯವಾದಗಳು",
+  noAttendance:
+    "ನೀವು ರಾಜ್ಯದ ರಾಜಧಾನಿಯ ಕಾರ್ಯಕ್ರಮದಲ್ಲಿ ಭಾಗವಹಿಸುವುದಿಲ್ಲ ಎಂದು ಆಯ್ಕೆ ಮಾಡಿದ್ದೀರಿ.",
+  requiredName: "ದಯವಿಟ್ಟು ಹೆಸರು ನಮೂದಿಸಿ.",
+  requiredPhone:
+    "ದಯವಿಟ್ಟು ಸರಿಯಾದ 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
+  requiredState: "ದಯವಿಟ್ಟು ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+  requiredDistrict: "ದಯವಿಟ್ಟು ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+  requiredTehsil:
+    "ದಯವಿಟ್ಟು ತಹಸಿಲ್ / ಬ್ಲಾಕ್ ಆಯ್ಕೆಮಾಡಿ.",
+  requiredVillage: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಗ್ರಾಮದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.",
+  submitError:
+    "ನೋಂದಣಿಯನ್ನು ಸಲ್ಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  noPrabhari:
+    "ಈ ಪ್ರದೇಶಕ್ಕೆ ಪ್ರಭಾರಿ ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ.",
+  additionalMemberNote:
+    "ಈ ಸದಸ್ಯರಿಗೆ ಹೆಸರು ಮತ್ತು ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಮಾತ್ರ ನಮೂದಿಸಿ. ಸ್ಥಳದ ಮಾಹಿತಿಯನ್ನು ಮೊದಲ ಸದಸ್ಯರಿಂದ ಪಡೆಯಲಾಗುತ್ತದೆ.",
+  goHome: "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
+},
+
+ml: {
+  registration: "രജിസ്ട്രേഷൻ",
+  title: "ഡിസംബർ 17 – സംസ്ഥാന തലസ്ഥാനത്തേക്ക് പോകാം",
+  description:
+    "ഗൗ സമ്മാൻ ആഹ്വാൻ അഭിയാൻ – മൂന്നാം ഘട്ടം: 31 കോടി ഒപ്പുകൾ. ഡിസംബർ 17ന് ഗൗ സമ്മാൻ ആഹ്വാൻ അഭിയാന്റെ മൂന്നാം ഘട്ടത്തിൽ 31 കോടി ഒപ്പുകളോടെ ഇന്ത്യയിലെ എല്ലാ സംസ്ഥാന തലസ്ഥാനങ്ങളിലും നിവേദനം സമർപ്പിക്കും. നിങ്ങളുടെ സാന്നിധ്യം രേഖപ്പെടുത്തി ഈ രാജ്യവ്യാപക പ്രചാരണത്തിന്റെ ഭാഗമാകൂ.",
+  language: "ഭാഷ",
+  chooseLanguage: "ഭാഷ തിരഞ്ഞെടുക്കുക",
+  step1: "സ്ഥിരീകരിക്കുക",
+  step2: "വിശദാംശങ്ങൾ",
+
+  question:
+    "ഡിസംബർ 17-ന് നിങ്ങളുടെ സംസ്ഥാന തലസ്ഥാനത്ത് നിവേദനം സമർപ്പിക്കാൻ ഞങ്ങളോടൊപ്പം പോകാൻ ആഗ്രഹിക്കുന്നുണ്ടോ?",
+
+  yes: "അതെ, എനിക്ക് പോകണം",
+
+  yesDescription:
+    "ഡിസംബർ 17-ന് നിങ്ങളുടെ സംസ്ഥാന തലസ്ഥാനത്ത് നിവേദനം സമർപ്പിക്കുന്ന ഈ പ്രചാരണത്തിന്റെ ഭാഗമാകൂ.",
+
+  no: "ഇല്ല, എനിക്ക് പോകാൻ കഴിയില്ല",
+
+  noDescription:
+    "എനിക്ക് സംസ്ഥാന തലസ്ഥാനത്ത് നടക്കുന്ന പരിപാടിയിൽ പങ്കെടുക്കാൻ കഴിയില്ല.",
+
+  participantDetails: "പങ്കെടുക്കുന്നയാളുടെ വിശദാംശങ്ങൾ",
+  participantDescription:
+    "നിങ്ങളോടൊപ്പം വരുന്ന ഓരോ അംഗത്തിന്റെയും വിശദാംശങ്ങൾ നൽകുക.",
+  member: "അംഗം",
+  fullName: "പൂർണ്ണ പേര്",
+  mobileNumber: "മൊബൈൽ നമ്പർ",
+  state: "സംസ്ഥാനം",
+  district: "ജില്ല",
+  tehsil: "തഹസിൽ / ബ്ലോക്ക്",
+  village: "ഗ്രാമം",
+  enterVillage: "നിങ്ങളുടെ ഗ്രാമത്തിന്റെ പേര് നൽകുക",
+  enterName: "നിങ്ങളുടെ പൂർണ്ണ പേര് നൽകുക",
+  enterPhone: "10 അക്ക മൊബൈൽ നമ്പർ",
+  selectState: "സംസ്ഥാനം തിരഞ്ഞെടുക്കുക",
+  selectDistrict: "ജില്ല തിരഞ്ഞെടുക്കുക",
+  selectTehsil: "തഹസിൽ / ബ്ലോക്ക് തിരഞ്ഞെടുക്കുക",
+  selectStateFirst: "ആദ്യം സംസ്ഥാനം തിരഞ്ഞെടുക്കുക",
+  selectDistrictFirst: "ആദ്യം ജില്ല തിരഞ്ഞെടുക്കുക",
+  loadingStates: "സംസ്ഥാനങ്ങൾ ലോഡ് ചെയ്യുന്നു...",
+  loadingDistricts: "ജില്ലകൾ ലോഡ് ചെയ്യുന്നു...",
+  loadingDetails: "തഹസിലുകൾ ലോഡ് ചെയ്യുന്നു...",
+  loadingPrabhari: "പ്രഭാരി വിവരങ്ങൾ ലോഡ് ചെയ്യുന്നു...",
+  addMember: "മറ്റൊരു അംഗത്തെ ചേർക്കുക",
+  removeMember: "അംഗത്തെ നീക്കം ചെയ്യുക",
+  districtPrabhari: "ജില്ലാ പ്രഭാരി",
+  contact: "ബന്ധപ്പെടുക",
+  submit: "രജിസ്ട്രേഷൻ സമർപ്പിക്കുക",
+  submitting: "സമർപ്പിക്കുന്നു...",
+  back: "തിരികെ",
+  changeAnswer: "ഉത്തരം മാറ്റുക",
+  success: "രജിസ്ട്രേഷൻ വിജയകരം",
+  successDescription:
+    "നിങ്ങളുടെ രജിസ്ട്രേഷൻ വിജയകരമായി സമർപ്പിച്ചു.",
+  registeredMembers: "രജിസ്റ്റർ ചെയ്ത അംഗങ്ങൾ",
+  thankYou: "നന്ദി",
+  noAttendance:
+    "സംസ്ഥാന തലസ്ഥാനത്തെ പരിപാടിയിൽ പങ്കെടുക്കില്ലെന്ന് നിങ്ങൾ തിരഞ്ഞെടുത്തു.",
+  requiredName: "ദയവായി പേര് നൽകുക.",
+  requiredPhone:
+    "ദയവായി സാധുവായ 10 അക്ക മൊബൈൽ നമ്പർ നൽകുക.",
+  requiredState: "ദയവായി സംസ്ഥാനം തിരഞ്ഞെടുക്കുക.",
+  requiredDistrict: "ദയവായി ജില്ല തിരഞ്ഞെടുക്കുക.",
+  requiredTehsil:
+    "ദയവായി തഹസിൽ / ബ്ലോക്ക് തിരഞ്ഞെടുക്കുക.",
+  requiredVillage:
+    "ദയവായി നിങ്ങളുടെ ഗ്രാമത്തിന്റെ പേര് നൽകുക.",
+  submitError:
+    "രജിസ്ട്രേഷൻ സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.",
+  noPrabhari:
+    "ഈ പ്രദേശത്തിനുള്ള പ്രഭാരി വിവരങ്ങൾ ലഭ്യമല്ല.",
+  additionalMemberNote:
+    "ഈ അംഗത്തിന് പേര്, മൊബൈൽ നമ്പർ എന്നിവ മാത്രം നൽകുക. സ്ഥലവിവരം ആദ്യ അംഗത്തിൽ നിന്ന് എടുക്കും.",
+  goHome: "ഹോം പേജിലേക്ക് പോകുക",
+},
+
+or: {
+  registration: "ପଞ୍ଜୀକରଣ",
+  title: "୧୭ ଡିସେମ୍ବର – ଚାଲନ୍ତୁ ରାଜ୍ୟ ରାଜଧାନୀକୁ",
+  description:
+    "ଗୋ ସମ୍ମାନ ଆହ୍ୱାନ ଅଭିଯାନ – ତୃତୀୟ ପର୍ଯ୍ୟାୟ: ୩୧ କୋଟି ସ୍ୱାକ୍ଷର। ୧୭ ଡିସେମ୍ବରରେ ଗୋ ସମ୍ମାନ ଆହ୍ୱାନ ଅଭିଯାନର ତୃତୀୟ ପର୍ଯ୍ୟାୟରେ ୩୧ କୋଟି ସ୍ୱାକ୍ଷର ସହିତ ଭାରତର ସମସ୍ତ ରାଜ୍ୟର ରାଜଧାନୀରେ ଆବେଦନପତ୍ର ଦାଖଲ କରାଯିବ। ଆପଣଙ୍କ ଉପସ୍ଥିତି ପଞ୍ଜିକରଣ କରି ଏହି ଦେଶବ୍ୟାପୀ ଅଭିଯାନର ଅଂଶ ହୁଅନ୍ତୁ।",
+  language: "ଭାଷା",
+  chooseLanguage: "ଭାଷା ବାଛନ୍ତୁ",
+  step1: "ନିଶ୍ଚିତ କରନ୍ତୁ",
+  step2: "ବିବରଣୀ",
+
+  question:
+    "ଆପଣ ୧୭ ଡିସେମ୍ବରରେ ଆପଣଙ୍କ ରାଜ୍ୟର ରାଜଧାନୀରେ ଆବେଦନପତ୍ର ଦାଖଲ କରିବା ପାଇଁ ଆମ ସହିତ ଯୋଗ ଦେବାକୁ ଚାହୁଁଛନ୍ତି କି?",
+
+  yes: "ହଁ, ମୁଁ ଯିବାକୁ ଚାହୁଁଛି",
+
+  yesDescription:
+    "୧୭ ଡିସେମ୍ବରରେ ଆପଣଙ୍କ ରାଜ୍ୟର ରାଜଧାନୀରେ ଆବେଦନପତ୍ର ଦାଖଲ କରିବାର ଏହି ଅଭିଯାନର ଅଂଶ ହୁଅନ୍ତୁ।",
+
+  no: "ନା, ମୁଁ ଯାଇପାରିବି ନାହିଁ",
+
+  noDescription:
+    "ମୁଁ ରାଜ୍ୟ ରାଜଧାନୀରେ ହେବାକୁ ଥିବା କାର୍ଯ୍ୟକ୍ରମରେ ଯୋଗ ଦେଇପାରିବି ନାହିଁ।",
+
+  participantDetails: "ଅଂଶଗ୍ରହଣକାରୀଙ୍କ ବିବରଣୀ",
+  participantDescription:
+    "ଆପଣଙ୍କ ସହିତ ଆସୁଥିବା ପ୍ରତ୍ୟେକ ସଦସ୍ୟଙ୍କ ବିବରଣୀ ଦିଅନ୍ତୁ।",
+  member: "ସଦସ୍ୟ",
+  fullName: "ପୂର୍ଣ୍ଣ ନାମ",
+  mobileNumber: "ମୋବାଇଲ ନମ୍ବର",
+  state: "ରାଜ୍ୟ",
+  district: "ଜିଲ୍ଲା",
+  tehsil: "ତହସିଲ / ବ୍ଲକ",
+  village: "ଗାଁ",
+  enterVillage: "ଆପଣଙ୍କ ଗାଁର ନାମ ଦିଅନ୍ତୁ",
+  enterName: "ଆପଣଙ୍କ ପୂର୍ଣ୍ଣ ନାମ ଦିଅନ୍ତୁ",
+  enterPhone: "୧୦ ଅଙ୍କର ମୋବାଇଲ ନମ୍ବର",
+  selectState: "ରାଜ୍ୟ ବାଛନ୍ତୁ",
+  selectDistrict: "ଜିଲ୍ଲା ବାଛନ୍ତୁ",
+  selectTehsil: "ତହସିଲ / ବ୍ଲକ ବାଛନ୍ତୁ",
+  selectStateFirst: "ପ୍ରଥମେ ରାଜ୍ୟ ବାଛନ୍ତୁ",
+  selectDistrictFirst: "ପ୍ରଥମେ ଜିଲ୍ଲା ବାଛନ୍ତୁ",
+  loadingStates: "ରାଜ୍ୟଗୁଡ଼ିକ ଲୋଡ୍ ହେଉଛି...",
+  loadingDistricts: "ଜିଲ୍ଲାଗୁଡ଼ିକ ଲୋଡ୍ ହେଉଛି...",
+  loadingDetails: "ତହସିଲଗୁଡ଼ିକ ଲୋଡ୍ ହେଉଛି...",
+  loadingPrabhari: "ପ୍ରଭାରୀଙ୍କ ସୂଚନା ଲୋଡ୍ ହେଉଛି...",
+  addMember: "ଆଉ ଜଣେ ସଦସ୍ୟ ଯୋଡନ୍ତୁ",
+  removeMember: "ସଦସ୍ୟଙ୍କୁ ହଟାନ୍ତୁ",
+  districtPrabhari: "ଜିଲ୍ଲା ପ୍ରଭାରୀ",
+  contact: "ଯୋଗାଯୋଗ",
+  submit: "ପଞ୍ଜୀକରଣ ଦାଖଲ କରନ୍ତୁ",
+  submitting: "ଦାଖଲ ହେଉଛି...",
+  back: "ପଛକୁ",
+  changeAnswer: "ଉତ୍ତର ବଦଳାନ୍ତୁ",
+  success: "ପଞ୍ଜୀକରଣ ସଫଳ",
+  successDescription:
+    "ଆପଣଙ୍କ ପଞ୍ଜୀକରଣ ସଫଳତାର ସହିତ ଦାଖଲ ହୋଇଛି।",
+  registeredMembers: "ପଞ୍ଜୀକୃତ ସଦସ୍ୟ",
+  thankYou: "ଧନ୍ୟବାଦ",
+  noAttendance:
+    "ଆପଣ ରାଜ୍ୟ ରାଜଧାନୀର କାର୍ଯ୍ୟକ୍ରମରେ ଯୋଗ ଦେବେ ନାହିଁ ବୋଲି ବାଛିଛନ୍ତି।",
+  requiredName: "ଦୟାକରି ନାମ ଦିଅନ୍ତୁ।",
+  requiredPhone:
+    "ଦୟାକରି ସଠିକ୍ ୧୦ ଅଙ୍କର ମୋବାଇଲ ନମ୍ବର ଦିଅନ୍ତୁ।",
+  requiredState: "ଦୟାକରି ରାଜ୍ୟ ବାଛନ୍ତୁ।",
+  requiredDistrict: "ଦୟାକରି ଜିଲ୍ଲା ବାଛନ୍ତୁ।",
+  requiredTehsil:
+    "ଦୟାକରି ତହସିଲ / ବ୍ଲକ ବାଛନ୍ତୁ।",
+  requiredVillage: "ଦୟାକରି ଆପଣଙ୍କ ଗାଁର ନାମ ଦିଅନ୍ତୁ।",
+  submitError:
+    "ପଞ୍ଜୀକରଣ ଦାଖଲ ହୋଇପାରିଲା ନାହିଁ। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
+  noPrabhari:
+    "ଏହି ଅଞ୍ଚଳ ପାଇଁ ପ୍ରଭାରୀଙ୍କ ସୂଚନା ଉପଲବ୍ଧ ନାହିଁ।",
+  additionalMemberNote:
+    "ଏହି ସଦସ୍ୟଙ୍କ ପାଇଁ କେବଳ ନାମ ଏବଂ ମୋବାଇଲ ନମ୍ବର ଦିଅନ୍ତୁ। ସ୍ଥାନର ସୂଚନା ପ୍ରଥମ ସଦସ୍ୟଙ୍କଠାରୁ ନିଆଯିବ।",
+  goHome: "ହୋମ ପେଜକୁ ଯାଆନ୍ତୁ",
+},
+
+pa: {
+  registration: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ",
+  title: "17 ਦਸੰਬਰ – ਆਓ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਚੱਲੀਏ",
+  description:
+    "ਗੌ ਸਨਮਾਨ ਆਹਵਾਨ ਅਭਿਆਨ – ਤੀਜਾ ਪੜਾਅ: 31 ਕਰੋੜ ਦਸਤਖ਼ਤ। 17 ਦਸੰਬਰ ਨੂੰ ਗੌ ਸਨਮਾਨ ਆਹਵਾਨ ਅਭਿਆਨ ਦੇ ਤੀਜੇ ਪੜਾਅ ਵਿੱਚ 31 ਕਰੋੜ ਦਸਤਖ਼ਤਾਂ ਦੇ ਨਾਲ ਭਾਰਤ ਦੇ ਸਾਰੇ ਰਾਜਾਂ ਦੀਆਂ ਰਾਜਧਾਨੀਆਂ ਵਿੱਚ ਅਰਜ਼ੀ ਪੇਸ਼ ਕੀਤੀ ਜਾਵੇਗੀ। ਆਪਣੀ ਹਾਜ਼ਰੀ ਦਰਜ ਕਰਵਾ ਕੇ ਇਸ ਦੇਸ਼ਵਿਆਪੀ ਅਭਿਆਨ ਦਾ ਹਿੱਸਾ ਬਣੋ।",
+  language: "ਭਾਸ਼ਾ",
+  chooseLanguage: "ਭਾਸ਼ਾ ਚੁਣੋ",
+  step1: "ਪੁਸ਼ਟੀ",
+  step2: "ਵੇਰਵੇ",
+
+  question:
+    "ਕੀ ਤੁਸੀਂ 17 ਦਸੰਬਰ ਨੂੰ ਆਪਣੇ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਵਿੱਚ ਅਰਜ਼ੀ ਪੇਸ਼ ਕਰਨ ਲਈ ਸਾਡੇ ਨਾਲ ਸ਼ਾਮਲ ਹੋਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+
+  yes: "ਹਾਂ, ਮੈਂ ਜਾਣਾ ਚਾਹੁੰਦਾ ਹਾਂ",
+
+  yesDescription:
+    "17 ਦਸੰਬਰ ਨੂੰ ਆਪਣੇ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਵਿੱਚ ਅਰਜ਼ੀ ਪੇਸ਼ ਕਰਨ ਦੇ ਇਸ ਅਭਿਆਨ ਦਾ ਹਿੱਸਾ ਬਣੋ।",
+
+  no: "ਨਹੀਂ, ਮੈਂ ਨਹੀਂ ਜਾ ਸਕਦਾ",
+
+  noDescription:
+    "ਮੈਂ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਦੇ ਕਾਰਜਕ੍ਰਮ ਵਿੱਚ ਸ਼ਾਮਲ ਨਹੀਂ ਹੋ ਸਕਾਂਗਾ।",
+
+  participantDetails: "ਭਾਗੀਦਾਰ ਦੇ ਵੇਰਵੇ",
+  participantDescription:
+    "ਤੁਹਾਡੇ ਨਾਲ ਆਉਣ ਵਾਲੇ ਹਰ ਮੈਂਬਰ ਦੇ ਵੇਰਵੇ ਦਰਜ ਕਰੋ।",
+  member: "ਮੈਂਬਰ",
+  fullName: "ਪੂਰਾ ਨਾਮ",
+  mobileNumber: "ਮੋਬਾਈਲ ਨੰਬਰ",
+  state: "ਰਾਜ",
+  district: "ਜ਼ਿਲ੍ਹਾ",
+  tehsil: "ਤਹਿਸੀਲ / ਬਲਾਕ",
+  village: "ਪਿੰਡ",
+  enterVillage: "ਆਪਣੇ ਪਿੰਡ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ",
+  enterName: "ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ",
+  enterPhone: "10 ਅੰਕਾਂ ਦਾ ਮੋਬਾਈਲ ਨੰਬਰ",
+  selectState: "ਰਾਜ ਚੁਣੋ",
+  selectDistrict: "ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ",
+  selectTehsil: "ਤਹਿਸੀਲ / ਬਲਾਕ ਚੁਣੋ",
+  selectStateFirst: "ਪਹਿਲਾਂ ਰਾਜ ਚੁਣੋ",
+  selectDistrictFirst: "ਪਹਿਲਾਂ ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ",
+  loadingStates: "ਰਾਜ ਲੋਡ ਹੋ ਰਹੇ ਹਨ...",
+  loadingDistricts: "ਜ਼ਿਲ੍ਹੇ ਲੋਡ ਹੋ ਰਹੇ ਹਨ...",
+  loadingDetails: "ਤਹਿਸੀਲਾਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ...",
+  loadingPrabhari: "ਪ੍ਰਭਾਰੀ ਦੀ ਜਾਣਕਾਰੀ ਲੋਡ ਹੋ ਰਹੀ ਹੈ...",
+  addMember: "ਇੱਕ ਹੋਰ ਮੈਂਬਰ ਸ਼ਾਮਲ ਕਰੋ",
+  removeMember: "ਮੈਂਬਰ ਹਟਾਓ",
+  districtPrabhari: "ਜ਼ਿਲ੍ਹਾ ਪ੍ਰਭਾਰੀ",
+  contact: "ਸੰਪਰਕ",
+  submit: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਜਮ੍ਹਾਂ ਕਰੋ",
+  submitting: "ਜਮ੍ਹਾਂ ਹੋ ਰਿਹਾ ਹੈ...",
+  back: "ਵਾਪਸ",
+  changeAnswer: "ਜਵਾਬ ਬਦਲੋ",
+  success: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਫਲ",
+  successDescription:
+    "ਤੁਹਾਡੀ ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਫਲਤਾਪੂਰਵਕ ਜਮ੍ਹਾਂ ਹੋ ਗਈ ਹੈ।",
+  registeredMembers: "ਰਜਿਸਟਰਡ ਮੈਂਬਰ",
+  thankYou: "ਧੰਨਵਾਦ",
+  noAttendance:
+    "ਤੁਸੀਂ ਚੁਣਿਆ ਹੈ ਕਿ ਤੁਸੀਂ ਰਾਜ ਦੀ ਰਾਜਧਾਨੀ ਦੇ ਕਾਰਜਕ੍ਰਮ ਵਿੱਚ ਸ਼ਾਮਲ ਨਹੀਂ ਹੋਵੋਗੇ।",
+  requiredName: "ਕਿਰਪਾ ਕਰਕੇ ਨਾਮ ਦਰਜ ਕਰੋ।",
+  requiredPhone:
+    "ਕਿਰਪਾ ਕਰਕੇ ਸਹੀ 10 ਅੰਕਾਂ ਦਾ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ।",
+  requiredState: "ਕਿਰਪਾ ਕਰਕੇ ਰਾਜ ਚੁਣੋ।",
+  requiredDistrict: "ਕਿਰਪਾ ਕਰਕੇ ਜ਼ਿਲ੍ਹਾ ਚੁਣੋ।",
+  requiredTehsil:
+    "ਕਿਰਪਾ ਕਰਕੇ ਤਹਿਸੀਲ / ਬਲਾਕ ਚੁਣੋ।",
+  requiredVillage: "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਪਿੰਡ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ।",
+  submitError:
+    "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਜਮ੍ਹਾਂ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  noPrabhari:
+    "ਇਸ ਖੇਤਰ ਲਈ ਪ੍ਰਭਾਰੀ ਦੀ ਜਾਣਕਾਰੀ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।",
+  additionalMemberNote:
+    "ਇਸ ਮੈਂਬਰ ਲਈ ਸਿਰਫ਼ ਨਾਮ ਅਤੇ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ। ਸਥਾਨ ਦੀ ਜਾਣਕਾਰੀ ਪਹਿਲੇ ਮੈਂਬਰ ਤੋਂ ਲਈ ਜਾਵੇਗੀ।",
+  goHome: "ਹੋਮ ਪੇਜ 'ਤੇ ਜਾਓ",
+},
+
+as: {
+  registration: "পঞ্জীয়ন",
+  title: "১৭ ডিচেম্বৰ – আহক ৰাজ্যৰ ৰাজধানীলৈ",
+  description:
+    "গৌ সন্মান আহ্বান অভিযান – তৃতীয় পৰ্যায়: ৩১ কোটি স্বাক্ষৰ। ১৭ ডিচেম্বৰত গৌ সন্মান আহ্বান অভিযানৰ তৃতীয় পৰ্যায়ত ৩১ কোটি স্বাক্ষৰৰ সৈতে ভাৰতৰ সকলো ৰাজ্যৰ ৰাজধানীত আবেদন পত্ৰ দাখিল কৰা হ'ব। আপোনাৰ উপস্থিতি পঞ্জীয়ন কৰি এই ৰাষ্ট্ৰব্যাপী অভিযানৰ অংশ হওক।",
+  language: "ভাষা",
+  chooseLanguage: "ভাষা বাছক",
+  step1: "নিশ্চিত কৰক",
+  step2: "বিৱৰণ",
+
+  question:
+    "আপুনি ১৭ ডিচেম্বৰত আপোনাৰ ৰাজ্যৰ ৰাজধানীত আবেদন পত্ৰ দাখিল কৰিবলৈ আমাৰ সৈতে যোগদান কৰিব বিচাৰে নেকি?",
+
+  yes: "হয়, মই যাব বিচাৰোঁ",
+
+  yesDescription:
+    "১৭ ডিচেম্বৰত আপোনাৰ ৰাজ্যৰ ৰাজধানীত আবেদন পত্ৰ দাখিল কৰাৰ এই অভিযানৰ অংশ হওক।",
+
+  no: "নহয়, মই যাব নোৱাৰোঁ",
+
+  noDescription:
+    "মই ৰাজ্যৰ ৰাজধানীত অনুষ্ঠিত হ'বলগীয়া কাৰ্যসূচীত অংশগ্ৰহণ কৰিব নোৱাৰিম।",
+
+  participantDetails: "অংশগ্ৰহণকাৰীৰ বিৱৰণ",
+  participantDescription:
+    "আপোনাৰ সৈতে অহা প্ৰতিজন সদস্যৰ বিৱৰণ দিয়ক।",
+  member: "সদস্য",
+  fullName: "সম্পূৰ্ণ নাম",
+  mobileNumber: "ম'বাইল নম্বৰ",
+  state: "ৰাজ্য",
+  district: "জিলা",
+  tehsil: "তহচিল / ব্লক",
+  village: "গাঁও",
+  enterVillage: "আপোনাৰ গাঁৱৰ নাম দিয়ক",
+  enterName: "আপোনাৰ সম্পূৰ্ণ নাম দিয়ক",
+  enterPhone: "১০ সংখ্যাৰ ম'বাইল নম্বৰ",
+  selectState: "ৰাজ্য বাছক",
+  selectDistrict: "জিলা বাছক",
+  selectTehsil: "তহচিল / ব্লক বাছক",
+  selectStateFirst: "প্ৰথমে ৰাজ্য বাছক",
+  selectDistrictFirst: "প্ৰথমে জিলা বাছক",
+  loadingStates: "ৰাজ্যসমূহ লোড হৈ আছে...",
+  loadingDistricts: "জিলাসমূহ লোড হৈ আছে...",
+  loadingDetails: "তহচিলসমূহ লোড হৈ আছে...",
+  loadingPrabhari: "প্ৰভাৰীৰ তথ্য লোড হৈ আছে...",
+  addMember: "আন এজন সদস্য যোগ কৰক",
+  removeMember: "সদস্য আঁতৰাওক",
+  districtPrabhari: "জিলা প্ৰভাৰী",
+  contact: "যোগাযোগ",
+  submit: "পঞ্জীয়ন দাখিল কৰক",
+  submitting: "দাখিল হৈ আছে...",
+  back: "পিছলৈ",
+  changeAnswer: "উত্তৰ সলনি কৰক",
+  success: "পঞ্জীয়ন সফল",
+  successDescription:
+    "আপোনাৰ পঞ্জীয়ন সফলতাৰে দাখিল কৰা হৈছে।",
+  registeredMembers: "পঞ্জীয়ন কৰা সদস্য",
+  thankYou: "ধন্যবাদ",
+  noAttendance:
+    "আপুনি ৰাজ্যৰ ৰাজধানীৰ কাৰ্যসূচীত অংশগ্ৰহণ নকৰাৰ সিদ্ধান্ত লৈছে।",
+  requiredName: "অনুগ্ৰহ কৰি নাম দিয়ক।",
+  requiredPhone:
+    "অনুগ্ৰহ কৰি সঠিক ১০ সংখ্যাৰ ম'বাইল নম্বৰ দিয়ক।",
+  requiredState: "অনুগ্ৰহ কৰি ৰাজ্য বাছক।",
+  requiredDistrict: "অনুগ্ৰহ কৰি জিলা বাছক।",
+  requiredTehsil:
+    "অনুগ্ৰহ কৰি তহচিল / ব্লক বাছক।",
+  requiredVillage:
+    "অনুগ্ৰহ কৰি আপোনাৰ গাঁৱৰ নাম দিয়ক।",
+  submitError:
+    "পঞ্জীয়ন দাখিল কৰিব পৰা নগ'ল। পুনৰ চেষ্টা কৰক।",
+  noPrabhari:
+    "এই অঞ্চলৰ বাবে প্ৰভাৰীৰ তথ্য উপলব্ধ নহয়।",
+  additionalMemberNote:
+    "এই সদস্যৰ বাবে কেৱল নাম আৰু ম'বাইল নম্বৰ দিয়ক। স্থানৰ তথ্য প্ৰথম সদস্যৰ পৰা লোৱা হ'ব।",
+  goHome: "হোম পেজলৈ যাওক",
+},
+
+ur: {
+  registration: "رجسٹریشن",
+  title: "17 دسمبر – چلیں ریاستی دارالحکومت",
+  description:
+    "گئو سمان آہوان ابھیان – تیسرا مرحلہ: 31 کروڑ دستخط۔ 17 دسمبر کو گئو سمان آہوان ابھیان کے تیسرے مرحلے میں 31 کروڑ دستخطوں کے ساتھ بھارت کی تمام ریاستوں کے دارالحکومتوں میں عرضداشت پیش کی جائے گی۔ اپنی موجودگی درج کروا کر اس ملک گیر مہم کا حصہ بنیں۔",
+  language: "زبان",
+  chooseLanguage: "زبان منتخب کریں",
+  step1: "تصدیق",
+  step2: "تفصیلات",
+
+  question:
+    "کیا آپ 17 دسمبر کو اپنے ریاستی دارالحکومت میں عرضداشت پیش کرنے کے لیے ہمارے ساتھ شامل ہونا چاہتے ہیں؟",
+
+  yes: "ہاں، میں جانا چاہتا ہوں",
+
+  yesDescription:
+    "17 دسمبر کو اپنے ریاستی دارالحکومت میں عرضداشت پیش کرنے کی اس مہم کا حصہ بنیں۔",
+
+  no: "نہیں، میں نہیں جا سکتا",
+
+  noDescription:
+    "میں ریاستی دارالحکومت میں ہونے والے پروگرام میں شرکت نہیں کر سکوں گا۔",
+
+  participantDetails: "شرکت کنندہ کی تفصیلات",
+  participantDescription:
+    "اپنے ساتھ آنے والے ہر رکن کی تفصیلات درج کریں۔",
+  member: "رکن",
+  fullName: "پورا نام",
+  mobileNumber: "موبائل نمبر",
+  state: "ریاست",
+  district: "ضلع",
+  tehsil: "تحصیل / بلاک",
+  village: "گاؤں",
+  enterVillage: "اپنے گاؤں کا نام درج کریں",
+  enterName: "اپنا پورا نام درج کریں",
+  enterPhone: "10 ہندسوں کا موبائل نمبر",
+  selectState: "ریاست منتخب کریں",
+  selectDistrict: "ضلع منتخب کریں",
+  selectTehsil: "تحصیل / بلاک منتخب کریں",
+  selectStateFirst: "پہلے ریاست منتخب کریں",
+  selectDistrictFirst: "پہلے ضلع منتخب کریں",
+  loadingStates: "ریاستیں لوڈ ہو رہی ہیں...",
+  loadingDistricts: "اضلاع لوڈ ہو رہے ہیں...",
+  loadingDetails: "تحصیلیں لوڈ ہو رہی ہیں...",
+  loadingPrabhari: "انچارج کی معلومات لوڈ ہو رہی ہے...",
+  addMember: "ایک اور رکن شامل کریں",
+  removeMember: "رکن ہٹائیں",
+  districtPrabhari: "ضلعی انچارج",
+  contact: "رابطہ",
+  submit: "رجسٹریشن جمع کریں",
+  submitting: "جمع ہو رہی ہے...",
+  back: "واپس",
+  changeAnswer: "جواب تبدیل کریں",
+  success: "رجسٹریشن کامیاب",
+  successDescription:
+    "آپ کی رجسٹریشن کامیابی سے جمع ہو گئی ہے۔",
+  registeredMembers: "رجسٹرڈ اراکین",
+  thankYou: "شکریہ",
+  noAttendance:
+    "آپ نے منتخب کیا ہے کہ آپ ریاستی دارالحکومت کے پروگرام میں شرکت نہیں کریں گے۔",
+  requiredName: "براہ کرم نام درج کریں۔",
+  requiredPhone:
+    "براہ کرم درست 10 ہندسوں کا موبائل نمبر درج کریں۔",
+  requiredState: "براہ کرم ریاست منتخب کریں۔",
+  requiredDistrict: "براہ کرم ضلع منتخب کریں۔",
+  requiredTehsil:
+    "براہ کرم تحصیل / بلاک منتخب کریں۔",
+  requiredVillage:
+    "براہ کرم اپنے گاؤں کا نام درج کریں۔",
+  submitError:
+    "رجسٹریشن جمع نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+  noPrabhari:
+    "ضلعی انچارج کی معلومات دستیاب نہیں ہیں۔",
+  additionalMemberNote:
+    "اس رکن کے لیے صرف نام اور موبائل نمبر درج کریں۔ مقام کی معلومات پہلے رکن سے لی جائے گی۔",
+  goHome: "ہوم پیج پر جائیں",
+},
 };
 
 /* =========================================================
