@@ -2,6 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
+/*
+|--------------------------------------------------------------------------
+| CONFIG
+|--------------------------------------------------------------------------
+*/
+
 const MAX_MEMBERS = 20;
 const MAX_LIMIT = 100;
 
@@ -103,18 +109,11 @@ function isValidIndianPhone(phone) {
 | ADMIN AUTHENTICATION
 |--------------------------------------------------------------------------
 |
-| This is used ONLY by GET.
+| GET is ADMIN ONLY.
 |
-| POST remains public.
-|
-|--------------------------------------------------------------------------
 */
 
 async function authenticateAdmin(req) {
-  /*
-   * Get JWT from HTTP-only cookie
-   */
-
   const token =
     req.cookies.get("auth_token")?.value;
 
@@ -132,10 +131,6 @@ async function authenticateAdmin(req) {
       ),
     };
   }
-
-  /*
-   * Verify JWT
-   */
 
   let decoded;
 
@@ -159,10 +154,6 @@ async function authenticateAdmin(req) {
     };
   }
 
-  /*
-   * Make sure decoded token is an object
-   */
-
   if (
     !decoded ||
     typeof decoded !== "object"
@@ -179,14 +170,6 @@ async function authenticateAdmin(req) {
       ),
     };
   }
-
-  /*
-   * Your existing JWT seems to use either:
-   *
-   * decoded.userId
-   * OR
-   * decoded.id
-   */
 
   const userId =
     decoded.userId ?? decoded.id;
@@ -206,18 +189,33 @@ async function authenticateAdmin(req) {
     };
   }
 
-  /*
-   * Check that the user still exists.
-   *
-   * This is important because deleting a user from
-   * the database should invalidate their access even
-   * if their JWT has not expired yet.
-   */
+  const numericUserId =
+    Number(userId);
+
+  if (
+    !Number.isInteger(
+      numericUserId
+    ) ||
+    numericUserId <= 0
+  ) {
+    return {
+      success: false,
+      response: NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+          message:
+            "Invalid user ID",
+        },
+        { status: 401 }
+      ),
+    };
+  }
 
   const user =
     await prisma.user.findUnique({
       where: {
-        id: Number(userId),
+        id: numericUserId,
       },
 
       select: {
@@ -247,7 +245,6 @@ async function authenticateAdmin(req) {
   };
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | POST
@@ -255,9 +252,8 @@ async function authenticateAdmin(req) {
 |
 | PUBLIC
 |
-| Anyone can submit the protest registration.
+| Anyone can submit registration.
 |
-|--------------------------------------------------------------------------
 */
 
 export async function POST(req) {
@@ -393,7 +389,7 @@ export async function POST(req) {
 
     /*
     |--------------------------------------------------------------------------
-    | VALIDATE MEMBERS
+    | VALIDATE MEMBER BASIC DATA
     |--------------------------------------------------------------------------
     */
 
@@ -422,41 +418,17 @@ export async function POST(req) {
         );
       }
 
-      const name =
-        cleanString(
-          member.name,
-          100
-        );
-
-      const phone =
-        String(
-          member.phone ||
-            ""
-        ).trim();
-
-      const stateId =
-        String(
-          member.stateId ||
-            ""
-        ).trim();
-
-      const districtId =
-        String(
-          member.districtId ||
-            ""
-        ).trim();
-
-      const tehsilId =
-        String(
-          member.tehsilId ||
-            ""
-        ).trim();
-
       /*
       |--------------------------------------------------------------------------
       | NAME
       |--------------------------------------------------------------------------
       */
+
+      const name =
+        cleanString(
+          member.name,
+          100
+        );
 
       if (!name) {
         return errorResponse(
@@ -494,6 +466,11 @@ export async function POST(req) {
       |--------------------------------------------------------------------------
       */
 
+      const phone =
+        String(
+          member.phone || ""
+        ).trim();
+
       if (
         !isValidIndianPhone(
           phone
@@ -507,9 +484,10 @@ export async function POST(req) {
       }
 
       /*
-       * Prevent duplicate numbers inside
-       * the same submission.
-       */
+      |--------------------------------------------------------------------------
+      | DUPLICATE PHONE
+      |--------------------------------------------------------------------------
+      */
 
       if (
         phoneSet.has(phone)
@@ -525,183 +503,248 @@ export async function POST(req) {
 
       /*
       |--------------------------------------------------------------------------
-      | LOCATION IDS
+      | LOCATION
       |--------------------------------------------------------------------------
+      |
+      | ONLY FIRST MEMBER PROVIDES LOCATION.
+      |
       */
 
-      if (
-        !isValidId(stateId)
-      ) {
-        return errorResponse(
-          `Member ${
-            i + 1
-          }: invalid state.`
-        );
+      let stateId = "";
+      let districtId = "";
+      let tehsilId = "";
+      let village = "";
+
+      if (i === 0) {
+        stateId =
+          String(
+            member.stateId ||
+              ""
+          ).trim();
+
+        districtId =
+          String(
+            member.districtId ||
+              ""
+          ).trim();
+
+        tehsilId =
+          String(
+            member.tehsilId ||
+              ""
+          ).trim();
+
+        village =
+          cleanString(
+            member.village,
+            150
+          );
+
+        if (
+          !isValidId(
+            stateId
+          )
+        ) {
+          return errorResponse(
+            "Member 1: state is required."
+          );
+        }
+
+        if (
+          !isValidId(
+            districtId
+          )
+        ) {
+          return errorResponse(
+            "Member 1: district is required."
+          );
+        }
+
+        if (
+          !isValidId(
+            tehsilId
+          )
+        ) {
+          return errorResponse(
+            "Member 1: tehsil is required."
+          );
+        }
+
+        if (!village) {
+          return errorResponse(
+            "Member 1: village is required."
+          );
+        }
+
+        if (
+          village.length < 2
+        ) {
+          return errorResponse(
+            "Member 1: village name is too short."
+          );
+        }
       }
 
-      if (
-        !isValidId(districtId)
-      ) {
-        return errorResponse(
-          `Member ${
-            i + 1
-          }: invalid district.`
-        );
-      }
-
-      if (
-        !isValidId(tehsilId)
-      ) {
-        return errorResponse(
-          `Member ${
-            i + 1
-          }: invalid tehsil.`
-        );
-      }
+      /*
+      |--------------------------------------------------------------------------
+      | STORE BASIC DATA
+      |--------------------------------------------------------------------------
+      */
 
       validatedMembers.push({
         name,
         phone,
+
+        /*
+         * For members after the first,
+         * location remains empty for now.
+         */
         stateId,
         districtId,
         tehsilId,
+        village,
       });
     }
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFY STATE → DISTRICT → TEHSIL
+    | FIRST MEMBER LOCATION
     |--------------------------------------------------------------------------
     */
 
-    const verifiedMembers = [];
+    const primary =
+      validatedMembers[0];
 
-    for (
-      let i = 0;
-      i <
-      validatedMembers.length;
-      i++
-    ) {
-      const member =
-        validatedMembers[i];
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFY STATE
+    |--------------------------------------------------------------------------
+    */
 
-      /*
-      |--------------------------------------------------------------------------
-      | STATE
-      |--------------------------------------------------------------------------
-      */
+    const state =
+      await prisma.state.findUnique(
+        {
+          where: {
+            id: primary.stateId,
+          },
 
-      const state =
-        await prisma.state.findUnique(
-          {
-            where: {
-              id: member.stateId,
-            },
+          select: {
+            id: true,
+            name: true,
+          },
+        }
+      );
 
-            select: {
-              id: true,
-              name: true,
-            },
-          }
-        );
-
-      if (!state) {
-        return errorResponse(
-          `Member ${
-            i + 1
-          }: selected state does not exist.`
-        );
-      }
-
-      /*
-      |--------------------------------------------------------------------------
-      | DISTRICT
-      |--------------------------------------------------------------------------
-      |
-      | Make sure district belongs to
-      | selected state.
-      |
-      */
-
-      const district =
-        await prisma.district.findFirst(
-          {
-            where: {
-              id:
-                member.districtId,
-
-              stateId:
-                state.id,
-            },
-
-            select: {
-              id: true,
-              name: true,
-            },
-          }
-        );
-
-      if (!district) {
-        return errorResponse(
-          `Member ${
-            i + 1
-          }: selected district does not belong to the selected state.`
-        );
-      }
-
-      /*
-      |--------------------------------------------------------------------------
-      | TEHSIL
-      |--------------------------------------------------------------------------
-      |
-      | Make sure tehsil belongs to
-      | selected district.
-      |
-      */
-
-      const tehsil =
-        await prisma.tehsil.findFirst(
-          {
-            where: {
-              id:
-                member.tehsilId,
-
-              districtId:
-                district.id,
-            },
-
-            select: {
-              id: true,
-              name: true,
-            },
-          }
-        );
-
-      if (!tehsil) {
-        return errorResponse(
-          `Member ${
-            i + 1
-          }: selected tehsil does not belong to the selected district.`
-        );
-      }
-
-      verifiedMembers.push({
-        name:
-          member.name,
-
-        phone:
-          member.phone,
-
-        stateId:
-          state.id,
-
-        districtId:
-          district.id,
-
-        tehsilId:
-          tehsil.id,
-      });
+    if (!state) {
+      return errorResponse(
+        "Selected state does not exist."
+      );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFY DISTRICT
+    |--------------------------------------------------------------------------
+    |
+    | District MUST belong to selected state.
+    |
+    */
+
+    const district =
+      await prisma.district.findFirst(
+        {
+          where: {
+            id: primary.districtId,
+
+            stateId:
+              state.id,
+          },
+
+          select: {
+            id: true,
+            name: true,
+          },
+        }
+      );
+
+    if (!district) {
+      return errorResponse(
+        "Selected district does not belong to the selected state."
+      );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFY TEHSIL
+    |--------------------------------------------------------------------------
+    |
+    | Tehsil MUST belong to selected district.
+    |
+    */
+
+    const tehsil =
+      await prisma.tehsil.findFirst(
+        {
+          where: {
+            id: primary.tehsilId,
+
+            districtId:
+              district.id,
+          },
+
+          select: {
+            id: true,
+            name: true,
+          },
+        }
+      );
+
+    if (!tehsil) {
+      return errorResponse(
+        "Selected tehsil does not belong to the selected district."
+      );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | NORMALIZE ALL MEMBERS
+    |--------------------------------------------------------------------------
+    |
+    | IMPORTANT:
+    |
+    | Additional members inherit:
+    |
+    | State
+    | District
+    | Tehsil
+    | Village
+    |
+    | from member 1.
+    |
+    */
+
+    const verifiedMembers =
+      validatedMembers.map(
+        (member) => ({
+          name:
+            member.name,
+
+          phone:
+            member.phone,
+
+          stateId:
+            state.id,
+
+          districtId:
+            district.id,
+
+          tehsilId:
+            tehsil.id,
+
+          village:
+            primary.village,
+        })
+      );
 
     /*
     |--------------------------------------------------------------------------
@@ -716,14 +759,14 @@ export async function POST(req) {
             {
               data: {
                 language,
-                wantsToAttendCapital,
+
+                wantsToAttendCapital:
+                  true,
 
                 members: {
                   create:
                     verifiedMembers.map(
-                      (
-                        member
-                      ) => ({
+                      (member) => ({
                         name:
                           member.name,
 
@@ -738,6 +781,9 @@ export async function POST(req) {
 
                         tehsilId:
                           member.tehsilId,
+
+                        village:
+                          member.village,
                       })
                     ),
                 },
@@ -745,12 +791,37 @@ export async function POST(req) {
 
               select: {
                 id: true,
-                createdAt: true,
+
+                createdAt:
+                  true,
 
                 members: {
                   select: {
                     id: true,
                     name: true,
+                    phone: true,
+                    village: true,
+
+                    state: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+
+                    district: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+
+                    tehsil: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
                   },
                 },
               },
@@ -776,6 +847,17 @@ export async function POST(req) {
         membersRegistered:
           registration
             .members.length,
+
+        data: {
+          id:
+            registration.id,
+
+          createdAt:
+            registration.createdAt,
+
+          members:
+            registration.members,
+        },
       },
       201
     );
@@ -788,6 +870,12 @@ export async function POST(req) {
       }
     );
 
+    /*
+    |--------------------------------------------------------------------------
+    | PRISMA UNIQUE ERROR
+    |--------------------------------------------------------------------------
+    */
+
     if (
       error?.code ===
       "P2002"
@@ -798,6 +886,22 @@ export async function POST(req) {
       );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | PRISMA FOREIGN KEY ERROR
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+      error?.code ===
+      "P2003"
+    ) {
+      return errorResponse(
+        "Invalid location information.",
+        400
+      );
+    }
+
     return errorResponse(
       "Unable to process your registration right now. Please try again later.",
       500
@@ -805,13 +909,22 @@ export async function POST(req) {
   }
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | GET
 |--------------------------------------------------------------------------
 |
 | ADMIN ONLY
+|
+| Supports:
+|
+| search
+| stateId
+| districtId
+| tehsilId
+| language
+| page
+| limit
 |
 |--------------------------------------------------------------------------
 */
@@ -885,7 +998,7 @@ export async function GET(req) {
 
     /*
     |--------------------------------------------------------------------------
-    | PAGE
+    | PAGINATION
     |--------------------------------------------------------------------------
     */
 
@@ -980,6 +1093,12 @@ export async function GET(req) {
     |--------------------------------------------------------------------------
     | SEARCH
     |--------------------------------------------------------------------------
+    |
+    | Search:
+    | name
+    | phone
+    | village
+    |
     */
 
     if (search) {
@@ -990,8 +1109,16 @@ export async function GET(req) {
               search,
           },
         },
+
         {
           phone: {
+            contains:
+              search,
+          },
+        },
+
+        {
+          village: {
             contains:
               search,
           },
@@ -1020,80 +1147,80 @@ export async function GET(req) {
     const [
       registrations,
       filteredTotal,
-    ] =
-      await prisma.$transaction(
-        [
-          prisma.protestRegistrationMember.findMany(
-            {
-              where,
+      total,
+    ] = await prisma.$transaction(
+      [
+        prisma.protestRegistrationMember.findMany(
+          {
+            where,
 
-              skip,
-              take: limit,
+            skip,
+            take: limit,
 
-              orderBy: {
-                createdAt:
-                  "desc",
-              },
+            orderBy: {
+              createdAt:
+                "desc",
+            },
 
-              select: {
-                id: true,
+            select: {
+              id: true,
 
-                name: true,
-                phone: true,
+              name: true,
 
-                createdAt: true,
+              phone: true,
 
-                state: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
+              village: true,
 
-                district: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
+              createdAt:
+                true,
 
-                tehsil: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-
-                registration: {
-                  select: {
-                    id: true,
-                    language: true,
-                    wantsToAttendCapital:
-                      true,
-                    createdAt:
-                      true,
-                  },
+              state: {
+                select: {
+                  id: true,
+                  name: true,
                 },
               },
-            }
-          ),
 
-          prisma.protestRegistrationMember.count(
-            {
-              where,
-            }
-          ),
-        ]
-      );
+              district: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
 
-    /*
-    |--------------------------------------------------------------------------
-    | TOTAL REGISTRATIONS
-    |--------------------------------------------------------------------------
-    */
+              tehsil: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
 
-    const total =
-      await prisma.protestRegistrationMember.count();
+              registration: {
+                select: {
+                  id: true,
+
+                  language: true,
+
+                  wantsToAttendCapital:
+                    true,
+
+                  createdAt:
+                    true,
+                },
+              },
+            },
+          }
+        ),
+
+        prisma.protestRegistrationMember.count(
+          {
+            where,
+          }
+        ),
+
+        prisma.protestRegistrationMember.count(),
+      ]
+    );
 
     /*
     |--------------------------------------------------------------------------
@@ -1114,7 +1241,8 @@ export async function GET(req) {
     */
 
     return successResponse({
-      data: registrations,
+      data:
+        registrations,
 
       total,
 
@@ -1141,6 +1269,9 @@ export async function GET(req) {
 
         email:
           auth.user.email,
+
+        name:
+          auth.user.name,
       },
     });
   } catch (error) {
