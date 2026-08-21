@@ -843,7 +843,7 @@ router.push("/dashboard/fileupload");
             </button>
             <button
   onClick={() =>
-    setTab("protestRegistrations")
+    router.push("/dashboard/protest-registrations")
   }
   className={`px-6 py-4 rounded-2xl font-bold transition-all flex items-center gap-2 ${
     tab === "protestRegistrations"

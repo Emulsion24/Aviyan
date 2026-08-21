@@ -120,7 +120,7 @@ model State {
   districts District[]
 
   prabhari Prabhari?
-
+   protestRegistrations ProtestRegistration[]
   // Protest registration relation
   protestRegistrationMembers ProtestRegistrationMember[]
 }
@@ -258,10 +258,21 @@ model DownloadCard {
 //
 // =========================================================
 
+// =========================================================
+// PROTEST REGISTRATION
+// =========================================================
+
 model ProtestRegistration {
-  id                   Int     @id @default(autoincrement())
+  id                   Int      @id @default(autoincrement())
   language             String
-  wantsToAttendCapital Boolean @default(true)
+  wantsToAttendCapital Boolean  @default(true)
+
+  // Fields for "No" Flow (Non-Attendees)
+  stateId              String?
+  state                State?   @relation(fields: [stateId], references: [id], onDelete: Restrict)
+  reason               String?  @db.Text
+  name                 String?
+  phone                String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -271,6 +282,7 @@ model ProtestRegistration {
   @@index([createdAt])
   @@index([language])
   @@index([wantsToAttendCapital])
+  @@index([stateId])
   @@map("protest_registrations")
 }
 

@@ -1,8 +1,8 @@
 "use client";
-import { FaWhatsapp, FaEnvelope,FaYoutube,FaApple ,FaFacebook, FaInstagram, FaTwitter, FaSpotify } from "react-icons/fa";
+import { FaWhatsapp, FaEnvelope,FaYoutube,FaApple ,FaFacebook, FaInstagram, FaTwitter, FaSpotify, FaConnectdevelop } from "react-icons/fa";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { Menu, X, LogIn, UserPlus, Phone, Mail, MapPin, Download, Search } from "lucide-react";
+import { Menu, X, LogIn, UserPlus, Phone, Mail, MapPin, Download, Search ,Calendar1Icon} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const HeroWithNav = () => {
@@ -579,22 +579,28 @@ const HeroWithNav = () => {
                 </div>
               </div>
   
-              <div className="flex flex-wrap justify-center gap-4 pt-6">
-                <button onClick={scrollToForm} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-600 text-white shadow-2xl hover:shadow-orange-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
-                  <span className="flex items-center gap-3"><UserPlus size={24} />अभियान में शामिल हों</span>
-                </button>
-                
-                <button onClick={openPopup} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 text-white shadow-2xl hover:shadow-green-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
-                  <span className="flex items-center gap-3"><MapPin size={24} />बैठक करवाने हेतु </span>
-                </button>
-                   <button onClick={scrollToSection} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-600 text-white shadow-2xl hover:shadow-orange-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
-                  <span className="flex items-center gap-3"><Download size={24} />डाउनलोड सेंटर</span>
-                </button>
-                 <button onClick={scrollTopravari} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 text-white shadow-2xl hover:shadow-orange-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
-                  <span className="flex items-center gap-3"><Search size={24} />प्रभारी दर्शिका</span>
-                </button>
-              </div>
+            <div className="flex flex-wrap justify-center gap-4 pt-6">
+  <button onClick={scrollToForm} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-600 text-white shadow-2xl hover:shadow-orange-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+    <span className="flex items-center gap-3"><UserPlus size={24} />अभियान में शामिल हों</span>
+  </button>
+ 
+  <button onClick={openPopup} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 text-white shadow-2xl hover:shadow-green-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+    <span className="flex items-center gap-3"><MapPin size={24} />बैठक करवाने हेतु </span>
+  </button>
+  
+  <button onClick={scrollToSection} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-600 text-white shadow-2xl hover:shadow-orange-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+    <span className="flex items-center gap-3"><Download size={24} />डाउनलोड सेंटर</span>
+  </button>
+  
+  <button onClick={scrollTopravari} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 text-white shadow-2xl hover:shadow-orange-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+    <span className="flex items-center gap-3"><Search size={24} />प्रभारी दर्शिका</span>
+  </button>
 
+  {/* NEW BUTTON ADDED HERE */}
+  <button onClick={() => window.location.href = '/17december'} className="group px-10 py-5 text-xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-orange-500 to-amber-600 text-white shadow-2xl hover:shadow-orange-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+    <span className="flex items-center gap-3"><Calendar1Icon size={24} />17 दिसंबर पंजीकरण</span>
+  </button>
+</div>
               </div>
 <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] aspect-square mt-4 sm:mt-6 mx-auto mb-4 sm:mb-6">
               {/* Center circle */}
