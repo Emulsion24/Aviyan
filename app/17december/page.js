@@ -266,7 +266,7 @@ const TRANSLATIONS = {
     fullName: "पूर्ण नाव",
     nameOptional: "पूर्ण नाव (पर्यायी)",
     mobileNumber: "मोबाईल नंबर",
-    phoneOptional: "मोबाईल नंबर (पर्यायी)",
+    phoneOptional: "মোबाईल नंबर (पर्यायी)",
     state: "राज्य",
     district: "जिल्हा",
     tehsil: "तहसील / ब्लॉक",
@@ -571,7 +571,7 @@ const TRANSLATIONS = {
     requiredVillage: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಗ್ರಾಮದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.",
     submitError: "ನೋಂದಣಿಯನ್ನು ಸಲ್ಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
     noPrabhari: "ಈ ಪ್ರದೇಶಕ್ಕೆ ಪ್ರಭಾರಿ ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ.",
-    additionalMemberNote: "ಈ ಸದಸ್ಯರಿಗೆ ಹೆಸರು ಮತ್ತು ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಮಾತ್ರ ನಮೂದಿಸಿ. ಸ್ಥಳದ ಮಾಹಿತಿಯನ್ನು ಮೊದಲ ಸದಸ್ಯರಿಂದ ಪಡೆಯಲಾಗುತ್ತದೆ.",
+    additionalMemberNote: "ಈ ಸದಸ್ಯರಿಗೆ ಹೆಸರು ಮತ್ತು ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಮಾತ್ರ ನಮೂದಿಸಿ. ಸ್ಥಳದ ಮಾಹಿತಿಯನ್ನು ಪಡೆಯಲಾಗುತ್ತದೆ.",
     goHome: "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
     defaultDate: "ಡಿಸೆಂಬರ್ 17",
   },
@@ -978,7 +978,7 @@ function CustomDropdown({ label, value, options = [], onChange, disabled, loadin
   const selectedOpt = options.find((o) => String(o.value) === String(value));
 
   return (
-    <div className="relative group pt-3" ref={ref}>
+    <div className={`relative group pt-3 ${isOpen ? "z-50" : "z-10"}`} ref={ref}>
       <div
         className={`absolute -top-1 start-4 z-20 px-3 py-0.5 text-[10px] font-black uppercase tracking-widest transition-colors rounded-[1rem_0.5rem_1rem_0.5rem] shadow-sm border-2 ${
           disabled
@@ -1029,7 +1029,7 @@ function CustomDropdown({ label, value, options = [], onChange, disabled, loadin
 
       {isOpen && !disabled && !loading && (
         <div className="absolute start-0 end-0 top-full mt-2 z-[200] rounded-[1.5rem_0.5rem_1.5rem_0.5rem] border-2 border-orange-400 bg-amber-50 shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2">
-          <div className="max-h-60 overflow-y-auto custom-scrollbar">
+          <div className="max-h-56 overflow-y-auto custom-scrollbar">
             {options.length === 0 ? (
               <div className="px-4 py-4 text-sm font-bold text-amber-900/70 text-center">
                 {placeholder}
@@ -1331,7 +1331,7 @@ export default function Page() {
   if (submitted) {
     if (attendance === false) {
       return (
-        <main dir={isRTL ? "rtl" : "ltr"} className="relative min-h-screen bg-amber-50/50 px-4 py-6 sm:py-8 font-sans overflow-hidden">
+        <main dir={isRTL ? "rtl" : "ltr"} className="relative min-h-screen bg-amber-50/50 px-4 py-6 sm:py-8 font-sans overflow-x-hidden">
           <GlobalStyles />
           <BackgroundDecoration />
           <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-2xl items-center justify-center animate-in fade-in zoom-in duration-500">
@@ -1361,7 +1361,7 @@ export default function Page() {
 
     const primary = members[0];
     return (
-      <main dir={isRTL ? "rtl" : "ltr"} className="relative min-h-screen bg-amber-50/50 px-4 py-6 sm:py-8 font-sans overflow-hidden">
+      <main dir={isRTL ? "rtl" : "ltr"} className="relative min-h-screen bg-amber-50/50 px-4 py-6 sm:py-8 font-sans overflow-x-hidden">
         <GlobalStyles />
         <BackgroundDecoration />
         <div className="relative z-10 mx-auto max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -1443,7 +1443,7 @@ export default function Page() {
   const stateOptions = states.map(s => ({ value: s.id, label: s.name }));
 
   return (
-    <main dir={isRTL ? "rtl" : "ltr"} className="relative min-h-screen bg-amber-50 pb-24 sm:pb-20 font-sans overflow-hidden">
+    <main dir={isRTL ? "rtl" : "ltr"} className="relative min-h-screen bg-amber-50 pb-24 sm:pb-20 font-sans overflow-x-hidden">
       <GlobalStyles />
       <BackgroundDecoration />
 
@@ -1465,7 +1465,7 @@ export default function Page() {
         </div>
 
         {/* HEADER */}
-        <header className="mb-6 rounded-[3rem_1rem_3rem_1rem] border-2 border-orange-200/80 bg-amber-100/70 shadow-lg backdrop-blur-xl animate-in slide-in-from-bottom-4 duration-700 delay-200 sm:mb-8">
+        <header className="mb-6 rounded-[3rem_1rem_3rem_1rem] border-2 border-orange-200/80 bg-amber-100/70 shadow-lg backdrop-blur-xl animate-in slide-in-from-bottom-4 duration-700 delay-200">
           <div className="rounded-t-[3rem_1rem_3rem_1rem] overflow-hidden">
             <div className="animate-shimmer-bar h-2 w-full bg-gradient-to-r from-orange-400 via-amber-200 via-red-500 to-orange-600" />
           </div>
@@ -1488,20 +1488,22 @@ export default function Page() {
                   </p>
                 </div>
               </div>
-
-              {/* LANGUAGE */}
-              <div className="w-full sm:max-w-[200px] shrink-0 mt-2 sm:mt-0">
-                <CustomDropdown
-                  label={t.language}
-                  value={language}
-                  options={languageOptions}
-                  onChange={changeLanguage}
-                  icon={<Globe2 size={16} />}
-                />
-              </div>
             </div>
           </div>
         </header>
+
+        {/* LANGUAGE SELECTOR */}
+        <div className="mb-6 sm:mb-8 flex justify-end animate-in fade-in duration-700 delay-200">
+          <div className="w-full sm:max-w-[250px]">
+            <CustomDropdown
+              label={t.language}
+              value={language}
+              options={languageOptions}
+              onChange={changeLanguage}
+              icon={<Globe2 size={16} />}
+            />
+          </div>
+        </div>
 
         {/* PROGRESS */}
         <div className="mb-6 flex items-center gap-4 rounded-[2rem_1rem_2rem_1rem] border-2 border-orange-200/80 bg-amber-100/60 px-5 py-4 shadow-sm backdrop-blur-md sm:mb-8 sm:px-8 sm:py-5 animate-in fade-in duration-700 delay-300">
@@ -2126,6 +2128,13 @@ function PrabhariSection({ title, loading, people = [], t }) {
    PRABHARI CARD
 ========================================================= */
 function PrabhariCard({ person, index = 0 }) {
+  // Split multiple entries by common delimiters
+  const names = person.name ? person.name.split(/[,/&]/).map(n => n.trim()).filter(Boolean) : ["—"];
+  const phones = person.phone ? person.phone.split(/[,/&]/).map(p => p.trim()).filter(Boolean) : [];
+  const emails = person.email ? person.email.split(/[,/&]/).map(e => e.trim()).filter(Boolean) : [];
+
+  const maxLen = Math.max(names.length, phones.length, emails.length);
+
   return (
     <div
       style={{ animationDelay: `${index * 90}ms`, animationFillMode: "backwards" }}
@@ -2135,27 +2144,41 @@ function PrabhariCard({ person, index = 0 }) {
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1rem_0.5rem_1rem_0.5rem] bg-orange-200 text-black border-2 border-orange-300 transition-all group-hover:bg-orange-400 group-hover:scale-110">
           <User size={20} className="text-black" />
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="font-black text-orange-950 text-lg leading-tight break-words">
-            {person.name || "—"}
-          </p>
-          {person.phone && (
-            <a
-              href={`tel:${person.phone}`}
-              className="mt-2.5 inline-flex items-center gap-2 rounded-[0.5rem_1rem_0.5rem_1rem] bg-amber-200 px-3 py-1.5 text-sm font-black text-black transition-colors hover:bg-orange-400 active:scale-95 border-2 border-orange-300"
-            >
-              <Phone size={14} className="text-black" />
-              {person.phone}
-            </a>
-          )}
-          {person.email && (
-            <a
-              href={`mailto:${person.email}`}
-              className="mt-2 block truncate text-sm font-bold text-amber-900 hover:text-black transition-colors"
-            >
-              {person.email}
-            </a>
-          )}
+        <div className="min-w-0 flex-1 flex flex-col gap-4">
+          {Array.from({ length: maxLen }).map((_, i) => {
+            const name = names[i] || names[0] || "—";
+            const phone = phones[i];
+            const email = emails[i];
+
+            return (
+              <div key={i} className="flex flex-col items-start">
+                {i === 0 || names[i] ? (
+                  <p className="font-black text-orange-950 text-lg leading-tight break-words">
+                    {names[i] || "—"}
+                  </p>
+                ) : null}
+                
+                {phone && (
+                  <a
+                    href={`tel:${phone.replace(/\D/g, '')}`}
+                    className="mt-2.5 inline-flex items-center gap-2 rounded-[0.5rem_1rem_0.5rem_1rem] bg-amber-200 px-3 py-1.5 text-sm font-black text-black transition-colors hover:bg-orange-400 active:scale-95 border-2 border-orange-300"
+                  >
+                    <Phone size={14} className="text-black" />
+                    {phone}
+                  </a>
+                )}
+                
+                {email && (
+                  <a
+                    href={`mailto:${email}`}
+                    className="mt-2 block truncate text-sm font-bold text-amber-900 hover:text-black transition-colors"
+                  >
+                    {email}
+                  </a>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
