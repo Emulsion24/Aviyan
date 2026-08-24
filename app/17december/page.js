@@ -1323,7 +1323,38 @@ export default function Page() {
 
   // Derive dynamic date based on selected state (mock implementation using default for now)
   const selectedStateObj = states.find(s => String(s.id) === String(selectedStateId));
-  const dynamicRallyDate = selectedStateObj?.rallyDate || t.defaultDate;
+  
+  const sName = (selectedStateObj?.name || "").toLowerCase();
+  let newDay = "17";
+  let newBnDay = "১৭";
+  let newMrDay = "१७"; // Also Hindi
+  let newOrDay = "୧୭";
+
+  if (sName.includes("maharashtra") || sName.includes("mumbai")) {
+    newDay = "1"; newBnDay = "১"; newMrDay = "१"; newOrDay = "୧";
+  } else if (sName.includes("delhi")) {
+    newDay = "18"; newBnDay = "১৮"; newMrDay = "१८"; newOrDay = "୧୮";
+  } else if (sName.includes("west bengal") || sName.includes("kolkata") || sName.includes("bengal")) {
+    newDay = "21"; newBnDay = "২১"; newMrDay = "२१"; newOrDay = "୨୧";
+  }
+
+  let dynamicRallyDate = t.defaultDate;
+  if (newDay !== "17") {
+    dynamicRallyDate = (t.defaultDate || "17 December")
+      .replace("17", newDay)
+      .replace("১৭", newBnDay)
+      .replace("१७", newMrDay)
+      .replace("୧୭", newOrDay);
+  }
+
+  const replaceDateInText = (text) => {
+    if (!text || newDay === "17") return text;
+    return text
+      .replace(/17/g, newDay)
+      .replace(/১৭/g, newBnDay)
+      .replace(/१७/g, newMrDay)
+      .replace(/୧୭/g, newOrDay);
+  };
 
   /* =======================================================
      SUCCESS SCREEN
@@ -1477,14 +1508,14 @@ export default function Page() {
                   <Users size={26} strokeWidth={2.5} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-black uppercase tracking-widest text-orange-900 sm:text-sm">
+  <p className="text-xs font-black uppercase tracking-widest text-orange-900 sm:text-sm">
                     {t.registration}
                   </p>
                   <h1 className="mt-1.5 text-2xl font-black tracking-tight text-orange-950 sm:text-4xl">
-                    {t.title}
+                    {replaceDateInText(t.title)}
                   </h1>
                   <p className="mt-2.5 text-sm font-bold leading-relaxed text-amber-950 max-w-xl sm:text-base">
-                    {t.description}
+                    {replaceDateInText(t.description)}
                   </p>
                 </div>
               </div>
@@ -1573,9 +1604,9 @@ export default function Page() {
                     </p>
                   </div>
 
-                  <h3 className="text-2xl font-black text-orange-950 sm:text-3xl text-center mb-8 tracking-tight">
-                    {t.question}
-                  </h3>
+               <h3 className="text-2xl font-black text-orange-950 sm:text-3xl text-center mb-8 tracking-tight">
+  {replaceDateInText(t.question)}
+</h3>
 
                   <div className="grid gap-5 sm:grid-cols-2">
                     <button
@@ -1593,9 +1624,9 @@ export default function Page() {
                         <h3 className="mt-6 text-xl font-black text-orange-950 group-hover:text-black transition-colors">
                           {t.yes}
                         </h3>
-                        <p className="mt-2 text-sm font-bold leading-relaxed text-amber-900">
-                          {t.yesDescription}
-                        </p>
+                      <p className="mt-2 text-sm font-bold leading-relaxed text-amber-900">
+  {replaceDateInText(t.yesDescription)}
+</p>
                       </div>
                     </button>
 
